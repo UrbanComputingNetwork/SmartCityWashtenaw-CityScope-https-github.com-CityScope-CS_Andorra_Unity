@@ -1,6 +1,0 @@
-<<<<<<< HEAD
-m_EditorVersion: 5.3.6f1
-=======
-m_EditorVersion: 5.3.5f1
->>>>>>> parent of 5a758e4... Updated TCP connection; removed BRT folder
-m_StandardAssetsVersion: 0
