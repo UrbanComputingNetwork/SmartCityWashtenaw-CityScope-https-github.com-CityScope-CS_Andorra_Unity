@@ -152,7 +152,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &451275317
 Transform:
   m_ObjectHideFlags: 0
@@ -230,7 +230,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &647733614
 AudioListener:
   m_ObjectHideFlags: 0
@@ -406,7 +406,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1877268379
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -573,8 +573,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e359cc6160e84cedafdd2258d45ade7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  asciiTypes: {fileID: 4900000, guid: 90e89bfe5d48d400f9c26623b91c3936, type: 3}
-  asciiHeights: {fileID: 4900000, guid: 0d6ce251b0df744d2a512c267c4da6cb, type: 3}
+  _asciiTypes: {fileID: 4900000, guid: 90e89bfe5d48d400f9c26623b91c3936, type: 3}
+  _asciiFloors: {fileID: 4900000, guid: 0d6ce251b0df744d2a512c267c4da6cb, type: 3}
   _outOfBoundsType: -2
   _gridX: 61
   _gridY: 96
@@ -610,7 +610,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2142124935
 Transform:
   m_ObjectHideFlags: 0
