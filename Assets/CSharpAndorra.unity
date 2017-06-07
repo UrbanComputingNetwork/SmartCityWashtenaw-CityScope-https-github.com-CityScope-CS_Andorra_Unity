@@ -145,14 +145,13 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 451275317}
-  - component: {fileID: 451275318}
   m_Layer: 0
   m_Name: ContextModels
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &451275317
 Transform:
   m_ObjectHideFlags: 0
@@ -168,21 +167,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: -110, z: 0}
---- !u!114 &451275318
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 451275316}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b1ece9d458f943528e15e282abc37de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _cityIOgameObj: {fileID: 1877268378}
-  _state1: {fileID: 1224832317}
-  _state2: {fileID: 1100213161}
-  _state3: {fileID: 1224832317}
 --- !u!1 &525979615
 GameObject:
   m_ObjectHideFlags: 0
@@ -230,7 +214,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!81 &647733614
 AudioListener:
   m_ObjectHideFlags: 0
@@ -370,7 +354,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1519664121426616, guid: 1e3bccef77ee644cba5cc27a68e93076, type: 2}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1e3bccef77ee644cba5cc27a68e93076, type: 2}
@@ -400,13 +384,14 @@ GameObject:
   - component: {fileID: 1877268380}
   - component: {fileID: 1877268381}
   - component: {fileID: 1877268379}
+  - component: {fileID: 1877268382}
   m_Layer: 0
   m_Name: cityIO
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1877268379
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -418,16 +403,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bd967667142940a2b25806954914f0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  urlTable: volpe
+  tableNameAddUnderscoreBefore: _andorra
   delayWWW: 1
   _flag: 0
-  tableX: 16
-  tableY: 16
+  tableX: 21
+  tableY: 21
   cellWorldSize: 34.75
   cellShrink: 1
   floorHeight: 4
   _material: {fileID: 2100000, guid: 91216ae568b35425ead5420092fd8102, type: 2}
-  _Cells:
+  _table:
     grid: []
     objects:
       slider1: 0
@@ -500,6 +485,24 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &1877268382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1877268378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b1ece9d458f943528e15e282abc37de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _contextHolder: {fileID: 451275316}
+  _heatmapHolder: {fileID: 2107124964}
+  _cityIOscript: {fileID: 1877268379}
+  _heatmapsScript: {fileID: 2107124967}
+  _andorraCityScope: {fileID: 1224832317}
+  _andorraOld: {fileID: 1100213161}
+  _sliderState: 0
 --- !u!1001 &2037484920
 Prefab:
   m_ObjectHideFlags: 0
@@ -557,7 +560,7 @@ GameObject:
   - component: {fileID: 2107124965}
   - component: {fileID: 2107124967}
   m_Layer: 0
-  m_Name: AsciiParent
+  m_Name: HeatmapsHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -606,8 +609,8 @@ MonoBehaviour:
   _cellSize: 34.75
   _outOfBoundsType: -2
   _randomColors: []
-  _zAxisMultiplier: 10
-  _addToYHeight: 250
+  _zAxisMultiplier: 20
+  _addToYHeight: 400
   _winodwSearchDim: 5
 --- !u!1 &2142124934
 GameObject:

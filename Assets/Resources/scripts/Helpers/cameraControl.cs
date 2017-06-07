@@ -32,7 +32,7 @@ public class cameraControl : MonoBehaviour
 	{
 		_time -= Time.deltaTime * (Time.timeScale / _transitionDuration);
 		if (_script._flag == true) { // data IS indeed flowing from cityIO 
-			if (_script._Cells.objects.dockID == -1 || _boolRotateCamera == true) { // is brick in edit slot?
+			if (_script._table.objects.dockID == -1 || _boolRotateCamera == true) { // is brick in edit slot?
 				if (_thisCam.orthographicSize != _startSize) { 
 					_thisCam.orthographicSize = Mathf.Lerp (_startSize, _endSize, _time);
 				}
