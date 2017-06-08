@@ -599,7 +599,7 @@ GameObject:
   m_Layer: 0
   m_Name: cityIO
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 5721338939258241955, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -713,7 +713,7 @@ MonoBehaviour:
   _heatmapsScript: {fileID: 2107124967}
   _andorraCityScope: {fileID: 1100213161}
   _andorraOld: {fileID: 1224832317}
-  _sliderState: 0
+  _sliderState: 1
 --- !u!1 &1919941637
 GameObject:
   m_ObjectHideFlags: 0

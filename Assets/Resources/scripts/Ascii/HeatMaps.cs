@@ -82,8 +82,7 @@ public class HeatMaps : MonoBehaviour
                         _typesList[i] = _city_IO_script._table.grid[_tmpCount].type;
                         _tmpCount = _tmpCount + 1;
 
-                        /*   print(i + " " + _typesList[i] + " " + _tmpCount + " " +
-                            _city_IO_script._table.grid[_tmpCount].type + '\n'); */
+                        /* print(i + " item changed from: " + _typesList[i] + " to: " + _city_IO_script._table.grid[_tmpCount].type+ " in IO list number: " + _tmpCount  + '\n'); */
                     }
                 }
             }
