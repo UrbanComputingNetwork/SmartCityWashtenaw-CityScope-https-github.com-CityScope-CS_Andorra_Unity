@@ -17,8 +17,13 @@ public class HeatMaps : MonoBehaviour
     /// The ASCII floors txt files.
     /// </summary>
     public TextAsset _asciiFloors;
+    /// <summary>
+    /// The ASCII masks txt files.
+    /// </summary>
+    public TextAsset _asciiMasks;
     private List<int> _typesList = new List<int>();
     private List<int> _floorsList = new List<int>();
+    private List<int> _masksList = new List<int>();
 
     /// <summary>
     /// to be replaced with x,y dim from ascii parsing
@@ -67,6 +72,8 @@ public class HeatMaps : MonoBehaviour
         //     {
         _floorsList = AsciiParser.AsciiParserMethod(_asciiFloors);
         _typesList = AsciiParser.AsciiParserMethod(_asciiTypes);
+        _masksList = AsciiParser.AsciiParserMethod(_asciiMasks);
+
         // var _tmpCount = 0;
         // if (_city_IO_script._newCityioDataFlag)
         // {

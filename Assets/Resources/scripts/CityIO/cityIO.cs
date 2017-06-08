@@ -73,7 +73,7 @@ public class cityIO : MonoBehaviour
     private GameObject cityIOGeo;
     public Material _material;
     public Table _table;
-    public GameObject gridParent;
+    public GameObject _gridHolder;
     public GameObject textMeshPrefab;
     public static List<GameObject> gridObjects = new List<GameObject>(); //new list!
     public Color[] colors;
@@ -109,7 +109,7 @@ public class cityIO : MonoBehaviour
     }
     void drawTable()
     {
-        foreach (Transform child in gridParent.transform)
+        foreach (Transform child in _gridHolder.transform)
         {
             GameObject.Destroy(child.gameObject); // strat cycle with clean grid
             gridObjects.Clear(); // clean list!!!
@@ -118,11 +118,12 @@ public class cityIO : MonoBehaviour
         {
             // make the geomerty
             cityIOGeo = GameObject.CreatePrimitive(PrimitiveType.Cube); //make cell cube 
-            cityIOGeo.transform.parent = gridParent.transform; //put into parent object for later control 
+            cityIOGeo.transform.parent = _gridHolder.transform; //put into parent object for later control
             cityIOGeo.GetComponent<Renderer>().material = _material;
-            cityIOGeo.transform.rotation = gridParent.transform.rotation;
-            cityIOGeo.transform.localPosition = new Vector3((_table.grid[i].x * cellWorldSize), 0, (_table.grid[i].y * cellWorldSize)); //compensate for scale shift due to height
-            cityIOGeo.transform.localScale = new Vector3(cellWorldSize, 0, cellWorldSize);
+            cityIOGeo.transform.localPosition =
+                new Vector3((_table.grid[i].x * cellWorldSize), 0, (_table.grid[i].y * cellWorldSize)); //compensate for scale shift due to height
+            cityIOGeo.transform.localScale =
+                new Vector3(cellWorldSize, 0, cellWorldSize);
             cityIOGeo.name =
            ("Type > " + _table.grid[i].type + " X > " + _table.grid[i].x.ToString() + " Y > " + _table.grid[i].y.ToString());
             cityIOGeo.AddComponent<NavMeshObstacle>();

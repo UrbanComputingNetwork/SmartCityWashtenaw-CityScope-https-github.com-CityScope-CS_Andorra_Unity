@@ -185,34 +185,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 111024226}
---- !u!1 &374258298
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 374258299}
-  m_Layer: 0
-  m_Name: GridParent
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &374258299
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 374258298}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1877268380}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &451275316
 GameObject:
   m_ObjectHideFlags: 0
@@ -669,7 +641,7 @@ MonoBehaviour:
       pop_old: 0
     id: 
     timestamp: 0
-  gridParent: {fileID: 374258298}
+  _gridHolder: {fileID: 1877268378}
   textMeshPrefab: {fileID: 1432455272805652, guid: d806e0341f67b4c6586a791ecd625d8a,
     type: 2}
   colors:
@@ -688,8 +660,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 374258299}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -904,14 +875,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _city_IO_script: {fileID: 1877268379}
-  _refreshAscii: 1
+  _refreshAscii: 3
   _asciiTypes: {fileID: 4900000, guid: 90e89bfe5d48d400f9c26623b91c3936, type: 3}
   _asciiFloors: {fileID: 4900000, guid: 0d6ce251b0df744d2a512c267c4da6cb, type: 3}
-  _gridX: 61
+  _asciiMasks: {fileID: 4900000, guid: 42a5dade6335c474eb0ee09788271882, type: 3}
+  _gridX: 60
   _gridY: 96
   _cellShrink: 0.9
   _cellSize: 34.75
-  _outOfBoundsType: -2
+  _outOfBoundsType: -1
   _randomColors: []
   _zAxisMultiplier: 20
   _addToYHeight: 400
