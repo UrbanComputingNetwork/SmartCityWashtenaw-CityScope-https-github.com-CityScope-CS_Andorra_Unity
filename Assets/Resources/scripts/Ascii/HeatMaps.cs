@@ -64,31 +64,31 @@ public class HeatMaps : MonoBehaviour
     private GameObject _neighborsGeometry;
     private int _cellScoreCount = 0;
 
-    void Start() // Try with a capital S?
-                 //IEnumerator Start()
-
+    //void Start() // Try with a capital S?
+    IEnumerator Start()
     {
-        //     while (true)
-        //     {
-        _floorsList = AsciiParser.AsciiParserMethod(_asciiFloors);
-        _typesList = AsciiParser.AsciiParserMethod(_asciiTypes);
-        _masksList = AsciiParser.AsciiParserMethod(_asciiMasks);
+        while (true)
+        {
+            _floorsList = AsciiParser.AsciiParserMethod(_asciiFloors);
+            _typesList = AsciiParser.AsciiParserMethod(_asciiTypes);
+            _masksList = AsciiParser.AsciiParserMethod(_asciiMasks);
+            var _tmpCount = 0;
+            if (_city_IO_script._newCityioDataFlag)
+            {
+                for (int i = 0; i < _masksList.Count(); i++)
+                {
+                    if (_masksList[i] == 1)
+                    {
+                        _typesList[i] = _city_IO_script._table.grid[_tmpCount].type;
+                        _tmpCount = _tmpCount + 1;
 
-        // var _tmpCount = 0;
-        // if (_city_IO_script._newCityioDataFlag)
-        // {
-        //     for (int i = 0; i < _floorsList.Count(); i++)
-        //     {
-        //         if (_typesList[i] == -1)
-        //         {
-        //             _typesList[i] = _city_IO_script._table.grid[_tmpCount].type;
-        //             print(i + " " + _typesList[i] + " " + _tmpCount + " " + _city_IO_script._table.grid[_tmpCount].type + '\n');
-        //             _tmpCount = _tmpCount + 1;
-        //         }
-        //     }
-        // }
-        //    yield return new WaitForSeconds(_refreshAscii);
-        //   }
+                        /*   print(i + " " + _typesList[i] + " " + _tmpCount + " " +
+                            _city_IO_script._table.grid[_tmpCount].type + '\n'); */
+                    }
+                }
+            }
+            yield return new WaitForSeconds(_refreshAscii);
+        }
     }
 
     /// <summary>
@@ -120,7 +120,6 @@ public class HeatMaps : MonoBehaviour
                             Color.HSVToRGB(1, 1, (_floorsList[_loopsCounter]) / _rangeOfFloors);// this creates color based on value of cell!
                 }
                 _loopsCounter = _loopsCounter + 1; //count the loops
-
             }
         }
     }
@@ -132,7 +131,6 @@ public class HeatMaps : MonoBehaviour
     {
         //     _floorsList = AsciiParser.AsciiParserMethod(_asciiFloors);
         //    _typesList = AsciiParser.AsciiParserMethod(_asciiTypes);
-
         _loopsCounter = 0;
         _rangeOfTypes = (Mathf.Abs(_typesList.Max()) + Mathf.Abs(_typesList.Min()));
 
