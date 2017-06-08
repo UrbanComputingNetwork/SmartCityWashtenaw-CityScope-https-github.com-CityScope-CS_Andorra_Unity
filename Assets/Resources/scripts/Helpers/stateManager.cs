@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class stateManager : MonoBehaviour
 {
-
     public GameObject _contextHolder;
     public GameObject _heatmapHolder;
     public cityIO _cityIOscript;

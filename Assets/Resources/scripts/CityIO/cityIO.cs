@@ -5,7 +5,9 @@ using UnityEngine.AI;
 using System.Linq;
 
 
-/// <summary> class start </summary>
+/// <summary> 
+/// class start 
+/// </summary>
 
 [System.Serializable]  // have to have this in every JSON class!
 public class Grid
@@ -49,96 +51,77 @@ public class Table
 
 /// <summary> class end </summary>
 
-
 public class cityIO : MonoBehaviour
 {
-
-    //	private string localJson = "file:///Users/noyman/GIT/KendallAgents/Assets/Resources/scripts/citymatrix_volpe.json"; //local file
-    private string urlStart = "https://cityio.media.mit.edu/api/table/citymatrix"; // Table data: https://cityio.media.mit.edu/table/cityio_meta
-    public string tableNameAddUnderscoreBefore = "";
-
-    private string url;
-
+    private string _urlStart = "https://cityio.media.mit.edu/api/table/citymatrix";
+    // Table data: https://cityio.media.mit.edu/table/cityio_meta
+    private string _urlLocalHost = "http://localhost:8080//table/citymatrix";
+    public bool _WebOrLocal = true;
+    public string _tableNameAddUnderscoreBefore = "";
+    private string _url;
     public int delayWWW;
     private WWW www;
     private string cityIOtext;
     private string cityIOtext_Old;
     //this one look for changes
-    public bool _flag = false;
-
+    public bool _newCityioDataFlag = false;
     public int tableX;
     public int tableY;
     public float cellWorldSize;
     public float cellShrink;
     public float floorHeight;
-
     private GameObject cityIOGeo;
     public Material _material;
-
     public Table _table;
     public GameObject gridParent;
     public GameObject textMeshPrefab;
-    public static List<GameObject> gridObjects = new List<GameObject>();
-    //new list!
-
+    public static List<GameObject> gridObjects = new List<GameObject>(); //new list!
     public Color[] colors;
-
-
     IEnumerator Start()
     {
-
         while (true)
         {
-
-            url = urlStart + tableNameAddUnderscoreBefore;
-            //WWW www = new WWW (url);
-            WWW www = new WWW(url);
-
+            if (_WebOrLocal == true)
+            {
+                _url = _urlStart + _tableNameAddUnderscoreBefore;
+            }
+            else
+            {
+                _url = _urlLocalHost + _tableNameAddUnderscoreBefore;
+            }
+            WWW www = new WWW(_url);
             yield return www;
             yield return new WaitForSeconds(delayWWW);
             cityIOtext = www.text; //just a cleaner Var
             if (cityIOtext != cityIOtext_Old)
             {
                 cityIOtext_Old = cityIOtext; //new data has arrived from server 
-                jsonHandler();
+                _table = Table.CreateFromJSON(cityIOtext); // get parsed JSON into Cells variable --- MUST BE BEFORE CALLING ANYTHING FROM CELLS!!
+                _newCityioDataFlag = true;
+                drawTable();
 
-
+                // prints last update time to console 
+                System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
+                var lastUpdateTime = epochStart.AddSeconds(System.Math.Round(_table.timestamp / 1000d)).ToLocalTime();
+                print("Table was updated." + '\n' + "Following JSON from CityIO server was created at: " + lastUpdateTime + '\n' + cityIOtext);
             }
         }
     }
-
-
-    void jsonHandler()
-    {
-        _table = Table.CreateFromJSON(cityIOtext); // get parsed JSON into Cells variable --- MUST BE BEFORE CALLING ANYTHING FROM CELLS!!
-        drawTable();
-
-
-        // prints last update time to console 
-        System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
-        var lastUpdateTime = epochStart.AddSeconds(System.Math.Round(_table.timestamp / 1000d)).ToLocalTime();
-        print("Table was updated." + '\n' + "Following JSON from CityIO server was created at: " + lastUpdateTime + '\n' + cityIOtext);
-
-        _flag = true;
-    }
-
-
     void drawTable()
     {
-
         foreach (Transform child in gridParent.transform)
         {
             GameObject.Destroy(child.gameObject); // strat cycle with clean grid
             gridObjects.Clear(); // clean list!!!
         }
-
         for (int i = 0; i < _table.grid.Count; i++) // loop through list of all cells grid objects 
         {
             // make the geomerty
-            cityIOGeo = GameObject.CreatePrimitive(PrimitiveType.Cube); //make cell cube  
-            cityIOGeo.GetComponent<Renderer>().material = _material;
+            cityIOGeo = GameObject.CreatePrimitive(PrimitiveType.Cube); //make cell cube 
             cityIOGeo.transform.parent = gridParent.transform; //put into parent object for later control 
-            cityIOGeo.transform.position = new Vector3((_table.grid[i].x * cellWorldSize), 0, (_table.grid[i].y * cellWorldSize)); //compensate for scale shift due to height
+            cityIOGeo.GetComponent<Renderer>().material = _material;
+            cityIOGeo.transform.rotation = gridParent.transform.rotation;
+            cityIOGeo.transform.localPosition = new Vector3((_table.grid[i].x * cellWorldSize), 0, (_table.grid[i].y * cellWorldSize)); //compensate for scale shift due to height
             cityIOGeo.transform.localScale = new Vector3(cellWorldSize, 0, cellWorldSize);
             cityIOGeo.name =
            ("Type > " + _table.grid[i].type + " X > " + _table.grid[i].x.ToString() + " Y > " + _table.grid[i].y.ToString());
@@ -150,13 +133,10 @@ public class cityIO : MonoBehaviour
             for (int n = 0; n < _table.objects.density.Count; n++)
             { //go through all 'densities' to match Type to Height. Add +1 so #6 (Road could be in. Fix in JSON Needed) 
               //print(n + " " +_Cells.objects.density[n]);
-
-
                 if (new int[] { 0, 1, 2, 3, 4, 5 }.Contains(_table.grid[i].type))
                 { //if this cell is one of the buildings types
                     cityIOGeo.transform.localScale = new Vector3(cellShrink * cellWorldSize, (_table.objects.density[n] * floorHeight), cellShrink * cellWorldSize);
                     cityIOGeo.transform.localPosition = new Vector3(cityIOGeo.transform.position.x, (_table.objects.density[n] * floorHeight) / 2, cityIOGeo.transform.position.z); //compensate for scale shift and x,y array
-
                     var _tmpColor = colors[_table.grid[i].type];
                     _tmpColor.a = 0.5f;
                     cityIOGeo.GetComponent<Renderer>().material.color = _tmpColor;
@@ -191,7 +171,6 @@ public class cityIO : MonoBehaviour
         }
         gridObjects.Add(cityIOGeo); //add this Gobj to list
     }
-
     private void ShowBuildingTypeText(int i) //mesh type text metod 
     {
         GameObject textMesh = GameObject.Instantiate(textMeshPrefab, new Vector3((_table.grid[i].x * cellWorldSize),

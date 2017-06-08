@@ -7,6 +7,8 @@ using System.Linq;
 
 public class HeatMaps : MonoBehaviour
 {
+    public cityIO _city_IO_script;
+    public int _refreshAscii = 2;
     /// <summary>
     /// The ASCII types txt files.
     /// </summary>
@@ -58,9 +60,28 @@ public class HeatMaps : MonoBehaviour
     private int _cellScoreCount = 0;
 
     void Start() // Try with a capital S?
+                 //IEnumerator Start()
+
     {
+        //     while (true)
+        //     {
         _floorsList = AsciiParser.AsciiParserMethod(_asciiFloors);
         _typesList = AsciiParser.AsciiParserMethod(_asciiTypes);
+        // var _tmpCount = 0;
+        // if (_city_IO_script._newCityioDataFlag)
+        // {
+        //     for (int i = 0; i < _floorsList.Count(); i++)
+        //     {
+        //         if (_typesList[i] == -1)
+        //         {
+        //             _typesList[i] = _city_IO_script._table.grid[_tmpCount].type;
+        //             print(i + " " + _typesList[i] + " " + _tmpCount + " " + _city_IO_script._table.grid[_tmpCount].type + '\n');
+        //             _tmpCount = _tmpCount + 1;
+        //         }
+        //     }
+        // }
+        //    yield return new WaitForSeconds(_refreshAscii);
+        //   }
     }
 
     /// <summary>
@@ -119,7 +140,6 @@ public class HeatMaps : MonoBehaviour
                 { // if not on the area which is out of the physical model space
                     _typesGeometry = GameObject.CreatePrimitive(PrimitiveType.Quad); //make cell cube
                     _typesGeometry.name = ("Types " + _typesList[_loopsCounter].ToString());
-                    // _typesGeometry.transform.localPosition =  new Vector3(x * _cellSize, _addToYHeight, y * _cellSize); 
                     _typesGeometry.transform.localPosition = new Vector3(x * _cellSize,
                        _shiftFloorListAboveZero * _zAxisMultiplier + _addToYHeight,
                       y * _cellSize);   //move and rotate
@@ -135,12 +155,20 @@ public class HeatMaps : MonoBehaviour
                         var _rnd = Random.Range(0f, 1f);
                         _randomColors.Add(Color.HSVToRGB(_rnd, 1, 1));
                     }
-                    _typesGeometry.transform.GetComponent<Renderer>().material.color =
-                            _randomColors[_shiftTypeListAboveZero];
+                    if (_typesList[_loopsCounter] == -1)
+                    {
+                        _typesGeometry.transform.localScale = new Vector3(0.25f * _cellSize, 0.25f * _cellSize, 0.25f * _cellSize);
+                        _typesGeometry.transform.GetComponent<Renderer>().material.color = Color.black;
+                    }
+                    else
+                    {
+                        _typesGeometry.transform.GetComponent<Renderer>().material.color = _randomColors[_shiftTypeListAboveZero];
+                    }
                     _typesGeometry.transform.GetComponent<Renderer>().receiveShadows = false;
                     _typesGeometry.transform.GetComponent<Renderer>().shadowCastingMode =
                         UnityEngine.Rendering.ShadowCastingMode.Off;
                 }
+
                 _loopsCounter = _loopsCounter + 1;//count the loops
             }
         }
