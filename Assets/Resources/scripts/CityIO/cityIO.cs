@@ -58,15 +58,14 @@ public class cityIO : MonoBehaviour
     public bool _WebOrLocal = true;
     public string _tableNameAddUnderscoreBefore = "";
     private string _url;
-    public int delayWWW;
-    private WWW www;
-    private string cityIOtext;
-    private string cityIOtext_Old;
+    public int _delayWWW;
+    private WWW _www;
+    private string _oldText;
     //this one look for changes
     public bool _newCityioDataFlag = false;
-    public int tableX;
-    public int tableY;
-    public float cellWorldSize;
+    public int _tableX;
+    public int _tableY;
+    public float _cellWorldSize;
     public float cellShrink;
     public float floorHeight;
     private GameObject cityIOGeo;
@@ -87,20 +86,26 @@ public class cityIO : MonoBehaviour
             {
                 _url = _urlLocalHost + _tableNameAddUnderscoreBefore;
             }
-            WWW www = new WWW(_url);
-            yield return www;
-            yield return new WaitForSeconds(delayWWW);
-            cityIOtext = www.text; //just a cleaner Var
-            if (cityIOtext != cityIOtext_Old)
+            yield return new WaitForSeconds(_delayWWW);
+            WWW _www = new WWW(_url);
+            yield return _www;
+            if (!string.IsNullOrEmpty(_www.error))
             {
-                cityIOtext_Old = cityIOtext; //new data has arrived from server 
-                _table = Table.CreateFromJSON(cityIOtext); // get parsed JSON into Cells variable --- MUST BE BEFORE CALLING ANYTHING FROM CELLS!!
-                _newCityioDataFlag = true;
-                drawTable();
-                // prints last update time to console 
-                System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
-                var lastUpdateTime = epochStart.AddSeconds(System.Math.Round(_table.timestamp / 1000d)).ToLocalTime();
-                print("Table was updated." + '\n' + "Following JSON from CityIO server was created at: " + lastUpdateTime + '\n' + cityIOtext);
+                Debug.Log(_www.error);
+            }
+            else
+            {
+                if (_www.text != _oldText)
+                {
+                    _oldText = _www.text; //new data has arrived from server 
+                    _table = Table.CreateFromJSON(_www.text); // get parsed JSON into Cells variable --- MUST BE BEFORE CALLING ANYTHING FROM CELLS!!
+                    _newCityioDataFlag = true;
+                    drawTable();
+                    // prints last update time to console 
+                    System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
+                    var lastUpdateTime = epochStart.AddSeconds(System.Math.Round(_table.timestamp / 1000d)).ToLocalTime();
+                    print("Table was updated." + '\n' + "Following JSON from CityIO server was created at: " + lastUpdateTime + '\n' + _www.text);
+                }
             }
         }
     }
@@ -117,9 +122,9 @@ public class cityIO : MonoBehaviour
             cityIOGeo.transform.parent = _gridHolder.transform; //put into parent object for later control
             cityIOGeo.GetComponent<Renderer>().material = _material;
             cityIOGeo.transform.localPosition =
-                  new Vector3((_table.grid[i].x * cellWorldSize), 0, (_table.grid[i].y * cellWorldSize)); //compensate for scale shift due to height
+                  new Vector3((_table.grid[i].x * _cellWorldSize), 0, (_table.grid[i].y * _cellWorldSize)); //compensate for scale shift due to height
             cityIOGeo.transform.localScale =
-                new Vector3(cellWorldSize, 0, cellWorldSize);
+                new Vector3(_cellWorldSize, 0, _cellWorldSize);
             cityIOGeo.name =
            ("Type: " + _table.grid[i].type + " X: " + _table.grid[i].x.ToString() + " Y: " + _table.grid[i].y.ToString());
             //ShowBuildingTypeText (i); /// call if you need type text float 
@@ -128,7 +133,7 @@ public class cityIO : MonoBehaviour
               //print(n + " " +_Cells.objects.density[n]);
                 if (new int[] { 0, 1, 2, 3, 4, 5 }.Contains(_table.grid[i].type))
                 { //if this cell is one of the buildings types
-                    cityIOGeo.transform.localScale = new Vector3(cellShrink * cellWorldSize, (_table.objects.density[n] * floorHeight), cellShrink * cellWorldSize);
+                    cityIOGeo.transform.localScale = new Vector3(cellShrink * _cellWorldSize, (_table.objects.density[n] * floorHeight), cellShrink * _cellWorldSize);
                     cityIOGeo.transform.position = new Vector3(cityIOGeo.transform.position.x,
                     _gridHolder.transform.position.y + (_table.objects.density[n] * floorHeight) / 2,
                     cityIOGeo.transform.position.z); //compensate for scale shift and x,y array
@@ -140,19 +145,18 @@ public class cityIO : MonoBehaviour
                 {
                     if (_table.grid[i].type == 6)
                     { //Street
-                        //print("Type > " + _table.grid[i].type + " X > " + _table.grid[i].x.ToString() + " Y > " + _table.grid[i].y.ToString());
                         cityIOGeo.transform.localPosition =
-                        new Vector3((_table.grid[i].x * cellWorldSize), 0, (_table.grid[i].y * cellWorldSize)); //compensate for scale shift and x,y array
-                        cityIOGeo.transform.localScale = new Vector3(cellShrink * cellWorldSize, 0.25f, cellShrink * cellWorldSize);
+                        new Vector3((_table.grid[i].x * _cellWorldSize), 0, (_table.grid[i].y * _cellWorldSize)); //compensate for scale shift and x,y array
+                        cityIOGeo.transform.localScale = new Vector3(cellShrink * _cellWorldSize, 0.25f, cellShrink * _cellWorldSize);
                         var _tmpColor = Color.gray;
                         _tmpColor.a = 1f;
                         cityIOGeo.GetComponent<Renderer>().material.color = _tmpColor;
                     }
                     else if (_table.grid[i].type == 9) // if parking
                     {
-                        cityIOGeo.transform.localScale = new Vector3(cellWorldSize, 0, cellWorldSize);
+                        cityIOGeo.transform.localScale = new Vector3(_cellWorldSize, 0, _cellWorldSize);
                         cityIOGeo.transform.localPosition = new Vector3
-                        (_table.grid[i].x * cellWorldSize, 0, _table.grid[i].y * cellWorldSize); //compensate for scale shift and x,y array
+                        (_table.grid[i].x * _cellWorldSize, 0, _table.grid[i].y * _cellWorldSize); //compensate for scale shift and x,y array
                         var _tmpColor = Color.gray;
                         _tmpColor.a = 1f;
                         cityIOGeo.GetComponent<Renderer>().material.color = _tmpColor;
@@ -160,8 +164,8 @@ public class cityIO : MonoBehaviour
                     else
                     { //if green or other non building type
                         cityIOGeo.transform.localPosition =
-                        new Vector3((_table.grid[i].x * cellWorldSize), 0, (_table.grid[i].y * cellWorldSize)); //hide base plates 
-                        cityIOGeo.transform.localScale = new Vector3(cellShrink * cellWorldSize * 0.1f, 0.25f, cellShrink * cellWorldSize * 0.1f);
+                        new Vector3((_table.grid[i].x * _cellWorldSize), 0, (_table.grid[i].y * _cellWorldSize)); //hide base plates 
+                        cityIOGeo.transform.localScale = new Vector3(cellShrink * _cellWorldSize * 0.1f, 0.25f, cellShrink * _cellWorldSize * 0.1f);
                         cityIOGeo.GetComponent<Renderer>().material.color = Color.black;
                     }
                 }
@@ -170,8 +174,8 @@ public class cityIO : MonoBehaviour
     }
     private void ShowBuildingTypeText(int i) //mesh type text metod 
     {
-        GameObject textMesh = GameObject.Instantiate(textMeshPrefab, new Vector3((_table.grid[i].x * cellWorldSize),
-                                  100, (_table.grid[i].y * cellWorldSize)),
+        GameObject textMesh = GameObject.Instantiate(textMeshPrefab, new Vector3((_table.grid[i].x * _cellWorldSize),
+                                  100, (_table.grid[i].y * _cellWorldSize)),
                                   cityIOGeo.transform.rotation, transform) as GameObject; //spwan prefab text
         textMesh.GetComponent<TextMesh>().text = _table.grid[i].type.ToString();
         textMesh.GetComponent<TextMesh>().fontSize = 300;

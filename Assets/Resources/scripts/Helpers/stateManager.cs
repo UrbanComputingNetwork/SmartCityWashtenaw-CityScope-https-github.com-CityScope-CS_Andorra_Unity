@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class stateManager : MonoBehaviour
 {
@@ -9,7 +10,8 @@ public class stateManager : MonoBehaviour
     public cityIO _cityIOscript;
     public HeatMaps _heatmapsScript;
     public GameObject _andorraCityScope;
-    public GameObject _andorraOld;
+    public GameObject _andorraHeatmap;
+    public GameObject _floorsUI;
 
     public int _sliderState = 0;
     private int _oldState;
@@ -36,34 +38,40 @@ public class stateManager : MonoBehaviour
         {
             default:
                 CleanOldViz(_contextHolder, _heatmapHolder);
-                ShowContext(_andorraOld);
+                ShowContext(_andorraCityScope);
                 print("Default: Basic Sat view and cityIO grid" + '\n');
+                _floorsUI.SetActive(false);
+
                 break;
-            case 0: //grid
-                CleanOldViz(_contextHolder, _heatmapHolder); ShowContext(_andorraCityScope);
+            case 0: //CITYIO
+                CleanOldViz(_contextHolder, _heatmapHolder);
+                ShowContext(_andorraCityScope);
                 print("State 0: Basic Sat view and cityIO grid" + '\n');
+                _floorsUI.SetActive(false);
                 break;
-            case 1:// land use
-                CleanOldViz(_contextHolder, _heatmapHolder);
-                ShowContext(_andorraCityScope);
-                _heatmapsScript.FloorsViz();
-                print("State 1: Land use map" + '\n');
 
-                break;
-            case 2: // density 
+            case 1:// FLOORS
                 CleanOldViz(_contextHolder, _heatmapHolder);
-                ShowContext(_andorraCityScope);
+                ShowContext(_andorraHeatmap);
+                StartCoroutine(_heatmapsScript.FloorsViz());
+                _floorsUI.SetActive(true);
+                print("State 1: Floors map" + '\n');
+                break;
+
+            case 2: // LANDUSE 
+                CleanOldViz(_contextHolder, _heatmapHolder);
+                ShowContext(_andorraHeatmap);
                 _heatmapsScript.TypesViz();
-
-                print("State 2: Density (floors) map" + '\n');
-
+                print("State 2: Land use map" + '\n');
+                _floorsUI.SetActive(false);
                 break;
-            case 3: // heatmap 
-                CleanOldViz(_contextHolder, _heatmapHolder);
-                ShowContext(_andorraCityScope);
-                _heatmapsScript.SearchNeighbors();
 
+            case 3: // HEATMAP
+                CleanOldViz(_contextHolder, _heatmapHolder);
+                ShowContext(_andorraHeatmap);
+                _heatmapsScript.SearchNeighbors();
                 print("State 3: Proximity HeatMap" + '\n');
+                _floorsUI.SetActive(false);
                 break;
         }
     }

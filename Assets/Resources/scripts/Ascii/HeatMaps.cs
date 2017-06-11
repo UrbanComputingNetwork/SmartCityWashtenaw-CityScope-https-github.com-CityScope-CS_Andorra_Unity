@@ -93,7 +93,7 @@ public class HeatMaps : MonoBehaviour
     /// <summary>
     /// Viz of floor heights 
     /// </summary>
-    public void FloorsViz() //make the height map //
+    public IEnumerator FloorsViz() //make the height map //
     {
         _loopsCounter = 0; // important to reset this 
         _rangeOfFloors = (Mathf.Abs(_floorsList.Max()) + Mathf.Abs(_floorsList.Min()));
@@ -103,20 +103,29 @@ public class HeatMaps : MonoBehaviour
             for (int y = 0; y < _gridY; y++)
             {
                 var _shiftFloorListAboveZero = _floorsList[_loopsCounter] + Mathf.Abs(_floorsList.Min()); // move list item from subzero
-                if (_typesList[_loopsCounter] != _outOfBoundsType && _floorsList[_loopsCounter] > 1)
+                if (_typesList[_loopsCounter] != _outOfBoundsType && _floorsList[_loopsCounter] > 0)
                 { // if not on the area which is out of the physical model space
                     _floorsGeometry = GameObject.CreatePrimitive(PrimitiveType.Cube); //make cell cube
                     _floorsGeometry.name = (_floorsList[_loopsCounter].ToString() + "Floors ");
                     _floorsGeometry.transform.parent = transform; //put into parent object for later control
-                    _floorsGeometry.transform.localScale = new Vector3(_cellShrink * _cellSize,
-                        _shiftFloorListAboveZero * _zAxisMultiplier,
-                        _cellShrink * _cellSize);   //move and rotate
                     _floorsGeometry.transform.localPosition = new Vector3(x * _cellSize,
                         _shiftFloorListAboveZero * (_zAxisMultiplier / 2) + _addToYHeight,
                         y * _cellSize); //compensate for scale shift due to height
                                         //color the thing
                     _floorsGeometry.transform.GetComponent<Renderer>().material.color =
                             Color.HSVToRGB(1, 1, (_floorsList[_loopsCounter]) / _rangeOfFloors);// this creates color based on value of cell!
+
+                    // _floorsGeometry.transform.localScale = new Vector3(_cellShrink * _cellSize, 1, _cellShrink * _cellSize);
+                    float _endY = _shiftFloorListAboveZero * _zAxisMultiplier;
+                    float _elpasedTime = 0f;
+                    float _endTime = 0.1f;
+                    while (_elpasedTime < _endTime)
+                    {
+                        _floorsGeometry.transform.localScale =
+                        new Vector3(_cellShrink * _cellSize, Mathf.Lerp(1, _endY, _elpasedTime / _endTime), _cellShrink * _cellSize);
+                        _elpasedTime += Time.deltaTime;
+                        yield return null;
+                    }
                 }
                 _loopsCounter = _loopsCounter + 1; //count the loops
             }
@@ -128,8 +137,6 @@ public class HeatMaps : MonoBehaviour
     /// </summary>
     public void TypesViz() // create types map //
     {
-        //     _floorsList = AsciiParser.AsciiParserMethod(_asciiFloors);
-        //    _typesList = AsciiParser.AsciiParserMethod(_asciiTypes);
         _loopsCounter = 0;
         _rangeOfTypes = (Mathf.Abs(_typesList.Max()) + Mathf.Abs(_typesList.Min()));
 
@@ -157,7 +164,7 @@ public class HeatMaps : MonoBehaviour
                     for (int c = 0; c < _rangeOfTypes + 1; c++)
                     { //!!! Must add one to count since _numberoftypes is 12, not 13!
                         var _rnd = Random.Range(0f, 1f);
-                        _randomColors.Add(Color.HSVToRGB(_rnd, 1, 1));
+                        _randomColors.Add(Color.HSVToRGB(1 - _rnd, 1, 1));
                     }
                     if (_typesList[_loopsCounter] == -1)
                     {
@@ -222,7 +229,7 @@ public class HeatMaps : MonoBehaviour
                     _neighborsGeometry.transform.parent = transform; //put into parent object for later control
                     _typesArray[x, y] = _typesList[_loopsCounter];
 
-                    if (_typesArray[x, y] > 0 && _typesArray[x, y] < 4) // what is the cells type we're searching for? 
+                    if (_typesArray[x, y] > 3 && _typesArray[x, y] < 7) // what is the cells type we're searching for? 
                     {
                         _neighborsGeometry.transform.GetComponent<Renderer>().material.color = Color.green;
                         _neighborsGeometry.transform.localScale = new Vector3(_cellSize, _cellSize, _cellSize);
@@ -236,7 +243,7 @@ public class HeatMaps : MonoBehaviour
                                     && _windowX < _gridX
                                     && _windowY < _gridY)
                                 { // make sure window area is not outside grid bounds 
-                                    if (_typesArray[_windowX, _windowY] > 3 && _typesArray[_windowX, _windowY] < 7)
+                                    if (_typesArray[_windowX, _windowY] > 0 && _typesArray[_windowX, _windowY] < 4)
                                     {
                                         _cellScoreCount = _cellScoreCount + 1;
                                         _neighborsGeometry.transform.localPosition =
