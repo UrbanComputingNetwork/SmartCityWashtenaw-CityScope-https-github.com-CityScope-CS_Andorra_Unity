@@ -6,6 +6,8 @@ using UnityEditor;
 public class stateManager : MonoBehaviour
 {
     public GameObject _contextHolder;
+
+    public GameObject _cellTowers;
     public GameObject _heatmapHolder;
     public cityIO _cityIOscript;
     public HeatMaps _heatmapsScript;
@@ -71,6 +73,14 @@ public class stateManager : MonoBehaviour
                 ShowContext(_andorraHeatmap);
                 _heatmapsScript.SearchNeighbors();
                 print("State 3: Proximity HeatMap" + '\n');
+                _floorsUI.SetActive(false);
+                break;
+
+            case 4: // Cell towers
+                CleanOldViz(_contextHolder, _heatmapHolder);
+                ShowContext(_andorraHeatmap);
+                ShowContext(_cellTowers);
+                print("State 4: Celltowers heatmap" + '\n');
                 _floorsUI.SetActive(false);
                 break;
         }

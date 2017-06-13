@@ -72,6 +72,7 @@ public class HeatMaps : MonoBehaviour
             _floorsList = AsciiParser.AsciiParserMethod(_asciiFloors);
             _typesList = AsciiParser.AsciiParserMethod(_asciiTypes);
             _masksList = AsciiParser.AsciiParserMethod(_asciiMasks);
+
             var _tmpCount = 0;
             if (_city_IO_script._newCityioDataFlag)
             {
@@ -145,15 +146,16 @@ public class HeatMaps : MonoBehaviour
             for (int y = 0; y < _gridY; y++)
             {
                 var _shiftTypeListAboveZero = _typesList[_loopsCounter] + Mathf.Abs(_typesList.Min()); // move list item from subzero
-                var _shiftFloorListAboveZero = _floorsList[_loopsCounter] + Mathf.Abs(_floorsList.Min()); // move list item from subzero
+                                                                                                       // var _shiftFloorListAboveZero = _floorsList[_loopsCounter] + Mathf.Abs(_floorsList.Min()); // move list item from subzero
 
                 if (_typesList[_loopsCounter] != _outOfBoundsType)
                 { // if not on the area which is out of the physical model space
                     _typesGeometry = GameObject.CreatePrimitive(PrimitiveType.Quad); //make cell cube
                     _typesGeometry.name = ("Types " + _typesList[_loopsCounter].ToString());
-                    _typesGeometry.transform.localPosition = new Vector3(x * _cellSize,
+                    /*_typesGeometry.transform.localPosition = new Vector3(x * _cellSize,
                        _shiftFloorListAboveZero * _zAxisMultiplier + _addToYHeight,
-                      y * _cellSize);   //move and rotate
+                      y * _cellSize);   //move and rotate */
+                    _typesGeometry.transform.localPosition = new Vector3(x * _cellSize, _addToYHeight, y * _cellSize);   //move and rotate
                     Quaternion _tmpRot = transform.localRotation;
                     _tmpRot.eulerAngles = new Vector3(90, 0, 0.0f);
                     _typesGeometry.transform.localRotation = _tmpRot;
@@ -229,7 +231,7 @@ public class HeatMaps : MonoBehaviour
                     _neighborsGeometry.transform.parent = transform; //put into parent object for later control
                     _typesArray[x, y] = _typesList[_loopsCounter];
 
-                    if (_typesArray[x, y] > 3 && _typesArray[x, y] < 7) // what is the cells type we're searching for? 
+                    if (_typesArray[x, y] > 0 && _typesArray[x, y] < 3) // what is the cells type we're searching for? 
                     {
                         _neighborsGeometry.transform.GetComponent<Renderer>().material.color = Color.green;
                         _neighborsGeometry.transform.localScale = new Vector3(_cellSize, _cellSize, _cellSize);
@@ -243,12 +245,11 @@ public class HeatMaps : MonoBehaviour
                                     && _windowX < _gridX
                                     && _windowY < _gridY)
                                 { // make sure window area is not outside grid bounds 
-                                    if (_typesArray[_windowX, _windowY] > 0 && _typesArray[_windowX, _windowY] < 4)
+                                    if (_typesArray[_windowX, _windowY] > 6 && _typesArray[_windowX, _windowY] < 9)
                                     {
                                         _cellScoreCount = _cellScoreCount + 1;
                                         _neighborsGeometry.transform.localPosition =
-                                            new Vector3(x * _cellSize, _neighborsGeometry.transform.localPosition.y +
-                                        _cellScoreCount, y * _cellSize);
+                                      new Vector3(x * _cellSize, _addToYHeight + (_cellScoreCount * 2), y * _cellSize);
                                         _neighborsGeometry.name = ("Results count: " + _cellScoreCount.ToString());
                                         var _tmpColor = _cellScoreCount / Mathf.Pow(2 * _winodwSearchDim, 2); // color color spectrum based on cell score/max potential score 
                                         _neighborsGeometry.transform.GetComponent<Renderer>().material.color =
@@ -263,7 +264,7 @@ public class HeatMaps : MonoBehaviour
                         _neighborsGeometry.transform.GetComponent<Renderer>().material.color =
                                            Color.HSVToRGB(0, 0, 0);
                         _neighborsGeometry.transform.localScale =
-                        new Vector3(_cellSize * 0.5f, _cellSize * 0.5f, _cellSize * 0.5f);
+                        new Vector3(_cellShrink * _cellSize, _cellShrink * _cellSize, _cellShrink * _cellSize);
                     }
                 }
             }

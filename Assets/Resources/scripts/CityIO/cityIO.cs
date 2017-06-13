@@ -74,8 +74,19 @@ public class cityIO : MonoBehaviour
     public GameObject _gridHolder;
     public GameObject textMeshPrefab;
     public Color[] colors;
+    public TextAsset _asciiMasks;
+    //private List<int> _masksList = new List<int>();
+    /* Vars for searching in table mask list */
+   // private int _intreactionMask = 1;
+
+
     IEnumerator Start()
     {
+        /* To be removed upon Json unification */
+        //_masksList = AsciiParser.AsciiParserMethod(_asciiMasks); // use this to get only intractable active 
+        // print (_masksList.Count());
+
+
         while (true)
         {
             if (_WebOrLocal == true)
@@ -91,7 +102,7 @@ public class cityIO : MonoBehaviour
             yield return _www;
             if (!string.IsNullOrEmpty(_www.error))
             {
-                Debug.Log(_www.error);
+                Debug.Log(_www.error); // use this for transfering to local server 
             }
             else
             {
@@ -111,23 +122,28 @@ public class cityIO : MonoBehaviour
     }
     void drawTable()
     {
+        /*  strat update table with clean grid */
         foreach (Transform child in _gridHolder.transform)
         {
-            GameObject.Destroy(child.gameObject); // strat cycle with clean grid
+            GameObject.Destroy(child.gameObject);
         }
+
+
         for (int i = 0; i < _table.grid.Count; i++) // loop through list of all cells grid objects 
         {
-            // make the geomerty
+            /* make the grid cells in generic form */
             cityIOGeo = GameObject.CreatePrimitive(PrimitiveType.Cube); //make cell cube 
             cityIOGeo.transform.parent = _gridHolder.transform; //put into parent object for later control
             cityIOGeo.GetComponent<Renderer>().material = _material;
             cityIOGeo.transform.localPosition =
                   new Vector3((_table.grid[i].x * _cellWorldSize), 0, (_table.grid[i].y * _cellWorldSize)); //compensate for scale shift due to height
             cityIOGeo.transform.localScale =
-                new Vector3(_cellWorldSize, 0, _cellWorldSize);
+                new Vector3(_cellWorldSize, .25f, _cellWorldSize);
             cityIOGeo.name =
            ("Type: " + _table.grid[i].type + " X: " + _table.grid[i].x.ToString() + " Y: " + _table.grid[i].y.ToString());
             //ShowBuildingTypeText (i); /// call if you need type text float 
+
+            /* Render grid cell based on type */
             for (int n = 0; n < _table.objects.density.Count; n++)
             { //go through all 'densities' to match Type to Height. Add +1 so #6 (Road could be in. Fix in JSON Needed) 
               //print(n + " " +_Cells.objects.density[n]);
@@ -141,7 +157,7 @@ public class cityIO : MonoBehaviour
                     _tmpColor.a = 0.5f;
                     cityIOGeo.GetComponent<Renderer>().material.color = _tmpColor;
                 }
-                else if (new int[] { -1, -2, 6, 7, 8 }.Contains(_table.grid[i].type))
+                else if (new int[] { -1, -2, 6, 7, 8, 9 }.Contains(_table.grid[i].type))
                 {
                     if (_table.grid[i].type == 6)
                     { //Street
@@ -154,10 +170,19 @@ public class cityIO : MonoBehaviour
                     }
                     else if (_table.grid[i].type == 9) // if parking
                     {
-                        cityIOGeo.transform.localScale = new Vector3(_cellWorldSize, 0, _cellWorldSize);
+                        cityIOGeo.transform.localScale = new Vector3(_cellWorldSize, 1, _cellWorldSize);
                         cityIOGeo.transform.localPosition = new Vector3
                         (_table.grid[i].x * _cellWorldSize, 0, _table.grid[i].y * _cellWorldSize); //compensate for scale shift and x,y array
                         var _tmpColor = Color.gray;
+                        _tmpColor.a = 1f;
+                        cityIOGeo.GetComponent<Renderer>().material.color = _tmpColor;
+                    }
+                    else if (_table.grid[i].type == 8) // if parking
+                    {
+                        cityIOGeo.transform.localScale = new Vector3(cellShrink * _cellWorldSize, 0.25f, cellShrink * _cellWorldSize);
+                        cityIOGeo.transform.localPosition = new Vector3
+                        (_table.grid[i].x * _cellWorldSize, 0, _table.grid[i].y * _cellWorldSize); //compensate for scale shift and x,y array
+                        var _tmpColor = Color.green;
                         _tmpColor.a = 1f;
                         cityIOGeo.GetComponent<Renderer>().material.color = _tmpColor;
                     }
@@ -165,7 +190,7 @@ public class cityIO : MonoBehaviour
                     { //if green or other non building type
                         cityIOGeo.transform.localPosition =
                         new Vector3((_table.grid[i].x * _cellWorldSize), 0, (_table.grid[i].y * _cellWorldSize)); //hide base plates 
-                        cityIOGeo.transform.localScale = new Vector3(cellShrink * _cellWorldSize * 0.1f, 0.25f, cellShrink * _cellWorldSize * 0.1f);
+                        cityIOGeo.transform.localScale = new Vector3(cellShrink * _cellWorldSize * 0.25f, 0.25f, cellShrink * _cellWorldSize * 0.25f);
                         cityIOGeo.GetComponent<Renderer>().material.color = Color.black;
                     }
                 }
