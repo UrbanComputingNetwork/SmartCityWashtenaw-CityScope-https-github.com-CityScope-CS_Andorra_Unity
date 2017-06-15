@@ -119,13 +119,22 @@ public class HeatMaps : MonoBehaviour
                     // _floorsGeometry.transform.localScale = new Vector3(_cellShrink * _cellSize, 1, _cellShrink * _cellSize);
                     float _endY = _shiftFloorListAboveZero * _zAxisMultiplier;
                     float _elpasedTime = 0f;
-                    float _endTime = 0.1f;
+                    float _endTime = 0.05f;
+
+
                     while (_elpasedTime < _endTime)
                     {
-                        _floorsGeometry.transform.localScale =
-                        new Vector3(_cellShrink * _cellSize, Mathf.Lerp(1, _endY, _elpasedTime / _endTime), _cellShrink * _cellSize);
-                        _elpasedTime += Time.deltaTime;
-                        yield return null;
+                        if (_floorsGeometry != null)
+                        {
+                            _floorsGeometry.transform.localScale =
+                            new Vector3(_cellShrink * _cellSize, Mathf.Lerp(1, _endY, _elpasedTime / _endTime), _cellShrink * _cellSize);
+                            _elpasedTime += Time.deltaTime;
+                            yield return null;
+                        }
+                        else
+                        {
+                            yield return null;
+                        }
                     }
                 }
                 _loopsCounter = _loopsCounter + 1; //count the loops
