@@ -15,14 +15,38 @@ public class stateManager : MonoBehaviour
     public GameObject _andorraHeatmap;
     public GameObject _floorsUI;
 
-    public int _sliderState = 0;
+    private int _sliderState = 1;
     private int _oldState;
+    public bool _demoModeBool = true;
+    public int _changeModeEverySeconds = 60;
 
     void Awake()
     {
-        _sliderState = _cityIOscript._table.objects.toggle1;
-        _oldState = _sliderState;
-        StateControl(_sliderState);
+        if (_demoModeBool != true)
+        {
+            _sliderState = _cityIOscript._table.objects.toggle1; //gets the slider 
+            _oldState = _sliderState;
+            StateControl(_sliderState);
+        }
+        else
+        {
+            StartCoroutine(DemoMode());
+        }
+    }
+
+    IEnumerator DemoMode()
+    {
+
+        while (true)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                yield return new WaitForSeconds(_changeModeEverySeconds);
+                StateControl(i);
+
+            }
+
+        }
     }
 
     void Update()

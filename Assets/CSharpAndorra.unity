@@ -517,7 +517,8 @@ MonoBehaviour:
   _andorraCityScope: {fileID: 2050935378}
   _andorraHeatmap: {fileID: 1300289217}
   _floorsUI: {fileID: 2103548903}
-  _sliderState: 1
+  _demoModeBool: 1
+  _changeModeEverySeconds: 3
 --- !u!114 &162730930
 MonoBehaviour:
   m_ObjectHideFlags: 0
