@@ -15,6 +15,8 @@ public class cameraControl : MonoBehaviour
     public GameObject _cityIOgameObj;
     public Camera _thisCam;
     public bool _boolRotateCamera = false;
+
+
     void Start()
     {
         _script = _cityIOgameObj.transform.GetComponent<cityIO>();
@@ -23,6 +25,7 @@ public class cameraControl : MonoBehaviour
 
     void Update()
     {
+
         _time -= Time.deltaTime * (Time.timeScale / _transitionDuration);
         if (_script._newCityioDataFlag == true)
         { // data IS indeed flowing from cityIO 
