@@ -1,6 +1,8 @@
 CSharpScope Andorra 
 ===================
 
+![](https://github.com/RELNO/CSharpScope_Andorra/blob/master/giphy.gif)
+
 
 This is a Unity based urban simulation portion CityScope Andorra. 
 
