@@ -55,13 +55,13 @@ public class cityIO : MonoBehaviour
     private string _urlStart = "https://cityio.media.mit.edu/api/table/citymatrix";
     // Table data: https://cityio.media.mit.edu/table/cityio_meta
     private string _urlLocalHost = "http://localhost:8080//table/citymatrix";
-    public bool _WebOrLocal = true;
+    public bool _onlineServer = true;
     public string _tableNameAddUnderscoreBefore = "";
     private string _url;
     public int _delayWWW;
     private WWW _www;
     private string _oldText;
-    //this one look for changes
+    //this looks for changes
     public bool _newCityioDataFlag = false;
     public int _tableX;
     public int _tableY;
@@ -79,17 +79,14 @@ public class cityIO : MonoBehaviour
     /* Vars for searching in table mask list */
    // private int _intreactionMask = 1;
 
-
     IEnumerator Start()
     {
         /* To be removed upon Json unification */
         //_masksList = AsciiParser.AsciiParserMethod(_asciiMasks); // use this to get only intractable active 
         // print (_masksList.Count());
-
-
         while (true)
         {
-            if (_WebOrLocal == true)
+            if (_onlineServer == true)
             {
                 _url = _urlStart + _tableNameAddUnderscoreBefore;
             }
@@ -115,7 +112,7 @@ public class cityIO : MonoBehaviour
                     // prints last update time to console 
                     System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
                     var lastUpdateTime = epochStart.AddSeconds(System.Math.Round(_table.timestamp / 1000d)).ToLocalTime();
-                    print("Table was updated." + '\n' + "Following JSON from CityIO server was created at: " + lastUpdateTime + '\n' + _www.text);
+                    print("CityIO new data has arrived." + '\n' + "JSON was created at: " + lastUpdateTime + '\n' + _www.text);
                 }
             }
         }
@@ -127,7 +124,6 @@ public class cityIO : MonoBehaviour
         {
             GameObject.Destroy(child.gameObject);
         }
-
 
         for (int i = 0; i < _table.grid.Count; i++) // loop through list of all cells grid objects 
         {

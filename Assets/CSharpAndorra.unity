@@ -2563,7 +2563,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1568835531256804, guid: 3bf1b2d24c64f45d1a5c113568e01e16, type: 2}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3bf1b2d24c64f45d1a5c113568e01e16, type: 2}
@@ -3148,7 +3148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bd967667142940a2b25806954914f0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _WebOrLocal: 1
+  _onlineServer: 1
   _tableNameAddUnderscoreBefore: _andorra
   _delayWWW: 1
   _newCityioDataFlag: 0
