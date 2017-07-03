@@ -8,7 +8,7 @@ using System.Linq;
 public class HeatMaps : MonoBehaviour
 {
     public cityIO _city_IO_script;
-    public int _refreshAscii = 2;
+    public int _refreshAscii = 100;
     /// <summary>
     /// The ASCII types txt files.
     /// </summary>
@@ -23,7 +23,7 @@ public class HeatMaps : MonoBehaviour
     public TextAsset _asciiMasks;
     private List<int> _typesList = new List<int>();
     private List<int> _floorsList = new List<int>();
-    private List<int> _masksList = new List<int>();
+    // private List<int> _masksList = new List<int>();
 
     /// <summary>
     /// to be replaced with x,y dim from ascii parsing
@@ -71,23 +71,16 @@ public class HeatMaps : MonoBehaviour
         {
             _floorsList = AsciiParser.AsciiParserMethod(_asciiFloors);
             _typesList = AsciiParser.AsciiParserMethod(_asciiTypes);
-            _masksList = AsciiParser.AsciiParserMethod(_asciiMasks);
+            // _masksList = AsciiParser.AsciiParserMethod(_asciiMasks);
 
-            var _tmpCount = 0;
             if (_city_IO_script._newCityioDataFlag)
             {
-                for (int i = 0; i < _masksList.Count(); i++)
-                {
-                    if (_masksList[i] == 1)
-                    {
-                        _typesList[i] = _city_IO_script._table.grid[_tmpCount].type;
-                        _tmpCount = _tmpCount + 1;
-
-                        /* print(i + " item changed from: " + _typesList[i] + " to: " + _city_IO_script._table.grid[_tmpCount].type+ " in IO list number: " + _tmpCount  + '\n'); */
-                    }
-                }
+                yield return new WaitForSeconds(_refreshAscii);
             }
-            yield return new WaitForSeconds(_refreshAscii);
+            else
+            {
+                yield return null;
+            }
         }
     }
 
@@ -98,7 +91,6 @@ public class HeatMaps : MonoBehaviour
     {
         _loopsCounter = 0; // important to reset this 
         _rangeOfFloors = (Mathf.Abs(_floorsList.Max()) + Mathf.Abs(_floorsList.Min()));
-
         for (int x = 0; x < _gridX - 1; x++)
         {
             for (int y = 0; y < _gridY; y++)
@@ -116,18 +108,16 @@ public class HeatMaps : MonoBehaviour
                     _floorsGeometry.transform.GetComponent<Renderer>().material.color =
                             Color.HSVToRGB(1, 1, (_floorsList[_loopsCounter]) / _rangeOfFloors);// this creates color based on value of cell!
 
-                    // _floorsGeometry.transform.localScale = new Vector3(_cellShrink * _cellSize, 1, _cellShrink * _cellSize);
                     float _endY = _shiftFloorListAboveZero * _zAxisMultiplier;
                     float _elpasedTime = 0f;
-                    float _endTime = 0.05f;
-
-
+                    float _endTime = 0.1f;
+                    // _floorsGeometry.transform.localScale = new Vector3(_cellShrink * _cellSize, 1, _cellShrink * _cellSize);
                     while (_elpasedTime < _endTime)
                     {
                         if (_floorsGeometry != null)
                         {
                             _floorsGeometry.transform.localScale =
-                            new Vector3(_cellShrink * _cellSize, Mathf.Lerp(1, _endY, _elpasedTime / _endTime), _cellShrink * _cellSize);
+                            new Vector3(_cellShrink * _cellSize, Mathf.Lerp(0, _endY, _elpasedTime / _endTime), _cellShrink * _cellSize);
                             _elpasedTime += Time.deltaTime;
                             yield return null;
                         }

@@ -3149,7 +3149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _onlineServer: 1
-  _tableNameAddUnderscoreBefore: _andorra
+  _tableNameAddUnderscoreBefore: _volpe
   _delayWWW: 1
   _newCityioDataFlag: 0
   _tableX: 21
@@ -3180,11 +3180,11 @@ MonoBehaviour:
     type: 2}
   colors:
   - {r: 1, g: 1, b: 0, a: 0}
-  - {r: 1, g: 0.766, b: 0, a: 0}
-  - {r: 1, g: 0.466, b: 0, a: 0}
+  - {r: 1, g: 0, b: 0.36579183, a: 0}
+  - {r: 0.7458437, g: 1, b: 0, a: 0}
   - {r: 0, g: 0.478, b: 1, a: 0}
-  - {r: 0, g: 0.691, b: 1, a: 0}
-  - {r: 0.5, g: 0.8137932, b: 1, a: 0}
+  - {r: 0.8796369, g: 0, b: 1, a: 0}
+  - {r: 1, g: 0.6685797, b: 0.2668457, a: 0}
   _asciiMasks: {fileID: 4900000, guid: 7019da2dcee2747f88d0f077f51eefe7, type: 3}
 --- !u!4 &1877268380
 Transform:
@@ -3661,7 +3661,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _city_IO_script: {fileID: 1877268379}
-  _refreshAscii: 3
+  _refreshAscii: 100
   _asciiTypes: {fileID: 4900000, guid: 90e89bfe5d48d400f9c26623b91c3936, type: 3}
   _asciiFloors: {fileID: 4900000, guid: 0d6ce251b0df744d2a512c267c4da6cb, type: 3}
   _asciiMasks: {fileID: 4900000, guid: 42a5dade6335c474eb0ee09788271882, type: 3}
