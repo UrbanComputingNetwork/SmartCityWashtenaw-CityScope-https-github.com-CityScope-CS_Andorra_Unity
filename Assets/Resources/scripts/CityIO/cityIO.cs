@@ -4,64 +4,22 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Linq;
 
-/// <summary> 
-/// class start 
-/// </summary>
-
-[System.Serializable]  // have to have this in every JSON class!
-public class Grid
-{
-    public int type;
-    public int x;
-    public int y;
-    public int rot;
-}
-
-[System.Serializable] // have to have this in every JSON class!
-public class Objects
-{
-    public float slider1;
-    public int toggle1;
-    public int toggle2;
-    public int toggle3;
-    public int toggle4;
-    public int dockID;
-    public int dockRotation;
-    public int IDMax;
-    public List<int> density;
-    public int pop_young;
-    public int pop_mid;
-    public int pop_old;
-}
-
-[System.Serializable]// have to have this in every JSON class!
-public class Table
-{
-    public List<Grid> grid;
-    public Objects objects;
-    public string id;
-    public long timestamp;
-
-    public static Table CreateFromJSON(string jsonString)
-    { // static function that returns Table which holds Class objects 
-        return JsonUtility.FromJson<Table>(jsonString);
-    }
-}
-
-/// <summary> class end </summary>
-
 public class cityIO : MonoBehaviour
 {
+    // Tables data are here: https://cityio.media.mit.edu/table/cityio_meta
     private string _urlStart = "https://cityio.media.mit.edu/api/table/citymatrix";
-    // Table data: https://cityio.media.mit.edu/table/cityio_meta
     private string _urlLocalHost = "http://localhost:8080//table/citymatrix";
     public bool _onlineServer = true;
-    public string _tableNameAddUnderscoreBefore = "";
+
+    public enum DataSource { LOCAL = 0, REMOTE = 1, INTERNAL = 2 };
+
+    public DataSource _dataSource = DataSource.INTERNAL;
+
+    public string _tableAddUnderscore = "";
     private string _url;
     public int _delayWWW;
     private WWW _www;
     private string _oldText;
-    //this looks for changes
     public bool _newCityioDataFlag = false;
     public int _tableX;
     public int _tableY;
@@ -74,25 +32,21 @@ public class cityIO : MonoBehaviour
     public GameObject _gridHolder;
     public GameObject textMeshPrefab;
     public Color[] colors;
-    public TextAsset _asciiMasks;
-    //private List<int> _masksList = new List<int>();
-    /* Vars for searching in table mask list */
-   // private int _intreactionMask = 1;
+
+    private int[] notBuildingTypes = new int[] { (int)Brick.INVALID, (int)Brick.MASK, (int)Brick.ROAD, (int)Brick.PARK, (int)Brick.PARKING, (int)Brick.STREET };
+    private int[] buildingTypes = new int[] { (int)Brick.RL, (int)Brick.RM, (int)Brick.RS, (int)Brick.RL, (int)Brick.OL, (int)Brick.OM, (int)Brick.OS };
 
     IEnumerator Start()
     {
-        /* To be removed upon Json unification */
-        //_masksList = AsciiParser.AsciiParserMethod(_asciiMasks); // use this to get only intractable active 
-        // print (_masksList.Count());
         while (true)
         {
             if (_onlineServer == true)
             {
-                _url = _urlStart + _tableNameAddUnderscoreBefore;
+                _url = _urlStart + _tableAddUnderscore;
             }
             else
             {
-                _url = _urlLocalHost + _tableNameAddUnderscoreBefore;
+                _url = _urlLocalHost + _tableAddUnderscore;
             }
             yield return new WaitForSeconds(_delayWWW);
             WWW _www = new WWW(_url);
@@ -130,77 +84,88 @@ public class cityIO : MonoBehaviour
             /* make the grid cells in generic form */
             cityIOGeo = GameObject.CreatePrimitive(PrimitiveType.Cube); //make cell cube 
             cityIOGeo.transform.parent = _gridHolder.transform; //put into parent object for later control
+
+            // Objects properties 
             cityIOGeo.GetComponent<Renderer>().material = _material;
             cityIOGeo.transform.localPosition =
                   new Vector3((_table.grid[i].x * _cellWorldSize), 0, (_table.grid[i].y * _cellWorldSize)); //compensate for scale shift due to height
-            cityIOGeo.transform.localScale =
-                new Vector3(_cellWorldSize, .25f, _cellWorldSize);
-            cityIOGeo.name =
-           ("Type: " + _table.grid[i].type + " X: " + _table.grid[i].x.ToString() + " Y: " + _table.grid[i].y.ToString());
-            //ShowBuildingTypeText (i); /// call if you need type text float 
 
-            /* Render grid cell based on type */
-            for (int n = 0; n < _table.objects.density.Count; n++)
-            { //go through all 'densities' to match Type to Height. Add +1 so #6 (Road could be in. Fix in JSON Needed) 
-              //print(n + " " +_Cells.objects.density[n]);
-                if (new int[] { 0, 1, 2, 3, 4, 5 }.Contains(_table.grid[i].type))
-                { //if this cell is one of the buildings types
-                    cityIOGeo.transform.localScale = new Vector3(cellShrink * _cellWorldSize, (_table.objects.density[n] * floorHeight), cellShrink * _cellWorldSize);
-                    cityIOGeo.transform.position = new Vector3(cityIOGeo.transform.position.x,
-                    _gridHolder.transform.position.y + (_table.objects.density[n] * floorHeight) / 2,
-                    cityIOGeo.transform.position.z); //compensate for scale shift and x,y array
-                    var _tmpColor = colors[_table.grid[i].type];
-                    _tmpColor.a = 0.5f;
+
+            // Render grid cells based on type, height, etc
+
+            if (buildingTypes.Contains(_table.grid[i].type)) //if this cell is one of the buildings types
+            {
+                cityIOGeo.transform.position = new Vector3(cityIOGeo.transform.position.x,
+                _gridHolder.transform.position.y + (_table.objects.density[_table.grid[i].type] * floorHeight) * 0.5f,
+                cityIOGeo.transform.position.z); //compensate for scale shift and x,y array
+
+                cityIOGeo.transform.localScale = new Vector3(cellShrink * _cellWorldSize,
+               (_table.objects.density[_table.grid[i].type] * floorHeight),
+               cellShrink * _cellWorldSize); // go through all 'densities' to match Type to Height
+
+                var _tmpColor = colors[_table.grid[i].type];
+                _tmpColor.a = 0.8f;
+                cityIOGeo.GetComponent<Renderer>().material.color = _tmpColor;
+
+            }
+            else if (notBuildingTypes.Contains(_table.grid[i].type))
+            {
+                if (_table.grid[i].type == (int)Brick.ROAD)
+                { //Street
+                    cityIOGeo.transform.localPosition =
+                    new Vector3((_table.grid[i].x * _cellWorldSize), 0, (_table.grid[i].y * _cellWorldSize)); //compensate for scale shift and x,y array
+                    cityIOGeo.transform.localScale = new Vector3(cellShrink * _cellWorldSize, 0.25f, cellShrink * _cellWorldSize);
+                    var _tmpColor = Color.gray;
+                    _tmpColor.a = 1f;
                     cityIOGeo.GetComponent<Renderer>().material.color = _tmpColor;
                 }
-                else if (new int[] { -1, -2, 6, 7, 8, 9 }.Contains(_table.grid[i].type))
+
+                else if (_table.grid[i].type == (int)Brick.PARKING) // if parking
                 {
-                    if (_table.grid[i].type == 6)
-                    { //Street
-                        cityIOGeo.transform.localPosition =
-                        new Vector3((_table.grid[i].x * _cellWorldSize), 0, (_table.grid[i].y * _cellWorldSize)); //compensate for scale shift and x,y array
-                        cityIOGeo.transform.localScale = new Vector3(cellShrink * _cellWorldSize, 0.25f, cellShrink * _cellWorldSize);
-                        var _tmpColor = Color.gray;
-                        _tmpColor.a = 1f;
-                        cityIOGeo.GetComponent<Renderer>().material.color = _tmpColor;
-                    }
-                    else if (_table.grid[i].type == 9) // if parking
-                    {
-                        cityIOGeo.transform.localScale = new Vector3(_cellWorldSize, 1, _cellWorldSize);
-                        cityIOGeo.transform.localPosition = new Vector3
-                        (_table.grid[i].x * _cellWorldSize, 0, _table.grid[i].y * _cellWorldSize); //compensate for scale shift and x,y array
-                        var _tmpColor = Color.gray;
-                        _tmpColor.a = 1f;
-                        cityIOGeo.GetComponent<Renderer>().material.color = _tmpColor;
-                    }
-                    else if (_table.grid[i].type == 8) // if parking
-                    {
-                        cityIOGeo.transform.localScale = new Vector3(cellShrink * _cellWorldSize, 0.25f, cellShrink * _cellWorldSize);
-                        cityIOGeo.transform.localPosition = new Vector3
-                        (_table.grid[i].x * _cellWorldSize, 0, _table.grid[i].y * _cellWorldSize); //compensate for scale shift and x,y array
-                        var _tmpColor = Color.green;
-                        _tmpColor.a = 1f;
-                        cityIOGeo.GetComponent<Renderer>().material.color = _tmpColor;
-                    }
-                    else
-                    { //if green or other non building type
-                        cityIOGeo.transform.localPosition =
-                        new Vector3((_table.grid[i].x * _cellWorldSize), 0, (_table.grid[i].y * _cellWorldSize)); //hide base plates 
-                        cityIOGeo.transform.localScale = new Vector3(cellShrink * _cellWorldSize * 0.25f, 0.25f, cellShrink * _cellWorldSize * 0.25f);
-                        cityIOGeo.GetComponent<Renderer>().material.color = Color.black;
-                    }
+                    cityIOGeo.transform.localScale = new Vector3(cellShrink * _cellWorldSize, 0.25f, cellShrink * _cellWorldSize);
+                    cityIOGeo.transform.localPosition = new Vector3
+                    (_table.grid[i].x * _cellWorldSize, 0, _table.grid[i].y * _cellWorldSize); //compensate for scale shift and x,y array
+                    var _tmpColor = Color.green;
+                    _tmpColor.a = 1f;
+                    cityIOGeo.GetComponent<Renderer>().material.color = _tmpColor;
+                }
+
+                else if (_table.grid[i].type == (int)Brick.STREET) // if street
+                {
+                    cityIOGeo.transform.localScale = new Vector3(_cellWorldSize, 1, _cellWorldSize);
+                    cityIOGeo.transform.localPosition = new Vector3
+                    (_table.grid[i].x * _cellWorldSize, 0, _table.grid[i].y * _cellWorldSize); //compensate for scale shift and x,y array
+                    var _tmpColor = Color.gray;
+                    _tmpColor.a = 1f;
+                    cityIOGeo.GetComponent<Renderer>().material.color = _tmpColor;
+                }
+                else //if other non building type
+                {
+                    cityIOGeo.transform.localPosition =
+                    new Vector3((_table.grid[i].x * _cellWorldSize), 0, (_table.grid[i].y * _cellWorldSize)); //hide base plates 
+                    cityIOGeo.transform.localScale = new Vector3
+                    (cellShrink * _cellWorldSize * 0.85f, 0.85f, cellShrink * _cellWorldSize * 0.85f);
+                    cityIOGeo.GetComponent<Renderer>().material.color = Color.black;
                 }
             }
+
+            //* naming the new object *//
+
+            if (_table.grid[i].type > (int)Brick.INVALID && _table.grid[i].type < (int)Brick.ROAD) //if object has is building with Z height
+            {
+                cityIOGeo.name =
+                          ("Type: " + _table.grid[i].type + " X: " +
+                          _table.grid[i].x.ToString() + " Y: " +
+                          _table.grid[i].y.ToString() +
+                          " Height: " + (_table.objects.density[_table.grid[i].type]).ToString());
+            }
+            else // if object is flat by nature
+            {
+                cityIOGeo.name =
+                          ("Type w/o height: " + _table.grid[i].type + " X: " +
+                          _table.grid[i].x.ToString() + " Y: " +
+                          _table.grid[i].y.ToString());
+            }
         }
-    }
-    private void ShowBuildingTypeText(int i) //mesh type text metod 
-    {
-        GameObject textMesh = GameObject.Instantiate(textMeshPrefab, new Vector3((_table.grid[i].x * _cellWorldSize),
-                                  100, (_table.grid[i].y * _cellWorldSize)),
-                                  cityIOGeo.transform.rotation, transform) as GameObject; //spwan prefab text
-        textMesh.GetComponent<TextMesh>().text = _table.grid[i].type.ToString();
-        textMesh.GetComponent<TextMesh>().fontSize = 300;
-        textMesh.GetComponent<TextMesh>().color = Color.black;
-        textMesh.GetComponent<TextMesh>().characterSize = 0.5f;
     }
 }
