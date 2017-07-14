@@ -518,7 +518,7 @@ MonoBehaviour:
   _andorraHeatmap: {fileID: 1300289217}
   _floorsUI: {fileID: 2103548903}
   _demoModeBool: 1
-  _changeModeEverySeconds: 10
+  _changeModeEverySeconds: 3
 --- !u!114 &162730930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3180,12 +3180,12 @@ MonoBehaviour:
   textMeshPrefab: {fileID: 1432455272805652, guid: d806e0341f67b4c6586a791ecd625d8a,
     type: 2}
   colors:
-  - {r: 1, g: 1, b: 0, a: 0}
-  - {r: 1, g: 0, b: 0.36579183, a: 0}
-  - {r: 0.7458437, g: 1, b: 0, a: 0}
+  - {r: 1, g: 0.4796396, b: 0, a: 0}
+  - {r: 1, g: 0.6455001, b: 0, a: 0}
+  - {r: 1, g: 0.8218307, b: 0, a: 0}
   - {r: 0, g: 0.478, b: 1, a: 0}
-  - {r: 0.8796369, g: 0, b: 1, a: 0}
-  - {r: 1, g: 0.6685797, b: 0.2668457, a: 0}
+  - {r: 0, g: 0.63161576, b: 1, a: 0}
+  - {r: 0.40654838, g: 0.7347028, b: 1, a: 0}
 --- !u!4 &1877268380
 Transform:
   m_ObjectHideFlags: 0
@@ -3661,7 +3661,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _city_IO_script: {fileID: 1877268379}
-  _refreshAscii: 100
   _asciiTypes: {fileID: 4900000, guid: 90e89bfe5d48d400f9c26623b91c3936, type: 3}
   _asciiFloors: {fileID: 4900000, guid: 0d6ce251b0df744d2a512c267c4da6cb, type: 3}
   _asciiMasks: {fileID: 4900000, guid: 42a5dade6335c474eb0ee09788271882, type: 3}

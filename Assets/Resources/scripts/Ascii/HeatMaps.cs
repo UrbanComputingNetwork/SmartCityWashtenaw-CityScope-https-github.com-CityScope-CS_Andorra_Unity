@@ -8,7 +8,6 @@ using System.Linq;
 public class HeatMaps : MonoBehaviour
 {
     public cityIO _city_IO_script;
-    public int _refreshAscii = 100;
     /// <summary>
     /// The ASCII types txt files.
     /// </summary>
@@ -64,30 +63,17 @@ public class HeatMaps : MonoBehaviour
     private GameObject _neighborsGeometry;
     private int _cellScoreCount = 0;
 
-    //void Start() // Try with a capital S?
-    IEnumerator Start()
+    void Awake()
     {
-        while (true)
-        {
-            _floorsList = AsciiParser.AsciiParserMethod(_asciiFloors);
-            _typesList = AsciiParser.AsciiParserMethod(_asciiTypes);
-            // _masksList = AsciiParser.AsciiParserMethod(_asciiMasks);
-
-            if (_city_IO_script._newCityioDataFlag)
-            {
-                yield return new WaitForSeconds(_refreshAscii);
-            }
-            else
-            {
-                yield return null;
-            }
-        }
+        _floorsList = AsciiParser.AsciiParserMethod(_asciiFloors);
+        _typesList = AsciiParser.AsciiParserMethod(_asciiTypes);
+        // _masksList = AsciiParser.AsciiParserMethod(_asciiMasks);
     }
 
     /// <summary>
     /// Viz of floor heights 
     /// </summary>
-    public IEnumerator FloorsViz() //make the height map //
+    public void FloorsViz() //make the height map //
     {
         _loopsCounter = 0; // important to reset this 
         _rangeOfFloors = (Mathf.Abs(_floorsList.Max()) + Mathf.Abs(_floorsList.Min()));
@@ -95,37 +81,35 @@ public class HeatMaps : MonoBehaviour
         {
             for (int y = 0; y < _gridY; y++)
             {
-                var _shiftFloorListAboveZero = _floorsList[_loopsCounter] + Mathf.Abs(_floorsList.Min()); // move list item from subzero
+                var _shiftFloorsHeightAboveZero = _floorsList[_loopsCounter] + Mathf.Abs(_floorsList.Min()); // move list item from subzero
                 if (_typesList[_loopsCounter] != _outOfBoundsType && _floorsList[_loopsCounter] > 0)
                 { // if not on the area which is out of the physical model space
                     _floorsGeometry = GameObject.CreatePrimitive(PrimitiveType.Cube); //make cell cube
                     _floorsGeometry.name = (_floorsList[_loopsCounter].ToString() + "Floors ");
                     _floorsGeometry.transform.parent = transform; //put into parent object for later control
-                    _floorsGeometry.transform.localPosition = new Vector3(x * _cellSize,
-                        _shiftFloorListAboveZero * (_zAxisMultiplier / 2) + _addToYHeight,
-                        y * _cellSize); //compensate for scale shift due to height
-                                        //color the thing
-                    _floorsGeometry.transform.GetComponent<Renderer>().material.color =
-                            Color.HSVToRGB(1, 1, (_floorsList[_loopsCounter]) / _rangeOfFloors);// this creates color based on value of cell!
+                    _floorsGeometry.transform.localPosition = new Vector3(x * _cellSize, _shiftFloorsHeightAboveZero * (_zAxisMultiplier / 2) + _addToYHeight, y * _cellSize); //compensate for scale shift due to height                                                                                                                                                    //color the thing
+                    _floorsGeometry.transform.GetComponent<Renderer>().material.color = Color.HSVToRGB(1, 1, (_floorsList[_loopsCounter]) / _rangeOfFloors);// this creates color based on value of cell!
+                    float _floorHeight = _shiftFloorsHeightAboveZero * _zAxisMultiplier;
+                    _floorsGeometry.transform.localScale = new Vector3(_cellShrink * _cellSize, _floorHeight, _cellShrink * _cellSize);
+                
+                    // float _elpasedTime = 0f;
+                    // float _endTime = 0.1f;
+                    // while (_elpasedTime < _endTime)
+                    // {
+                    //     if (_floorsGeometry != null)
+                    //     {
+                    //         _floorsGeometry.transform.localScale =
+                    //         new Vector3(_cellShrink * _cellSize, Mathf.Lerp
+                    //         (0, _floorHeight, _elpasedTime / _endTime), _cellShrink * _cellSize);
 
-                    float _endY = _shiftFloorListAboveZero * _zAxisMultiplier;
-                    float _elpasedTime = 0f;
-                    float _endTime = 0.1f;
-                    // _floorsGeometry.transform.localScale = new Vector3(_cellShrink * _cellSize, 1, _cellShrink * _cellSize);
-                    while (_elpasedTime < _endTime)
-                    {
-                        if (_floorsGeometry != null)
-                        {
-                            _floorsGeometry.transform.localScale =
-                            new Vector3(_cellShrink * _cellSize, Mathf.Lerp(0, _endY, _elpasedTime / _endTime), _cellShrink * _cellSize);
-                            _elpasedTime += Time.deltaTime;
-                            yield return null;
-                        }
-                        else
-                        {
-                            yield return null;
-                        }
-                    }
+                    //         _elpasedTime += Time.deltaTime;
+                    //         yield return new WaitForEndOfFrame();
+                    //     }
+                    //     else
+                    //     {
+                    //         yield return 0;
+                    //     }
+                    // }
                 }
                 _loopsCounter = _loopsCounter + 1; //count the loops
             }

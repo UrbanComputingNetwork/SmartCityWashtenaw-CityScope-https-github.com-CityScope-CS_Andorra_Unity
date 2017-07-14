@@ -53,7 +53,7 @@ public class cityIO : MonoBehaviour
             yield return _www;
             if (!string.IsNullOrEmpty(_www.error))
             {
-                Debug.Log(_www.error); // use this for transfering to local server 
+                Debug.Log("Error reaching cityIO server [404]: check internet connection and server settings of cityIO.cs"); // use this for transfering to local server 
             }
             else
             {
