@@ -951,7 +951,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: a36395e141cca486780ba61d8cb8691d, type: 2}
+  m_TargetTexture: {fileID: 8400000, guid: 64a1e38f67e314ea48a060b25b50c508, type: 2}
   m_TargetDisplay: 1
   m_TargetEye: 3
   m_HDR: 1
@@ -1315,7 +1315,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 416917651}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5143fc57048ac4b59bb02813b06f8b3a, type: 3}
+  m_Script: {fileID: 11500000, guid: 95516c9e1674645b2a43dc112aa3af8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &417497864
@@ -2560,7 +2560,7 @@ Camera:
     m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
+  m_TargetDisplay: 1
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
@@ -5905,7 +5905,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: f595480010f3c480d9ed2aeca02e7896, type: 2}
+  - {fileID: 2100000, guid: 657a48b153a7b435ca0920a4fdf893b2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6254,9 +6254,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1776031556}
   m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e68c4a8cc2b54ea0aa22cc59d07655b, type: 3}
+  m_Script: {fileID: 11500000, guid: 35538a8650bf448a99d84086b9e9bd86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _resetAfterMinutes: 0
 --- !u!1 &1792560144
 GameObject:
   m_ObjectHideFlags: 0
@@ -6510,7 +6511,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c95f04ff72c2a4f94b62bdfec70ef34d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dataSource: 0
+  _dataSource: 2
   _tableName: 1
   _delayWWW: 1
   _newCityioDataFlag: 0
