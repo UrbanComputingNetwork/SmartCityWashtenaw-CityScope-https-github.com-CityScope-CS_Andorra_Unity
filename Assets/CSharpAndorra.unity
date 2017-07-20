@@ -42,7 +42,7 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 9
+  serializedVersion: 11
   m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
@@ -54,7 +54,7 @@ LightmapSettings:
     m_EnableBakedLightmaps: 1
     m_EnableRealtimeLightmaps: 1
   m_LightmapEditorSettings:
-    serializedVersion: 8
+    serializedVersion: 9
     m_Resolution: 2
     m_BakeResolution: 40
     m_TextureWidth: 1024
@@ -89,7 +89,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigma: 1
   m_LightingDataAsset: {fileID: 112000002, guid: 83ee935938c89420086da53148a858a4,
     type: 2}
-  m_ShadowMaskMode: 0
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -512,7 +512,7 @@ MonoBehaviour:
   _contextHolder: {fileID: 451275316}
   _cellTowers: {fileID: 2108115987}
   _heatmapHolder: {fileID: 2107124964}
-  _cityIOscript: {fileID: 1877268379}
+  _cityIOscript: {fileID: 0}
   _heatmapsScript: {fileID: 2107124967}
   _andorraCityScope: {fileID: 2050935378}
   _andorraHeatmap: {fileID: 1300289217}
@@ -3145,20 +3145,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1877268378}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adc43bce52277436695953db54907290, type: 3}
+  m_Script: {fileID: 11500000, guid: a4b2bd5685f9b49f4a7481b30fb93b1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _onlineServer: 1
   _dataSource: 1
-  _tableAddUnderscore: _volpe
+  _tableName: 1
   _delayWWW: 1
   _newCityioDataFlag: 0
-  _tableX: 21
-  _tableY: 21
-  _cellWorldSize: 37.5
-  cellShrink: 0.9
-  floorHeight: 4
-  _material: {fileID: 2100000, guid: 91216ae568b35425ead5420092fd8102, type: 2}
+  _tableX: 20
+  _tableY: 20
+  _cellSizeInMeters: 37.5
+  cellShrink: 0.95
+  _floorHeight: 4
+  _material: {fileID: 0}
   _table:
     grid: []
     objects:
@@ -3176,16 +3175,9 @@ MonoBehaviour:
       pop_old: 0
     id: 
     timestamp: 0
-  _gridHolder: {fileID: 1877268378}
-  textMeshPrefab: {fileID: 1432455272805652, guid: d806e0341f67b4c6586a791ecd625d8a,
-    type: 2}
-  colors:
-  - {r: 1, g: 0.4796396, b: 0, a: 0}
-  - {r: 1, g: 0.6455001, b: 0, a: 0}
-  - {r: 1, g: 0.8218307, b: 0, a: 0}
-  - {r: 0, g: 0.478, b: 1, a: 0}
-  - {r: 0, g: 0.63161576, b: 1, a: 0}
-  - {r: 0.40654838, g: 0.7347028, b: 1, a: 0}
+  _gridHolder: {fileID: 0}
+  textMeshPrefab: {fileID: 0}
+  colors: []
 --- !u!4 &1877268380
 Transform:
   m_ObjectHideFlags: 0
@@ -3660,7 +3652,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce5fbcda942cf4440bfec75c84e894a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _city_IO_script: {fileID: 1877268379}
+  _city_IO_script: {fileID: 0}
   _asciiTypes: {fileID: 4900000, guid: 90e89bfe5d48d400f9c26623b91c3936, type: 3}
   _asciiFloors: {fileID: 4900000, guid: 0d6ce251b0df744d2a512c267c4da6cb, type: 3}
   _asciiMasks: {fileID: 4900000, guid: 42a5dade6335c474eb0ee09788271882, type: 3}
@@ -3772,6 +3764,20 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 500, y: 500}
   m_BounceIntensity: 1
+  m_FalloffTable:
+    m_Table[0]: 0
+    m_Table[1]: 0
+    m_Table[2]: 0
+    m_Table[3]: 0
+    m_Table[4]: 0
+    m_Table[5]: 0
+    m_Table[6]: 0
+    m_Table[7]: 0
+    m_Table[8]: 0
+    m_Table[9]: 0
+    m_Table[10]: 0
+    m_Table[11]: 0
+    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0

@@ -1,11 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿
 /// <summary> 
-/// class start 
+/// Class that mirrors data format from cityIO server JSON files (or local source) and allow parsing of data across project
 /// </summary>
 
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public enum Brick { RL = 0, RM = 1, RS = 2, OL = 3, OM = 4, OS = 5, ROAD = 6, PARK = 7, PARKING = 8, STREET = 9, INVALID = -1, MASK = -2 };
 
@@ -33,20 +33,6 @@ public class Objects
     public int pop_young;
     public int pop_mid;
     public int pop_old;
-}
-
-[System.Serializable]// have to have this in every JSON class!
-public class Table
-{
-    public List<Grid> grid;
-    public Objects objects;
-    public string id;
-    public long timestamp;
-
-    public static Table CreateFromJSON(string jsonString)
-    { // static function that returns Table which holds Class objects 
-        return JsonUtility.FromJson<Table>(jsonString);
-    }
 }
 
 /// <summary> class end </summary>
