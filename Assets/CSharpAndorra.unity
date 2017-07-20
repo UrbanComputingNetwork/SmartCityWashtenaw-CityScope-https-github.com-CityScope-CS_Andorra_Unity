@@ -3175,7 +3175,7 @@ MonoBehaviour:
       pop_old: 0
     id: 
     timestamp: 0
-  _gridHolder: {fileID: 0}
+  _gridHolder: {fileID: 2107124964}
   textMeshPrefab: {fileID: 0}
   colors: []
 --- !u!4 &1877268380
@@ -3269,7 +3269,8 @@ MonoBehaviour:
   m_Script: {fileID: -619905303, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 0}
+  m_FirstSelected: {fileID: 1918202024219118, guid: 69ee0668dd012994d82f0a36802c2898,
+    type: 2}
   m_sendNavigationEvents: 1
   m_DragThreshold: 5
 --- !u!4 &1919941640
