@@ -512,7 +512,7 @@ MonoBehaviour:
   _contextHolder: {fileID: 451275316}
   _cellTowers: {fileID: 2108115987}
   _heatmapHolder: {fileID: 2107124964}
-  _cityIOscript: {fileID: 0}
+  _cityIOscript: {fileID: 1877268379}
   _heatmapsScript: {fileID: 2107124967}
   _andorraCityScope: {fileID: 2050935378}
   _andorraHeatmap: {fileID: 1300289217}
@@ -3152,12 +3152,12 @@ MonoBehaviour:
   _tableName: 1
   _delayWWW: 1
   _newCityioDataFlag: 0
-  _tableX: 20
-  _tableY: 20
+  _tableX: 21
+  _tableY: 21
   _cellSizeInMeters: 37.5
   cellShrink: 0.95
   _floorHeight: 4
-  _material: {fileID: 0}
+  _material: {fileID: 2100000, guid: 91216ae568b35425ead5420092fd8102, type: 2}
   _table:
     grid: []
     objects:
@@ -3175,8 +3175,9 @@ MonoBehaviour:
       pop_old: 0
     id: 
     timestamp: 0
-  _gridHolder: {fileID: 2107124964}
-  textMeshPrefab: {fileID: 0}
+  _gridHolder: {fileID: 1877268378}
+  textMeshPrefab: {fileID: 1457066846111462, guid: dfc34f4bc7c33413ba53f73a233bfade,
+    type: 2}
   colors: []
 --- !u!4 &1877268380
 Transform:
