@@ -3178,7 +3178,16 @@ MonoBehaviour:
   _gridHolder: {fileID: 1877268378}
   textMeshPrefab: {fileID: 1457066846111462, guid: dfc34f4bc7c33413ba53f73a233bfade,
     type: 2}
-  colors: []
+  colors:
+  - {r: 0.6397059, g: 0.35277897, b: 0.35277897, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0.09839966, g: 0.1591069, b: 0.38235295, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0.23405062, g: 0.27205884, b: 0.23405062, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
 --- !u!4 &1877268380
 Transform:
   m_ObjectHideFlags: 0
