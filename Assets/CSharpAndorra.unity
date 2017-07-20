@@ -1368,7 +1368,7 @@ MonoBehaviour:
   _colorSpaceParent: {fileID: 136326348}
   _gridSizeX: 20
   _gridSizeY: 20
-  _refreshRate: 0.2
+  _refreshRate: 0
   _scannerScale: 0.01
   _useWebcam: 0
   _showRays: 0
@@ -5905,7 +5905,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 657a48b153a7b435ca0920a4fdf893b2, type: 2}
+  - {fileID: 2100000, guid: 61567943e2134485d8d444a586ecacdd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
