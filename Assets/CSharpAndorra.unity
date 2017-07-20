@@ -1362,18 +1362,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2868fe993f15433cbccf835e1dc0c39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bufferSize: 50
+  _bufferSize: 10
   _useBuffer: 1
   _gridParent: {fileID: 1163447381}
   _colorSpaceParent: {fileID: 136326348}
-  _gridSizeX: 0
-  _gridSizeY: 0
-  _refreshRate: 1
-  _scannerScale: 0.5
+  _gridSizeX: 20
+  _gridSizeY: 20
+  _refreshRate: 0.2
+  _scannerScale: 0.01
   _useWebcam: 0
   _showRays: 0
   _debug: 0
-  _isCalibrating: 1
+  _isCalibrating: 0
   _showDebugColors: 0
   sampleColors: []
   _numColors: 3
@@ -1556,7 +1556,7 @@ Behaviour:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 484852725}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!124 &484852729
 Behaviour:
   m_ObjectHideFlags: 0
@@ -1564,7 +1564,7 @@ Behaviour:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 484852725}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &484852730
 Camera:
   m_ObjectHideFlags: 0
@@ -6174,7 +6174,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: d5e16c7ebbaaf48279de007b34884d4c, type: 2}
+  - {fileID: 2100000, guid: c9db1a84b647e4a7a9ef2c4b058e9b49, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6843,12 +6843,12 @@ MeshRenderer:
   m_GameObject: {fileID: 1937784233}
   m_Enabled: 1
   m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_ReceiveShadows: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 80870f6447ffd445d9dcd9cac73be0b7, type: 2}
+  - {fileID: 2100000, guid: 304b03c6e07a648ca8eea30906d41626, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
