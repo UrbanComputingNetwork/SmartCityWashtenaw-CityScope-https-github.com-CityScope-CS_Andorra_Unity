@@ -1593,9 +1593,9 @@ Camera:
     m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 6e1838e6db5af408cbdfd5e300a2891d, type: 2}
-  m_TargetDisplay: 1
+  m_TargetDisplay: 0
   m_TargetEye: 3
-  m_HDR: 0
+  m_HDR: 1
   m_AllowMSAA: 1
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
@@ -2457,13 +2457,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 828391465}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 575e50e723a284a139a3ba6d44d36506, type: 3}
+  m_Script: {fileID: 11500000, guid: d00162121dcd742469be60d2d7cc07de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameras:
-  - {fileID: 1849879823}
-  - {fileID: 1030926451}
-  - {fileID: 1254680388}
+  cameras: []
 --- !u!4 &828391467
 Transform:
   m_ObjectHideFlags: 0
@@ -5905,7 +5902,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 61567943e2134485d8d444a586ecacdd, type: 2}
+  - {fileID: 2100000, guid: 953449c04075d4d22b7142af1448bbae, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
