@@ -1368,7 +1368,7 @@ MonoBehaviour:
   _colorSpaceParent: {fileID: 136326348}
   _gridSizeX: 20
   _gridSizeY: 20
-  _refreshRate: 1
+  _refreshRate: 10
   _scannerScale: 0.012
   _useWebcam: 0
   _showRays: 0
