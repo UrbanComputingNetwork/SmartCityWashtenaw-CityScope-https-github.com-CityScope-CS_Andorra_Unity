@@ -75,12 +75,10 @@ public class HeatMaps : MonoBehaviour
 	/// </summary>
 	private bool SetupFloors() {
 		int index = 0;
-		_floorsGeometries = new GameObject[(_gridX) * _gridY];
+		_floorsGeometries = new GameObject[(_gridX-1) * _gridY];
 
 		for (int x = 0; x < _gridX - 1; x++) {
 			for (int y = 0; y < _gridY; y++) {
-				index = x * (_gridX) + y;
-
 				if (_typesList[index] != _outOfBoundsType && _floorsList[index] > 0)
 				{ 
 					// if not on the area which is out of the physical model space
@@ -88,6 +86,7 @@ public class HeatMaps : MonoBehaviour
 					_floorsGeometries[index].name = (_floorsList[index].ToString() + "Floors ");
 					_floorsGeometries[index].transform.parent = transform; //put into parent object for later control
 				}
+				index++;
 			}
 		}
 		return true;
@@ -108,8 +107,6 @@ public class HeatMaps : MonoBehaviour
 
         for (int x = 0; x < _gridX - 1; x++) {
             for (int y = 0; y < _gridY; y++) {
-				index = x * (_gridX) + y;
-
 				var _shiftFloorsHeightAboveZero = _floorsList[index] + Mathf.Abs(_floorsList.Min()); // move list item from subzero
 				if (_typesList[index] != _outOfBoundsType && _floorsList[index] > 0)
                 { // if not on the area which is out of the physical model space
@@ -122,8 +119,9 @@ public class HeatMaps : MonoBehaviour
 					_floorsGeometries[index].transform.GetComponent<Renderer>().material.color = Color.HSVToRGB(1, 1, (_floorsList[index]) / _rangeOfFloors);// this creates color based on value of cell!
                     _floorHeight = _shiftFloorsHeightAboveZero * _zAxisMultiplier;
 					_floorsGeometries[index].transform.localScale = new Vector3(_cellShrink * _cellSize, _floorHeight, _cellShrink * _cellSize);
-                
                 }
+
+				index++;
             }
         }
     }

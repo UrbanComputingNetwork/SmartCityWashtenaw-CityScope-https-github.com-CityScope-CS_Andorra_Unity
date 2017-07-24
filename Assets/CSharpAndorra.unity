@@ -677,7 +677,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &136326349
 Transform:
   m_ObjectHideFlags: 0
@@ -890,7 +890,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &199217331
 Transform:
   m_ObjectHideFlags: 0
@@ -1373,7 +1373,7 @@ MonoBehaviour:
   _useWebcam: 0
   _showRays: 0
   _debug: 0
-  _isCalibrating: 1
+  _isCalibrating: 0
   _showDebugColors: 0
   sampleColors: []
   _numColors: 3
@@ -1583,7 +1583,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 5
+  far clip plane: 3
   field of view: 60
   orthographic: 1
   orthographic size: 1
@@ -1964,7 +1964,7 @@ Camera:
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
-  m_HDR: 1
+  m_HDR: 0
   m_AllowMSAA: 1
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
@@ -1998,7 +1998,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _target: {fileID: 525979616}
   _endSize: 600
-  _rotSpeed: 5
+  _rotSpeed: 1
   _transitionDuration: 1
   _cityIOgameObj: {fileID: 1877268378}
   _thisCam: {fileID: 647733617}
@@ -2448,7 +2448,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &828391466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2537,8 +2537,8 @@ Camera:
   m_GameObject: {fileID: 849010562}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.7607844, g: 0.7607844, b: 0.7607844, a: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -5031,6 +5031,14 @@ Prefab:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1891411665977990, guid: 3bf1b2d24c64f45d1a5c113568e01e16, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1589709706726174, guid: 3bf1b2d24c64f45d1a5c113568e01e16, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3bf1b2d24c64f45d1a5c113568e01e16, type: 2}
   m_IsPrefabParent: 0
@@ -5688,6 +5696,14 @@ Prefab:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1707289869736180, guid: 69ee0668dd012994d82f0a36802c2898, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1892874645706952, guid: 69ee0668dd012994d82f0a36802c2898, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 69ee0668dd012994d82f0a36802c2898, type: 2}
   m_IsPrefabParent: 0
@@ -5901,7 +5917,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: df8395aef2708445cbf22c0abc525fde, type: 2}
+  - {fileID: 2100000, guid: dc954bb12031d4a5a972e62cd813f2ff, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6226,7 +6242,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1776031557
 Transform:
   m_ObjectHideFlags: 0
@@ -7807,7 +7823,7 @@ Light:
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_AreaSize: {x: 500, y: 500}
   m_BounceIntensity: 1
   m_FalloffTable:

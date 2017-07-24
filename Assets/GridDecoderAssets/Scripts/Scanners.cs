@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 
 [System.Serializable]
@@ -21,6 +22,8 @@ public class ColorSettings {
 
 public class Scanners : MonoBehaviour
 {
+
+	private Thread scannerThread;
 
 	public int _bufferSize = 50;
 	public bool _useBuffer;
@@ -43,6 +46,7 @@ public class Scanners : MonoBehaviour
 	RenderTexture rTex;
 	Texture2D _texture;
 	GameObject keystonedQuad;
+	GameObject cameraKeystonedQuad;
 
 	public float _refreshRate = 1;
 	public float _scannerScale = 0.5f;
@@ -90,33 +94,43 @@ public class Scanners : MonoBehaviour
 				GetComponent<Webcam> ().enabled = true;
 		}
 
+		scannerThread = new Thread(UpdateScanners);
+		scannerThread.Start ();
+
 		InitVariables ();
 		EventManager.StartListening ("reload", OnReload);
 		EventManager.StartListening ("save", OnSave);
 			
 		while (true) {
 			yield return new WaitForEndOfFrame ();
-			SetTexture ();
+
 			yield return new WaitForSeconds (_refreshRate);
 
-			// Assign render texture from keystoned quad texture copy & copy it to a Texture2D
-			AssignRenderTexture();
-
-			if (_isCalibrating || setup)
-				CalibrateColors ();
-
-			// Assign scanner colors
-			ScanColors();
-
-			if (_debug)
-				PrintMatrix ();
-			
-			if (setup)
-				setup = false;
-
-			if (Time.frameCount % 60 == 0)
-				System.GC.Collect();
+			UpdateScanners ();
 		}
+	}
+
+	private void UpdateScanners() {
+
+		SetTexture ();
+
+		// Assign render texture from keystoned quad texture copy & copy it to a Texture2D
+		AssignRenderTexture();
+
+		if (_isCalibrating || setup)
+			CalibrateColors ();
+
+		// Assign scanner colors
+		ScanColors();
+
+		if (_debug)
+			PrintMatrix ();
+
+		if (setup)
+			setup = false;
+
+		if (Time.frameCount % 60 == 0)
+			System.GC.Collect();
 	}
 
 	/// <summary>
@@ -141,13 +155,16 @@ public class Scanners : MonoBehaviour
 		MakeScanners ();
 		SetupSampleObjects ();
 
+		cameraKeystonedQuad = GameObject.Find("CameraKeystoneQuad");
+
 		// Find copy mesh with RenderTexture
 		keystonedQuad = GameObject.Find (colorTexturedQuadName);
+
 		if (!keystonedQuad)
 			Debug.Log ("Keystoned quad not found.");
 
-		_texture = new Texture2D (GameObject.Find("CameraKeystoneQuad").GetComponent<Renderer> ().material.mainTexture.width, 
-			GameObject.Find("CameraKeystoneQuad").GetComponent<Renderer> ().material.mainTexture.height);
+		_texture = new Texture2D (cameraKeystonedQuad.GetComponent<Renderer> ().material.mainTexture.width, 
+			cameraKeystonedQuad.GetComponent<Renderer> ().material.mainTexture.height);
 
 		LoadSamplers ();
 	}
@@ -350,7 +367,7 @@ public class Scanners : MonoBehaviour
 	/// </summary>
 	/// <returns>The render texture as Texture2D.</returns>
 	private void AssignRenderTexture() {
-		RenderTexture rt = GameObject.Find (colorTexturedQuadName).transform.GetComponent<Renderer> ().material.mainTexture as RenderTexture;
+		RenderTexture rt = keystonedQuad.transform.GetComponent<Renderer> ().material.mainTexture as RenderTexture;
 		RenderTexture.active = rt;
 		if (!hitTex)
 			hitTex = new Texture2D (rt.width, rt.height, TextureFormat.RGB24, false);
@@ -364,12 +381,12 @@ public class Scanners : MonoBehaviour
 		if (_useWebcam) {
 			if (Webcam.isPlaying())
 	          {
-				_texture.SetPixels((GameObject.Find("CameraKeystoneQuad").GetComponent<Renderer>().material.mainTexture as WebCamTexture).GetPixels()); //for webcam 
+				_texture.SetPixels((cameraKeystonedQuad.GetComponent<Renderer>().material.mainTexture as WebCamTexture).GetPixels()); //for webcam 
 	          }
           	else return;
 		}
 		else {
-			_texture.SetPixels ((GameObject.Find("CameraKeystoneQuad").GetComponent<Renderer> ().material.mainTexture as Texture2D).GetPixels ()); // for texture map 
+			_texture.SetPixels ((cameraKeystonedQuad.GetComponent<Renderer> ().material.mainTexture as Texture2D).GetPixels ()); // for texture map 
 		};
 		_texture.Apply ();
 	}
