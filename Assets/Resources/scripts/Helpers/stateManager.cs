@@ -18,6 +18,9 @@ public class stateManager : MonoBehaviour
     public bool _demoModeBool = true;
     public int _changeModeEverySeconds = 60;
 
+	private const int NUM_STATES = 5;
+	private enum HeatmapState { CITYIO = 0, LANDUSE = 1, FLOORS = 2, HEATMAP = 3, CELL = 4 };
+
     void Awake()
     {
         if (_demoModeBool != true)
@@ -44,10 +47,10 @@ public class stateManager : MonoBehaviour
     {
         while (true)
         {
-            for (int i = 0; i < 5; i++)
+			for (int i = 0; i < NUM_STATES; i++)
             {
                 yield return new WaitForEndOfFrame();
-                StateControl(i);
+                StateControl(2);
                 yield return new WaitForSeconds(_changeModeEverySeconds);
             }
         }
@@ -63,31 +66,31 @@ public class stateManager : MonoBehaviour
                 _floorsUI.SetActive(false);
 
                 break;
-            case 0: //CITYIO
+			case (int) HeatmapState.CITYIO:
                 ShowContext(_andorraCityScope);
                 print("State 0: Basic Sat view and cityIO grid" + '\n');
                 _floorsUI.SetActive(false);
                 break;
-            case 1: // LANDUSE 
+			case (int)HeatmapState.LANDUSE: // LANDUSE 
                 ShowContext(_andorraHeatmap);
                 _heatmapsScript.TypesViz();
                 print("State 2: Land use map" + '\n');
                 _floorsUI.SetActive(false);
                 break;
-            case 2:// FLOORS
+			case (int)HeatmapState.FLOORS: // FLOORS
                 ShowContext(_andorraHeatmap);
                 _heatmapsScript.FloorsViz();
                 _floorsUI.SetActive(true);
 
                 print("State 1: Floors map" + '\n');
                 break;
-            case 3: // HEATMAP
+			case (int)HeatmapState.HEATMAP: // HEATMAP
                 ShowContext(_andorraHeatmap);
                 _heatmapsScript.SearchNeighbors();
                 print("State 3: Proximity HeatMap" + '\n');
                 _floorsUI.SetActive(false);
                 break;
-            case 4: // Cell towers
+			case (int)HeatmapState.CELL: // Cell towers
                 ShowContext(_andorraHeatmap);
                 ShowContext(_cellTowers);
                 print("State 4: Celltowers heatmap" + '\n');
@@ -105,8 +108,8 @@ public class stateManager : MonoBehaviour
 
         foreach (Transform child in _heatmapHolder.transform)
         {
-			GameObject.Destroy(child.gameObject.GetComponent<Renderer>().material);
-            Destroy(child.gameObject);
+			//GameObject.Destroy(child.gameObject.GetComponent<Renderer>().material);
+            //Destroy(child.gameObject);
         }
     }
     void ShowContext(GameObject t)

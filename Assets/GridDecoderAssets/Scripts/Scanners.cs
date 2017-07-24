@@ -405,7 +405,6 @@ public class Scanners : MonoBehaviour
 		if (colorSettings == null) return;
 		if (colorSettings.color == null) return;
 
-		int currId = 0;
 		for (int i = 0; i < colorSettings.color.Count; i++) {
 			sampleColors [i] = colorSettings.color [i];
 			colorRefSpheres [(ColorClassifier.SampleColor)i].GetComponent<Renderer> ().material.color = colorSettings.color [i];
