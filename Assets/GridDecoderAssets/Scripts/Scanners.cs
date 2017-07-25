@@ -102,20 +102,20 @@ public class Scanners : MonoBehaviour
 		EventManager.StartListening ("save", OnSave);
 			
 		while (true) {
-			yield return new WaitForEndOfFrame ();
-
+			////
+			//// Wait one frame for GPU
+			//// http://answers.unity3d.com/questions/465409/reading-from-a-rendertexture-is-slow-how-to-improv.html
+			////
 			yield return new WaitForSeconds (_refreshRate);
+			// Assign render texture from keystoned quad texture copy & copy it to a Texture2D
+			AssignRenderTexture();
+			yield return new WaitForEndOfFrame ();
 
 			UpdateScanners ();
 		}
 	}
 
 	private void UpdateScanners() {
-
-		SetTexture ();
-
-		// Assign render texture from keystoned quad texture copy & copy it to a Texture2D
-		AssignRenderTexture();
 
 		if (_isCalibrating || setup)
 			CalibrateColors ();
@@ -322,7 +322,7 @@ public class Scanners : MonoBehaviour
 					minColor = pixel;
 					if (_showDebugColors) {
 						// Could improve by drawing only if sphere locations change
-						Vector3 origin = GameObject.Find ("3D color space").transform.position;
+						Vector3 origin = GameObject.Find ("Color space parent").transform.position;
 						Debug.DrawLine (origin + new Vector3 (pixel.r, pixel.g, pixel.b), origin + new Vector3 (sampleColors [currID].r, sampleColors [currID].g, sampleColors [currID].b), pixel, 1, false);
 					}
 				} else 

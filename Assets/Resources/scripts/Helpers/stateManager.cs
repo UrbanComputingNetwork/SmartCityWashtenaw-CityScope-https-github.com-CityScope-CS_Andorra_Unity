@@ -50,7 +50,7 @@ public class stateManager : MonoBehaviour
 			for (int i = 0; i < NUM_STATES; i++)
             {
                 yield return new WaitForEndOfFrame();
-                StateControl(2);
+                StateControl(i);
                 yield return new WaitForSeconds(_changeModeEverySeconds);
             }
         }

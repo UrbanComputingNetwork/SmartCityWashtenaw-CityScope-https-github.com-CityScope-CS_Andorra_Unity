@@ -677,7 +677,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &136326349
 Transform:
   m_ObjectHideFlags: 0
@@ -858,8 +858,8 @@ MonoBehaviour:
   _andorraCityScope: {fileID: 2050935378}
   _andorraHeatmap: {fileID: 1300289217}
   _floorsUI: {fileID: 2103548903}
-  _demoModeBool: 1
-  _changeModeEverySeconds: 3
+  _demoModeBool: 0
+  _changeModeEverySeconds: 10
 --- !u!114 &162730930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -890,7 +890,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &199217331
 Transform:
   m_ObjectHideFlags: 0
@@ -1368,13 +1368,13 @@ MonoBehaviour:
   _colorSpaceParent: {fileID: 136326348}
   _gridSizeX: 20
   _gridSizeY: 20
-  _refreshRate: 10
+  _refreshRate: 1
   _scannerScale: 0.012
-  _useWebcam: 0
+  _useWebcam: 1
   _showRays: 0
   _debug: 0
-  _isCalibrating: 0
-  _showDebugColors: 0
+  _isCalibrating: 1
+  _showDebugColors: 1
   sampleColors: []
   _numColors: 3
   _colorSettingsFileName: sampleColorSettings.json
@@ -1384,7 +1384,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 417497864}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 13d68c4d054ae41d88f6af6f3cc1a7be, type: 3}
   m_Name: 

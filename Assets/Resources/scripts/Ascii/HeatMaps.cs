@@ -97,6 +97,9 @@ public class HeatMaps : MonoBehaviour
     /// </summary>
     public void FloorsViz() // make the height map //
     {
+		if (_typesList.Count < 0)
+			return;
+		
 		if (_floorsGeometries == null || _floorsGeometries.Length <= 0)
 			SetupFloors ();
 		
