@@ -47,11 +47,13 @@ public class stateManager : MonoBehaviour
     {
         while (true)
         {
-			for (int i = 0; i < NUM_STATES; i++)
+			//for (int i = 0; i < NUM_STATES; i++)
+			for (int i = 0; i < 1; i++)
             {
                 yield return new WaitForEndOfFrame();
-                StateControl(i);
+				StateControl(2);
                 yield return new WaitForSeconds(_changeModeEverySeconds);
+
             }
         }
     }
@@ -108,8 +110,8 @@ public class stateManager : MonoBehaviour
 
         foreach (Transform child in _heatmapHolder.transform)
         {
-			//GameObject.Destroy(child.gameObject.GetComponent<Renderer>().material);
-            //Destroy(child.gameObject);
+//			GameObject.Destroy(child.gameObject.GetComponent<Renderer>().material);
+//            Destroy(child.gameObject);
         }
     }
     void ShowContext(GameObject t)

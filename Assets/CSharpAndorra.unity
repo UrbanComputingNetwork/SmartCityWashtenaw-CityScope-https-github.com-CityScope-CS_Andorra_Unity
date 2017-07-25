@@ -858,7 +858,7 @@ MonoBehaviour:
   _andorraCityScope: {fileID: 2050935378}
   _andorraHeatmap: {fileID: 1300289217}
   _floorsUI: {fileID: 2103548903}
-  _demoModeBool: 0
+  _demoModeBool: 1
   _changeModeEverySeconds: 10
 --- !u!114 &162730930
 MonoBehaviour:
@@ -2648,7 +2648,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &957373279
 Transform:
   m_ObjectHideFlags: 0
@@ -6537,7 +6537,7 @@ MonoBehaviour:
     grid: []
     objects:
       slider1: 0
-      toggle1: 0
+      toggle1: 2
       toggle2: 0
       toggle3: 0
       toggle4: 0
@@ -7780,7 +7780,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2142124935
 Transform:
   m_ObjectHideFlags: 0

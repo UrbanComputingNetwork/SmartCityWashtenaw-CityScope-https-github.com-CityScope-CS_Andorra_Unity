@@ -75,16 +75,25 @@ public class HeatMaps : MonoBehaviour
 	/// </summary>
 	private bool SetupFloors() {
 		int index = 0;
+		int _floorHeight = 0;
 		_floorsGeometries = new GameObject[(_gridX-1) * _gridY];
+
+		_rangeOfFloors = (Mathf.Abs(_floorsList.Max()) + Mathf.Abs(_floorsList.Min()));
 
 		for (int x = 0; x < _gridX - 1; x++) {
 			for (int y = 0; y < _gridY; y++) {
+				var _shiftFloorsHeightAboveZero = _floorsList[index] + Mathf.Abs(_floorsList.Min()); // move list item from subzero
+
 				if (_typesList[index] != _outOfBoundsType && _floorsList[index] > 0)
 				{ 
 					// if not on the area which is out of the physical model space
 					_floorsGeometries[index] = GameObject.CreatePrimitive(PrimitiveType.Cube); //make cell cube
 					_floorsGeometries[index].name = (_floorsList[index].ToString() + "Floors ");
 					_floorsGeometries[index].transform.parent = transform; //put into parent object for later control
+					_floorsGeometries[index].transform.localPosition = new Vector3(x * _cellSize, _shiftFloorsHeightAboveZero * (_zAxisMultiplier / 2) + _addToYHeight, y * _cellSize); //compensate for scale shift due to height                                                                                                                                                    //color the thing
+					_floorsGeometries[index].transform.GetComponent<Renderer>().material.color = Color.HSVToRGB(1, 1, (_floorsList[index]) / _rangeOfFloors);// this creates color based on value of cell!
+					_floorHeight = _shiftFloorsHeightAboveZero * _zAxisMultiplier;
+					_floorsGeometries[index].transform.localScale = new Vector3(_cellShrink * _cellSize, _floorHeight, _cellShrink * _cellSize);
 				}
 				index++;
 			}
@@ -102,31 +111,7 @@ public class HeatMaps : MonoBehaviour
 		
 		if (_floorsGeometries == null || _floorsGeometries.Length <= 0)
 			SetupFloors ();
-		
-        _rangeOfFloors = (Mathf.Abs(_floorsList.Max()) + Mathf.Abs(_floorsList.Min()));
 
-		int index = 0;
-		int _floorHeight = 0;
-
-        for (int x = 0; x < _gridX - 1; x++) {
-            for (int y = 0; y < _gridY; y++) {
-				var _shiftFloorsHeightAboveZero = _floorsList[index] + Mathf.Abs(_floorsList.Min()); // move list item from subzero
-				if (_typesList[index] != _outOfBoundsType && _floorsList[index] > 0)
-                { // if not on the area which is out of the physical model space
-					if (_floorsGeometries [index] == null) {
-						Debug.Log ("index " + index + " not found in floor viz list");
-						continue;
-					}
-
-					_floorsGeometries[index].transform.localPosition = new Vector3(x * _cellSize, _shiftFloorsHeightAboveZero * (_zAxisMultiplier / 2) + _addToYHeight, y * _cellSize); //compensate for scale shift due to height                                                                                                                                                    //color the thing
-					_floorsGeometries[index].transform.GetComponent<Renderer>().material.color = Color.HSVToRGB(1, 1, (_floorsList[index]) / _rangeOfFloors);// this creates color based on value of cell!
-                    _floorHeight = _shiftFloorsHeightAboveZero * _zAxisMultiplier;
-					_floorsGeometries[index].transform.localScale = new Vector3(_cellShrink * _cellSize, _floorHeight, _cellShrink * _cellSize);
-                }
-
-				index++;
-            }
-        }
     }
 
     /// <summary>

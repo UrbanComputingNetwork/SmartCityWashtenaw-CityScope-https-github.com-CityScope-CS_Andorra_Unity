@@ -93,7 +93,7 @@ public class Scanners : MonoBehaviour
 			if (!GetComponent<Webcam> ().enabled)
 				GetComponent<Webcam> ().enabled = true;
 		}
-
+		 
 		scannerThread = new Thread(UpdateScanners);
 		scannerThread.Start ();
 
