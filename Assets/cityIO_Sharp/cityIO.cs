@@ -219,7 +219,6 @@ public class cityIO : MonoBehaviour
 			}
 			SetGridObject (i);
 		}
-
 		NameGridObject (i);
 	}
 
@@ -253,7 +252,8 @@ public class cityIO : MonoBehaviour
 
 	private void UpdateTable() {
 		for (int i = 0; i < _table.grid.Count; i++) { // loop through list of all cells grid objects 
-			UpdateGridObject(i);
+			if (_table.grid[i].update)
+				UpdateGridObject(i);
 		}
 	}
 		

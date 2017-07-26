@@ -16,6 +16,7 @@ public class Grid
     public int x;
     public int y;
     public int rot;
+	public bool update;
 }
 
 [System.Serializable] // have to have this in every JSON class!

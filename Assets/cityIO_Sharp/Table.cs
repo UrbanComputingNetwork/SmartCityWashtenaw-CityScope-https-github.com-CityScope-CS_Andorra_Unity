@@ -31,10 +31,14 @@ public class Table
 			for (int i = 0; i < currIds.GetLength (0); i++) {
 				for (int j = 0; j < currIds.GetLength (1); j++) {
 					int currType = table.grid [i * currIds.GetLength (0) + j].type;
+
 					if (currType != currIds [i, j]) {
 						table.grid [i * currIds.GetLength (0) + j].type = currIds [i, j];
 						needsUpdate = true;
+						table.grid [i * currIds.GetLength (0) + j].update = true;
 					}
+					else
+						table.grid [i * currIds.GetLength (0) + j].update = false;
 				}
 			}
 		}
@@ -49,6 +53,7 @@ public class Table
 					currGrid.x = i;
 					currGrid.y = j;
 					currGrid.rot = 180;
+					currGrid.update = true;
 					table.grid.Add (currGrid);
 					currGrid = null;
 				}
