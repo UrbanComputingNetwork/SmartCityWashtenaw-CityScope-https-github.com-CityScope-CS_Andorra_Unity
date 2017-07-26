@@ -129,6 +129,13 @@ public class cityIO : MonoBehaviour
         }
     }
 
+	public Color GetColor(int i) {
+		if (colors.Length > i)
+			return colors [i];
+		else
+			return Color.black;
+	}
+
     void drawTable()
     {
         /*  strat update table with clean grid */
