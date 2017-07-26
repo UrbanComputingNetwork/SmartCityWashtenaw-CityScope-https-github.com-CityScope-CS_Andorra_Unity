@@ -97,13 +97,10 @@ public class cityIO : MonoBehaviour
         while (true)
         {
             if (_dataSource == DataSource.REMOTE)
-            {
                 _url = _urlStart + _tableName.ToString();
-            }
             else if (_dataSource == DataSource.LOCAL)
-            {
                 _url = _urlLocalHost;
-            }
+			
             yield return new WaitForSeconds(_delayWWW);
 
             // For JSON parsing
@@ -194,17 +191,17 @@ public class cityIO : MonoBehaviour
 			_tmpColor = Color.white;
 			_tmpColor.a = 1f;
 
-			if (_table.grid[i].type == (int)Brick.ROAD) //road
+			if (_table.grid[i].type == (int)Brick.ROAD)
 			{
 				yPos = 0;
 				height = 0.25f;
 			}
-			else if (_table.grid[i].type == (int)Brick.PARKING) // if parking
+			else if (_table.grid[i].type == (int)Brick.PARKING) 
 			{
 				yPos = 0f;
 				height = 0.25f;
 			}
-			else if (_table.grid[i].type == (int)Brick.STREET) // if street
+			else if (_table.grid[i].type == (int)Brick.STREET)
 			{
 				yPos = 0f;
 				height = 1f;
