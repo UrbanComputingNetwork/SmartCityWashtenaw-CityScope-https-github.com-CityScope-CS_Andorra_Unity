@@ -94,6 +94,7 @@ public class HeatMaps : MonoBehaviour
 
 		if (floorsParent == null) {
 			CreateParent (ref floorsParent);
+			floorsParent.name = "Floors";
 		}
 
 		_floorsGeometries = new GameObject[(_gridX-1) * _gridY];
@@ -130,6 +131,7 @@ public class HeatMaps : MonoBehaviour
 
 		if (typesParent == null) {
 			CreateParent (ref typesParent);
+			typesParent.name = "Types";
 		}
 
 		if (_typesGeometries == null)
@@ -192,8 +194,6 @@ public class HeatMaps : MonoBehaviour
 		if (_floorsGeometries == null || _floorsGeometries.Length <= 0)
 			SetupFloors ();
 
-		typesParent.SetActive (false);
-		neighborSearchParent.SetActive (false);
 		floorsParent.SetActive (true);
     }
 
@@ -206,9 +206,6 @@ public class HeatMaps : MonoBehaviour
 			SetupTypesViz ();
 
 		typesParent.SetActive (true);
-		neighborSearchParent.SetActive (false);
-		floorsParent.SetActive (false);
-		
     }
 
 	private void CreateNeighborGeo(int x, int y, int index) {
@@ -230,62 +227,25 @@ public class HeatMaps : MonoBehaviour
 	}
 
 	private void SetupNeighborSearch() {
-		int[,] _typesArray = new int[_gridX, _gridY];
 		_loopsCounter = 0;
 
+		// Initialize parent object
 		if (neighborSearchParent == null) {
 			CreateParent (ref neighborSearchParent);
+			neighborSearchParent.name = "Neighbors";
 		}
 
-		for (int x = 0; x < _gridX - 1; x++)
-		{
-			for (int y = 0; y < _gridY; y++)
-			{
-				_loopsCounter = _loopsCounter + 1;
-				if (_typesList[_loopsCounter] != _outOfBoundsType)
-				{ // if not on the area which is out of the physical model space
-
+		// Initialize geos
+		for (int x = 0; x < _gridX - 1; x++) {
+			for (int y = 0; y < _gridY; y++) {
+				_loopsCounter++;
+				if (_typesList [_loopsCounter] != _outOfBoundsType) { // if not on the area which is out of the physical model space
 					CreateNeighborGeo (x, y, _loopsCounter);
-					_typesArray[x, y] = _typesList[_loopsCounter];
-
-					if (_typesArray[x, y] > 0 && _typesArray[x, y] < 3) // what is the cells type we're searching for? 
-					{
-						_neighborsGeometries[_loopsCounter].transform.GetComponent<Renderer>().material.color = Color.green;
-						_neighborsGeometries[_loopsCounter].transform.localScale = new Vector3(_cellSize, _cellSize, _cellSize);
-						_cellScoreCount = 0; //decalre a tmp counter  
-						for (int _windowX = x - _winodwSearchDim; _windowX < x + _winodwSearchDim; _windowX++)
-						{
-							for (int _windowY = y - _winodwSearchDim; _windowY < y + _winodwSearchDim; _windowY++)
-							{
-								if (_windowX > 0
-									&& _windowY > 0
-									&& _windowX < _gridX
-									&& _windowY < _gridY)
-								{ // make sure window area is not outside grid bounds 
-									if (_typesArray[_windowX, _windowY] > 6 && _typesArray[_windowX, _windowY] < 9)
-									{
-										_cellScoreCount = _cellScoreCount + 1;
-										_neighborsGeometries[_loopsCounter].transform.localPosition =
-											new Vector3(x * _cellSize, _addToYHeight + (_cellScoreCount * 2), y * _cellSize);
-										_neighborsGeometries[_loopsCounter].name = ("Results count: " + _cellScoreCount.ToString());
-										var _tmpColor = _cellScoreCount / Mathf.Pow(2 * _winodwSearchDim, 2); // color color spectrum based on cell score/max potential score 
-										_neighborsGeometries[_loopsCounter].transform.GetComponent<Renderer>().material.color =
-											Color.HSVToRGB(_tmpColor, 1, 1);
-									}
-								}
-							}
-						}
-					}
-					else
-					{
-						_neighborsGeometries[_loopsCounter].transform.GetComponent<Renderer>().material.color =
-							Color.HSVToRGB(0, 0, 0);
-						_neighborsGeometries[_loopsCounter].transform.localScale =
-							new Vector3(_cellShrink * _cellSize, _cellShrink * _cellSize, _cellShrink * _cellSize);
-					}
 				}
 			}
 		}
+			
+		SearchNeighbors ();
 	}
 
     /// <summary>
@@ -305,13 +265,68 @@ public class HeatMaps : MonoBehaviour
     ///
     /// </summary>
 
-    public void SearchNeighbors()
+    public void SearchNeighborsViz()
     {
 		if (_neighborsGeometries == null)
 			SetupNeighborSearch ();
 		
 		neighborSearchParent.SetActive (true);
-		typesParent.SetActive (false);
-		floorsParent.SetActive (false);
     }
+
+	/// <summary>
+	/// Searches the neighbors // brute force
+	/// </summary>
+	private void SearchNeighbors() {
+		int[,] _typesArray = new int[_gridX, _gridY];
+		int index = 0;
+
+		for (int x = 0; x < _gridX - 1; x++)
+		{
+			for (int y = 0; y < _gridY; y++)
+			{
+				index++;
+				if (_typesList[index] != _outOfBoundsType)
+				{ // if not on the area which is out of the physical model space
+					_typesArray[x, y] = _typesList[index];
+
+					if (_typesArray[x, y] > 0 && _typesArray[x, y] < 3) // what is the cells type we're searching for? 
+					{
+						_neighborsGeometries[index].transform.GetComponent<Renderer>().material.color = Color.green;
+						_neighborsGeometries[index].transform.localScale = new Vector3(_cellSize, _cellSize, _cellSize);
+						_cellScoreCount = 0; //decalre a tmp counter  
+
+						for (int _windowX = x - _winodwSearchDim; _windowX < x + _winodwSearchDim; _windowX++)
+						{
+							for (int _windowY = y - _winodwSearchDim; _windowY < y + _winodwSearchDim; _windowY++)
+							{
+								if (_windowX > 0
+									&& _windowY > 0
+									&& _windowX < _gridX
+									&& _windowY < _gridY)
+								{ // make sure window area is not outside grid bounds 
+									if (_typesArray[_windowX, _windowY] > 6 && _typesArray[_windowX, _windowY] < 9)
+									{
+										_cellScoreCount = _cellScoreCount + 1;
+										_neighborsGeometries[index].transform.localPosition =
+											new Vector3(x * _cellSize, _addToYHeight + (_cellScoreCount * 2), y * _cellSize);
+										_neighborsGeometries[index].name = ("Results count: " + _cellScoreCount.ToString());
+										var _tmpColor = _cellScoreCount / Mathf.Pow(2 * _winodwSearchDim, 2); // color color spectrum based on cell score/max potential score 
+										_neighborsGeometries[index].transform.GetComponent<Renderer>().material.color =
+											Color.HSVToRGB(_tmpColor, 1, 1);
+									}
+								}
+							}
+						}
+					}
+					else
+					{
+						_neighborsGeometries[index].transform.GetComponent<Renderer>().material.color =
+							Color.HSVToRGB(0, 0, 0);
+						_neighborsGeometries[index].transform.localScale =
+							new Vector3(_cellShrink * _cellSize, _cellShrink * _cellSize, _cellShrink * _cellSize);
+					}
+				}
+			}
+		}
+	}
 }

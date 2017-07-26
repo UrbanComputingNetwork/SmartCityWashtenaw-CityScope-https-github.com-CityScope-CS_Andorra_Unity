@@ -859,7 +859,7 @@ MonoBehaviour:
   _andorraHeatmap: {fileID: 1300289217}
   _floorsUI: {fileID: 2103548903}
   _demoModeBool: 1
-  _changeModeEverySeconds: 10
+  _changeModeEverySeconds: 5
 --- !u!114 &162730930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2648,7 +2648,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &957373279
 Transform:
   m_ObjectHideFlags: 0
@@ -5039,6 +5039,41 @@ Prefab:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 23743775672785158, guid: 3bf1b2d24c64f45d1a5c113568e01e16,
+        type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 34a50e6e79e1246cbaa079212175ac8d, type: 2}
+    - target: {fileID: 23874604635224346, guid: 3bf1b2d24c64f45d1a5c113568e01e16,
+        type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 34a50e6e79e1246cbaa079212175ac8d, type: 2}
+    - target: {fileID: 23764821112920678, guid: 3bf1b2d24c64f45d1a5c113568e01e16,
+        type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 34a50e6e79e1246cbaa079212175ac8d, type: 2}
+    - target: {fileID: 23318689340997872, guid: 3bf1b2d24c64f45d1a5c113568e01e16,
+        type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 34a50e6e79e1246cbaa079212175ac8d, type: 2}
+    - target: {fileID: 23467029519449752, guid: 3bf1b2d24c64f45d1a5c113568e01e16,
+        type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 34a50e6e79e1246cbaa079212175ac8d, type: 2}
+    - target: {fileID: 23522297424372500, guid: 3bf1b2d24c64f45d1a5c113568e01e16,
+        type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 34a50e6e79e1246cbaa079212175ac8d, type: 2}
+    - target: {fileID: 23360788857024534, guid: 3bf1b2d24c64f45d1a5c113568e01e16,
+        type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 34a50e6e79e1246cbaa079212175ac8d, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3bf1b2d24c64f45d1a5c113568e01e16, type: 2}
   m_IsPrefabParent: 0

@@ -87,7 +87,7 @@ public class stateManager : MonoBehaviour
                 break;
 			case (int)HeatmapState.HEATMAP: // HEATMAP
                 ShowContext(_andorraHeatmap);
-                _heatmapsScript.SearchNeighbors();
+                _heatmapsScript.SearchNeighborsViz();
                 print("State 3: Proximity HeatMap" + '\n');
                 _floorsUI.SetActive(false);
                 break;
@@ -109,8 +109,7 @@ public class stateManager : MonoBehaviour
 
         foreach (Transform child in _heatmapHolder.transform)
         {
-//			GameObject.Destroy(child.gameObject.GetComponent<Renderer>().material);
-//            Destroy(child.gameObject);
+			child.gameObject.SetActive(false);
         }
     }
     void ShowContext(GameObject t)
