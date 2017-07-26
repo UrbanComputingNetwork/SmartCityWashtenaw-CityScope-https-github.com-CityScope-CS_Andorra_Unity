@@ -55,7 +55,7 @@ public class cityIO : MonoBehaviour
     ///<summary>
     /// the grid basic unit mesh (prbably cube)
     /// </summary>
-    private GameObject _gridObject;
+    private GameObject[] _gridObjects;
     ///<summary>
     /// default base material for grid GOs
     /// </summary>
@@ -74,11 +74,22 @@ public class cityIO : MonoBehaviour
     /// </summary>
     public Color[] colors;
 
+	private Color _tmpColor;
+	private float height;
+	private float yPos;
+	private Vector3 gridObjectPosition;
+	private Vector3 gridObjectScale;
+
+
     private int[] notBuildingTypes = new int[] { (int)Brick.INVALID, (int)Brick.MASK, (int)Brick.ROAD, (int)Brick.PARK, (int)Brick.PARKING, (int)Brick.STREET };
     private int[] buildingTypes = new int[] { (int)Brick.RL, (int)Brick.RM, (int)Brick.RS, (int)Brick.RL, (int)Brick.OL, (int)Brick.OM, (int)Brick.OS };
 
     IEnumerator Start()
     {
+		_tmpColor = Color.black;
+		height = 0f;
+		yPos = 0f;
+
         _table = new Table();
         _table.objects = new Objects();
         _table.objects.density = new List<int>(new int[] { 5, 8, 20, 1, 10, 3 });
@@ -111,7 +122,7 @@ public class cityIO : MonoBehaviour
                         _oldData = _www.text; //new data has arrived from server 
                         _table = Table.CreateFromJSON(_www.text); // get parsed JSON into Cells variable --- MUST BE BEFORE CALLING ANYTHING FROM CELLS!!
                         _newCityioDataFlag = true;
-                        drawTable();
+                        DrawTable();
                         // prints last update time to console 
                         System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
                         var lastUpdateTime = epochStart.AddSeconds(System.Math.Round(_table.timestamp / 1000d)).ToLocalTime();
@@ -124,7 +135,7 @@ public class cityIO : MonoBehaviour
 				bool update = Table.CreateFromDecoder(ref _table, "ScannersParent");
                 _newCityioDataFlag = true;
                 if (_table.grid != null && update)
-                    drawTable();
+                    DrawTable();
             }
         }
     }
@@ -136,116 +147,134 @@ public class cityIO : MonoBehaviour
 			return Color.black;
 	}
 
-    void drawTable()
+	/// <summary>
+	/// Creates the grid object.
+	/// </summary>
+	/// <param name="i">The index.</param>
+	private void CreateGridObject(int i) {
+		/* make the grid cells in generic form */
+		_gridObjects[i] = GameObject.CreatePrimitive(PrimitiveType.Cube); //make cell cube 
+		_gridObjects[i].transform.parent = _gridHolder.transform; //put into parent object for later control
+
+		gridObjectPosition = new Vector3((_table.grid[i].x * _cellSizeInMeters), 0, (_table.grid[i].y * _cellSizeInMeters));
+		gridObjectScale = new Vector3(cellShrink * _cellSizeInMeters, 0.25f, cellShrink * _cellSizeInMeters);
+
+		// Objects properties 
+		_gridObjects[i].GetComponent<Renderer>().material = _material;
+		_gridObjects[i].transform.localPosition = gridObjectPosition; //compensate for scale shift due to height
+		_gridObjects[i].transform.localScale = gridObjectScale;
+	}
+
+	private void SetGridObject(int i) {
+		//compensate for scale shift and x,y array
+		gridObjectPosition = new Vector3((_table.grid[i].x * _cellSizeInMeters), yPos, (_table.grid[i].y * _cellSizeInMeters));
+		gridObjectScale = new Vector3(cellShrink * _cellSizeInMeters, height, cellShrink * _cellSizeInMeters);
+
+		_gridObjects[i].transform.localPosition = gridObjectPosition;
+		_gridObjects[i].transform.localScale = gridObjectScale; // go through all 'densities' to match Type to Height
+		_gridObjects[i].GetComponent<Renderer>().material.color = _tmpColor;
+	}
+
+	/// <summary>
+	/// Updates the grid object's height and scale given the current type.
+	/// </summary>
+	/// <param name="i">The index.</param>
+	private void UpdateGridObject(int i) {
+		if (buildingTypes.Contains(_table.grid[i].type)) //if this cell is one of the buildings types
+		{
+			height = _gridObjects[i].transform.position.y + (_table.objects.density[_table.grid[i].type] * _floorHeight) * 0.5f; 
+			yPos = _table.objects.density[_table.grid[i].type] * _floorHeight;
+			_tmpColor = colors[_table.grid[i].type];
+			_tmpColor.a = 0.8f;
+
+			SetGridObject (i);
+		}
+		else if (notBuildingTypes.Contains(_table.grid[i].type))
+		{
+			_tmpColor = Color.white;
+			_tmpColor.a = 1f;
+
+			if (_table.grid[i].type == (int)Brick.ROAD) //road
+			{
+				yPos = 0;
+				height = 0.25f;
+			}
+			else if (_table.grid[i].type == (int)Brick.PARKING) // if parking
+			{
+				yPos = 0f;
+				height = 0.25f;
+			}
+			else if (_table.grid[i].type == (int)Brick.STREET) // if street
+			{
+				yPos = 0f;
+				height = 1f;
+			}
+			else //if other non building type
+			{
+				yPos = 0f;
+				height = 0.85f;
+
+				_gridObjects[i].transform.localScale = new Vector3
+					(cellShrink * _cellSizeInMeters * 0.85f, 0.85f, cellShrink * _cellSizeInMeters * 0.85f);
+			}
+			SetGridObject (i);
+		}
+
+		NameGridObject (i);
+	}
+
+	private void NameGridObject(int i) {
+		if (_table.grid[i].type > (int)Brick.INVALID && _table.grid[i].type < (int)Brick.ROAD) //if object has is building with Z height
+		{
+			_gridObjects[i].name =
+				("Type: " + _table.grid[i].type + " X: " +
+					_table.grid[i].x.ToString() + " Y: " +
+					_table.grid[i].y.ToString() +
+					" Height: " + (_table.objects.density[_table.grid[i].type]).ToString());
+		}
+		else // if object is flat by nature
+		{
+			_gridObjects[i].name =
+				("Type w/o height: " + _table.grid[i].type + " X: " +
+					_table.grid[i].x.ToString() + " Y: " +
+					_table.grid[i].y.ToString());
+		}
+	}
+
+	/// <summary>
+	/// Creates array of gridobjects 
+	/// </summary>
+	private void SetupTable() {
+		_gridObjects = new GameObject[_table.grid.Count];
+
+		for (int i = 0; i < _table.grid.Count; i++) // loop through list of all cells grid objects 
+			CreateGridObject(i);
+	}
+
+	private void UpdateTable() {
+		for (int i = 0; i < _table.grid.Count; i++) { // loop through list of all cells grid objects 
+			UpdateGridObject(i);
+		}
+	}
+		
+
+    private void DrawTable()
     {
-        /*  strat update table with clean grid */
-        foreach (Transform child in _gridHolder.transform)
-        {
-            GameObject.Destroy(child.gameObject.GetComponent<Renderer>().material);
-            GameObject.Destroy(child.gameObject);
-        }
-
-
-        for (int i = 0; i < _table.grid.Count; i++) // loop through list of all cells grid objects 
-        {
-            /* make the grid cells in generic form */
-            _gridObject = GameObject.CreatePrimitive(PrimitiveType.Cube); //make cell cube 
-            _gridObject.transform.parent = _gridHolder.transform; //put into parent object for later control
-
-            // Objects properties 
-            _gridObject.GetComponent<Renderer>().material = _material;
-            _gridObject.transform.localPosition =
-                  new Vector3((_table.grid[i].x * _cellSizeInMeters), 0, (_table.grid[i].y * _cellSizeInMeters)); //compensate for scale shift due to height
-
-
-            // Render grid cells based on type, height, etc
-
-            if (buildingTypes.Contains(_table.grid[i].type)) //if this cell is one of the buildings types
-            {
-                _gridObject.transform.position = new Vector3(_gridObject.transform.position.x,
-                _gridHolder.transform.position.y + (_table.objects.density[_table.grid[i].type] * _floorHeight) * 0.5f,
-                _gridObject.transform.position.z); //compensate for scale shift and x,y array
-
-                _gridObject.transform.localScale = new Vector3(cellShrink * _cellSizeInMeters,
-               (_table.objects.density[_table.grid[i].type] * _floorHeight),
-               cellShrink * _cellSizeInMeters); // go through all 'densities' to match Type to Height
-
-                var _tmpColor = colors[_table.grid[i].type];
-                _tmpColor.a = 0.8f;
-                _gridObject.GetComponent<Renderer>().material.color = _tmpColor;
-
-            }
-            else if (notBuildingTypes.Contains(_table.grid[i].type))
-            {
-                if (_table.grid[i].type == (int)Brick.ROAD) //road
-                {
-                    _gridObject.transform.localPosition =
-                    new Vector3((_table.grid[i].x * _cellSizeInMeters), 0, (_table.grid[i].y * _cellSizeInMeters)); //compensate for scale shift and x,y array
-                    _gridObject.transform.localScale = new Vector3(cellShrink * _cellSizeInMeters, 0.25f, cellShrink * _cellSizeInMeters);
-                    var _tmpColor = Color.white;
-                    _tmpColor.a = 1f;
-                    _gridObject.GetComponent<Renderer>().material.color = _tmpColor;
-                }
-
-                else if (_table.grid[i].type == (int)Brick.PARKING) // if parking
-                {
-                    _gridObject.transform.localScale = new Vector3(cellShrink * _cellSizeInMeters, 0.25f, cellShrink * _cellSizeInMeters);
-                    _gridObject.transform.localPosition = new Vector3
-                    (_table.grid[i].x * _cellSizeInMeters, 0, _table.grid[i].y * _cellSizeInMeters); //compensate for scale shift and x,y array
-                    var _tmpColor = Color.white;
-                    _tmpColor.a = 1f;
-                    _gridObject.GetComponent<Renderer>().material.color = _tmpColor;
-                }
-
-                else if (_table.grid[i].type == (int)Brick.STREET) // if street
-                {
-                    _gridObject.transform.localScale = new Vector3(_cellSizeInMeters, 1, _cellSizeInMeters);
-                    _gridObject.transform.localPosition = new Vector3
-                    (_table.grid[i].x * _cellSizeInMeters, 0, _table.grid[i].y * _cellSizeInMeters); //compensate for scale shift and x,y array
-                    var _tmpColor = Color.white;
-                    _tmpColor.a = 1f;
-                    _gridObject.GetComponent<Renderer>().material.color = _tmpColor;
-                }
-                else //if other non building type
-                {
-                    _gridObject.transform.localPosition =
-                    new Vector3((_table.grid[i].x * _cellSizeInMeters), 0, (_table.grid[i].y * _cellSizeInMeters)); //hide base plates 
-                    _gridObject.transform.localScale = new Vector3
-                    (cellShrink * _cellSizeInMeters * 0.85f, 0.85f, cellShrink * _cellSizeInMeters * 0.85f);
-                    _gridObject.GetComponent<Renderer>().material.color = Color.white;
-                }
-            }
-
-            //* naming the new object *//
-
-            if (_table.grid[i].type > (int)Brick.INVALID && _table.grid[i].type < (int)Brick.ROAD) //if object has is building with Z height
-            {
-                _gridObject.name =
-                          ("Type: " + _table.grid[i].type + " X: " +
-                          _table.grid[i].x.ToString() + " Y: " +
-                          _table.grid[i].y.ToString() +
-                          " Height: " + (_table.objects.density[_table.grid[i].type]).ToString());
-            }
-            else // if object is flat by nature
-            {
-                _gridObject.name =
-                          ("Type w/o height: " + _table.grid[i].type + " X: " +
-                          _table.grid[i].x.ToString() + " Y: " +
-                          _table.grid[i].y.ToString());
-            }
-            // ShowBuildingTypeText(i, cityIOGeo.transform.localScale.y); /// call for showing type text 
-        }
+		if (_gridObjects == null)
+			SetupTable ();
+		
+		UpdateTable ();
     }
 
-    private void ShowBuildingTypeText(int i, float height) //mesh type text metod 
-    {
-        GameObject textMesh = GameObject.Instantiate(textMeshPrefab, new Vector3((_table.grid[i].x * _cellSizeInMeters),
-                                  height + 20, (_table.grid[i].y * _cellSizeInMeters)),
-                                  _gridObject.transform.rotation, transform) as GameObject; //spwan prefab text
-
-        textMesh.GetComponent<TextMesh>().text = _table.grid[i].type.ToString();
-        textMesh.GetComponent<TextMesh>().fontSize = 1000; // 
-        textMesh.GetComponent<TextMesh>().color = Color.black;
-        textMesh.GetComponent<TextMesh>().characterSize = 0.25f;
-    }
+//    private void ShowBuildingTypeText(int i, float height) //mesh type text metod 
+//    {
+//        GameObject textMesh = GameObject.Instantiate(textMeshPrefab, new Vector3((_table.grid[i].x * _cellSizeInMeters),
+//                                  height + 20, (_table.grid[i].y * _cellSizeInMeters)),
+//                                  _gridObject.transform.rotation, transform) as GameObject; //spwan prefab text
+//
+//        textMesh.GetComponent<TextMesh>().text = _table.grid[i].type.ToString();
+//        textMesh.GetComponent<TextMesh>().fontSize = 1000; // 
+//        textMesh.GetComponent<TextMesh>().color = Color.black;
+//        textMesh.GetComponent<TextMesh>().characterSize = 0.25f;
+//    }
 }
