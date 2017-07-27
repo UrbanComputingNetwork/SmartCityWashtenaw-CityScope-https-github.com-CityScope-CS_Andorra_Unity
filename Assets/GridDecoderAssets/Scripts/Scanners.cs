@@ -167,6 +167,8 @@ public class Scanners : MonoBehaviour
 			cameraKeystonedQuad.GetComponent<Renderer> ().material.mainTexture.height);
 
 		LoadSamplers ();
+
+		EventManager.TriggerEvent ("scannersInitialized");
 	}
 
 	/// <summary>
@@ -288,6 +290,10 @@ public class Scanners : MonoBehaviour
 	public int[,] GetCurrentIds() {
 		int[,] ids = currentIds.Clone () as int[,];
 		return ids;
+	}
+
+	public Vector2 GetGridDimensions() {
+		return (new Vector2 (numOfScannersX * 0.5f, numOfScannersY * 0.5f));
 	}
 
 	/// <summary>

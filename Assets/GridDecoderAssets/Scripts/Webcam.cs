@@ -36,10 +36,9 @@ public class Webcam : MonoBehaviour
     public static void Play()
     {
         int counter = 0;
-        while (!isPlaying() && counter < 50)
+        while (!isPlaying() && counter++ < 50)
         {
             webcamera.Play();
-            counter++;
         }
     }
 

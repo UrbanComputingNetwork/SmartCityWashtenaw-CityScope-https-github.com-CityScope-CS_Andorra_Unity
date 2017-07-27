@@ -1370,11 +1370,11 @@ MonoBehaviour:
   _gridSizeY: 20
   _refreshRate: 1
   _scannerScale: 0.012
-  _useWebcam: 1
+  _useWebcam: 0
   _showRays: 0
   _debug: 0
-  _isCalibrating: 1
-  _showDebugColors: 1
+  _isCalibrating: 0
+  _showDebugColors: 0
   sampleColors: []
   _numColors: 3
   _colorSettingsFileName: sampleColorSettings.json
@@ -1384,7 +1384,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 417497864}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 13d68c4d054ae41d88f6af6f3cc1a7be, type: 3}
   m_Name: 
@@ -4101,7 +4101,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1204152605
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6592,9 +6592,9 @@ MonoBehaviour:
   - {r: 0.40784317, g: 0.82745105, b: 0.73333335, a: 0}
   - {r: 0.9686275, g: 0.8862746, b: 0.7137255, a: 0}
   - {r: 0.83921576, g: 0.427451, b: 0.4784314, a: 0}
-  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0.81568635, g: 0.4784314, b: 0.27058825, a: 0}
   - {r: 0.69803923, g: 0.63529414, b: 0.83921576, a: 0}
-  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0.93725497, g: 0.93725497, b: 0.90196085, a: 0}
 --- !u!4 &1877268380
 Transform:
   m_ObjectHideFlags: 0

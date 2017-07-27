@@ -131,8 +131,11 @@ public class cityIO : MonoBehaviour
 			{ // for app data _gridHolder.transform.name
 				bool update = Table.CreateFromDecoder(ref _table, "ScannersParent");
                 _newCityioDataFlag = true;
-                if (_table.grid != null && update)
-                    DrawTable();
+				if (_table.grid != null && update) {
+					EventManager.TriggerEvent ("updateData");
+					yield return new WaitForEndOfFrame ();
+					DrawTable();
+				}
             }
         }
     }
@@ -142,6 +145,21 @@ public class cityIO : MonoBehaviour
 			return colors [i];
 		else
 			return Color.black;
+	}
+
+	public int GetGridType(int index) {
+		return _table.grid [index].type;
+	}
+
+	public int GetFloorHeight(int index) {
+		if (buildingTypes.Contains(_table.grid [index].type))
+			return (int)((_table.objects.density [_table.grid [index].type] * _floorHeight) * 0.5f);
+		else
+			return -1;
+	}
+
+	public bool ShouldUpdateGrid(int index) {
+		return _table.grid [index].update;
 	}
 
 	/// <summary>

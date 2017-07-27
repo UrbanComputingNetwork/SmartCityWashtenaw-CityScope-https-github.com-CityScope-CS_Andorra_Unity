@@ -68,6 +68,13 @@ public class HeatMaps : MonoBehaviour
 	private GameObject neighborSearchParent;
     private int _cellScoreCount = 0;
 
+	private enum Mask { INTERACTIVE = 0, GRID = 1, FULL_SITE = 2, OUTSIDE = 3 };
+	private int interactiveIndex;
+	private Vector2 interactiveGridLocation;
+	private Vector2 interactiveGridDim;
+
+	private cityIO cityIO;
+
 	////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////
@@ -84,6 +91,8 @@ public class HeatMaps : MonoBehaviour
 
     void Awake()
     {
+		cityIO = GameObject.Find ("cityIO").GetComponent<cityIO> ();
+
         _floorsList = AsciiParser.AsciiParserMethod(_asciiFloors);
         _typesList = AsciiParser.AsciiParserMethod(_asciiTypes);
         _masksList = AsciiParser.AsciiParserMethod(_asciiMasks);
@@ -93,7 +102,33 @@ public class HeatMaps : MonoBehaviour
 		SetupTypesViz ();
 
 		EventManager.StartListening ("updateData", OnUpdateData);
+		EventManager.StartListening ("scannersInitialized", FindInteractiveZone);
+
     }
+
+	private void FindInteractiveZone() {
+		interactiveIndex = -1;
+		int index = 0;
+		interactiveGridLocation = new Vector2 (0, 0);
+		interactiveGridDim = new Vector2 (0, 0);
+
+		// Find location of interactive grid
+		for (int x = 0; x < _gridX; x++) {
+			for (int y = 0; y < _gridY; y++) {
+				if (_masksList[index] == (int) Mask.GRID && interactiveIndex < 0) {
+					interactiveIndex = index;
+					interactiveGridLocation.x = x;
+					interactiveGridLocation.y = y;
+					Debug.Log ("Mask index is " + interactiveIndex);
+				}
+				index++;
+			}
+		}
+
+		interactiveGridDim = GameObject.Find ("ScannersParent").GetComponent<Scanners> ().GetGridDimensions();
+
+		Debug.Log ("Interactive grid starts at " + interactiveGridLocation + "   and has dimensions:   " + interactiveGridDim + " with index " + interactiveIndex);
+	}
 
 	private void CreateParent(ref GameObject parent) {
 		parent = new GameObject ();
@@ -126,7 +161,8 @@ public class HeatMaps : MonoBehaviour
 					_floorsGeometries[index] = GameObject.CreatePrimitive(PrimitiveType.Cube); //make cell cube
 					_floorsGeometries[index].name = (_floorsList[index].ToString() + "Floors ");
 					_floorsGeometries[index].transform.parent = floorsParent.transform;
-					_floorsGeometries[index].transform.localPosition = new Vector3(x * _cellSize, _shiftFloorsHeightAboveZero * (_zAxisMultiplier / 2) + _addToYHeight, y * _cellSize); //compensate for scale shift due to height                                                                                                                                                    //color the thing
+					_floorsGeometries[index].transform.localPosition = new Vector3(x * _cellSize, _shiftFloorsHeightAboveZero * (_zAxisMultiplier / 2) + _addToYHeight, y * _cellSize); //compensate for scale shift due to height                                                                                                                                                    
+					//color the thing
 					_floorsGeometries[index].transform.GetComponent<Renderer>().material.color = Color.HSVToRGB(1, 1, (_floorsList[index]) / _rangeOfFloors);// this creates color based on value of cell!
 					_floorHeight = _shiftFloorsHeightAboveZero * _zAxisMultiplier;
 					_floorsGeometries[index].transform.localScale = new Vector3(_cellShrink * _cellSize, _floorHeight, _cellShrink * _cellSize);
@@ -135,6 +171,20 @@ public class HeatMaps : MonoBehaviour
 			}
 		}
 		return true;
+	}
+
+
+	private void UpdateFloor(int index) {
+		if (_floorsGeometries [index] == null)
+			return;
+		
+		var _shiftFloorsHeightAboveZero = _floorsList[index] + Mathf.Abs(_floorsList.Min());
+
+		_floorsGeometries[index].transform.localPosition = new Vector3(_floorsGeometries[index].transform.localPosition.x, _shiftFloorsHeightAboveZero * (_zAxisMultiplier / 2) + _addToYHeight, _floorsGeometries[index].transform.localPosition.y); //compensate for scale shift due to height                                                                                                                                                    
+		//color the thing
+		_floorsGeometries[index].transform.GetComponent<Renderer>().material.color = Color.HSVToRGB(1, 1, (_floorsList[index]) / _rangeOfFloors);// this creates color based on value of cell!
+		float _floorHeight = _shiftFloorsHeightAboveZero * _zAxisMultiplier;
+		_floorsGeometries[index].transform.localScale = new Vector3(_cellShrink * _cellSize, _floorHeight, _cellShrink * _cellSize);
 	}
 
 	/// <summary>
@@ -163,7 +213,7 @@ public class HeatMaps : MonoBehaviour
 				if (_typesList[_loopsCounter] != _outOfBoundsType)
 				{ // if not on the area which is out of the physical model space
 					_typesGeometries[_loopsCounter] = GameObject.CreatePrimitive(PrimitiveType.Quad); //make cell cube
-					_typesGeometries[_loopsCounter].name = ("Types " + _typesList[_loopsCounter].ToString());
+					_typesGeometries[_loopsCounter].name = ("Types " + _typesList[_loopsCounter].ToString() + " " + _loopsCounter.ToString());
 					/*_typesGeometries.transform.localPosition = new Vector3(x * _cellSize,
                        _shiftFloorListAboveZero * _zAxisMultiplier + _addToYHeight,
                       y * _cellSize);   //move and rotate */
@@ -183,7 +233,7 @@ public class HeatMaps : MonoBehaviour
 					}
 					else
 					{
-						Color currColor = GameObject.Find ("cityIO").GetComponent<cityIO> ().GetColor (_shiftTypeListAboveZero);
+						Color currColor = cityIO.GetColor (_shiftTypeListAboveZero);
 						_typesGeometries [_loopsCounter].transform.GetComponent<Renderer> ().material.color = currColor;
 					}
 
@@ -197,6 +247,28 @@ public class HeatMaps : MonoBehaviour
 		}
 
 		return true;
+	}
+
+	private void UpdateType(int index) {
+		if (_typesGeometries [index] == null)
+			return;
+		
+		var _shiftTypeListAboveZero = _typesList[index]; 
+		//+ Mathf.Abs(_typesList.Min()); // move list item from subzero
+
+		_typesGeometries[index].name = ("Types " + _typesList[_loopsCounter].ToString());
+
+		if (_typesList[index] == -1)
+		{
+			//_typesGeometries[index].transform.localScale = new Vector3(0.25f * _cellSize, 0.25f * _cellSize, 0.25f * _cellSize);
+			_typesGeometries[index].transform.GetComponent<Renderer>().material.color = Color.black;
+		}
+		else
+		{
+			_typesGeometries[index].transform.localScale = new Vector3(_cellShrink * _cellSize, _cellShrink * _cellSize, _cellShrink * _cellSize);
+			Color currColor = cityIO.GetColor (_shiftTypeListAboveZero);
+			_typesGeometries [index].transform.GetComponent<Renderer> ().material.color = currColor;
+		}
 	}
 
 	private void CreateNeighborGeo(int x, int y, int index) {
@@ -362,24 +434,33 @@ public class HeatMaps : MonoBehaviour
 		}
 	}
 		
-	public void UpdateData() {
-		UpdateTypes ();
-		UpdateFloors ();
-
-		SearchNeighbors ();
+	public void OnUpdateData() {
+		UpdateFloorsAndTypes ();
+		//SearchNeighbors ();
 	}
 
 	/// <summary>
 	/// Updates the types // only update interactive part
 	/// </summary>
-	public void UpdateTypes() {
-		
-	}
+	private void UpdateFloorsAndTypes() {
+		Debug.Log ("Update floors & types in HeatMaps.");
 
-	/// <summary>
-	/// Updates the floors // only update interactive part
-	/// </summary>
-	public void UpdateFloors() {
+		int index = interactiveIndex;
+		int gridIndex = 0;
+
+		for (int j = (int)(interactiveGridLocation.y + interactiveGridDim.y); j > (int)interactiveGridLocation.y ; j--) {
+			for (int i = (int)interactiveGridLocation.x; i < (int)(interactiveGridLocation.x + interactiveGridDim.x); i++) {
+			
+				index = i * (int)(_gridY) + j;
+				if (cityIO.ShouldUpdateGrid(gridIndex)) {
+					_typesList [index] = cityIO.GetGridType (gridIndex);
+					_floorsList [index] = cityIO.GetFloorHeight (gridIndex);
+					UpdateType (index);
+					UpdateFloor (index);
+				}
+				gridIndex++;
+			}
+		}
 		
 	}
 
