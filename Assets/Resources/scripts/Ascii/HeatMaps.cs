@@ -175,12 +175,16 @@ public class HeatMaps : MonoBehaviour
 
 
 	private void UpdateFloor(int index) {
+		
 		if (_floorsGeometries [index] == null)
 			return;
-		
-		var _shiftFloorsHeightAboveZero = _floorsList[index] + Mathf.Abs(_floorsList.Min());
 
-		_floorsGeometries[index].transform.localPosition = new Vector3(_floorsGeometries[index].transform.localPosition.x, _shiftFloorsHeightAboveZero * (_zAxisMultiplier / 2) + _addToYHeight, _floorsGeometries[index].transform.localPosition.y); //compensate for scale shift due to height                                                                                                                                                    
+		// update range with new item
+		_rangeOfFloors = (Mathf.Abs(_floorsList.Max()) + Mathf.Abs(_floorsList.Min()));
+		
+		var _shiftFloorsHeightAboveZero = _floorsList [index] + Mathf.Abs(_floorsList.Min());
+
+		//_floorsGeometries[index].transform.localPosition = new Vector3(_floorsGeometries[index].transform.position.x, _shiftFloorsHeightAboveZero * (_zAxisMultiplier / 2) + _addToYHeight, _floorsGeometries[index].transform.position.y); //compensate for scale shift due to height                                                                                                                                                    
 		//color the thing
 		_floorsGeometries[index].transform.GetComponent<Renderer>().material.color = Color.HSVToRGB(1, 1, (_floorsList[index]) / _rangeOfFloors);// this creates color based on value of cell!
 		float _floorHeight = _shiftFloorsHeightAboveZero * _zAxisMultiplier;
@@ -207,7 +211,8 @@ public class HeatMaps : MonoBehaviour
 		{
 			for (int y = 0; y < _gridY; y++)
 			{
-				var _shiftTypeListAboveZero = _typesList[_loopsCounter] + Mathf.Abs(_typesList.Min()); // move list item from subzero
+				var _shiftTypeListAboveZero = _typesList [_loopsCounter];
+					//+ Mathf.Abs(_typesList.Min()); // move list item from subzero
 				// var _shiftFloorListAboveZero = _floorsList[_loopsCounter] + Mathf.Abs(_floorsList.Min()); // move list item from subzero
 
 				if (_typesList[_loopsCounter] != _outOfBoundsType)
@@ -254,7 +259,6 @@ public class HeatMaps : MonoBehaviour
 			return;
 		
 		var _shiftTypeListAboveZero = _typesList[index]; 
-		//+ Mathf.Abs(_typesList.Min()); // move list item from subzero
 
 		_typesGeometries[index].name = ("Types " + _typesList[_loopsCounter].ToString());
 
@@ -434,9 +438,13 @@ public class HeatMaps : MonoBehaviour
 		}
 	}
 		
+	/// <summary>
+	/// ~~~~~ COULD THREAD ~~~~~
+	/// Raises the update data event.
+	/// </summary>
 	public void OnUpdateData() {
 		UpdateFloorsAndTypes ();
-		//SearchNeighbors ();
+		SearchNeighbors ();
 	}
 
 	/// <summary>
@@ -450,7 +458,6 @@ public class HeatMaps : MonoBehaviour
 
 		for (int j = (int)(interactiveGridLocation.y + interactiveGridDim.y); j > (int)interactiveGridLocation.y ; j--) {
 			for (int i = (int)interactiveGridLocation.x; i < (int)(interactiveGridLocation.x + interactiveGridDim.x); i++) {
-			
 				index = i * (int)(_gridY) + j;
 				if (cityIO.ShouldUpdateGrid(gridIndex)) {
 					_typesList [index] = cityIO.GetGridType (gridIndex);

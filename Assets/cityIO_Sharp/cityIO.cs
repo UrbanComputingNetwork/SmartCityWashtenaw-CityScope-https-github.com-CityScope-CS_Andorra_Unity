@@ -92,7 +92,7 @@ public class cityIO : MonoBehaviour
 
         _table = new Table();
         _table.objects = new Objects();
-        _table.objects.density = new List<int>(new int[] { 5, 8, 20, 1, 10, 3 });
+        _table.objects.density = new List<int>(new int[] { 5, 8, 4, 5, 10, 3 });
 
         while (true)
         {
