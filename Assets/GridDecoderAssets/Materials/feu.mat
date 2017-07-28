@@ -7,10 +7,11 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: feu
-  m_Shader: {fileID: 4800000, guid: ef8c3bd3217264acaa7a22abebc7203f, type: 3}
+  m_Shader: {fileID: 4800000, guid: 3e9093dd150d143759431f84b9864b30, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 5
   m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
@@ -21,5 +22,7 @@ Material:
         m_Texture: {fileID: 2800000, guid: c328b75192e46468d9bf8653c8e16ebc, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    m_Floats: []
+    m_Floats:
+    - _Brightness: 0
+    - _Contrast: 1.36
     m_Colors: []
