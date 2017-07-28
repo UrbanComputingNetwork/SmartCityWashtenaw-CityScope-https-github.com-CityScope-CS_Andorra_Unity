@@ -456,10 +456,15 @@ public class HeatMaps : MonoBehaviour
 		int index = interactiveIndex;
 		int gridIndex = 0;
 
+		///
+		/// The interactive grid is indexed the other way! 
+		/// so have to iterate r-l up-down
+		/// 
 		for (int j = (int)(interactiveGridLocation.y + interactiveGridDim.y); j > (int)interactiveGridLocation.y ; j--) {
 			for (int i = (int)interactiveGridLocation.x; i < (int)(interactiveGridLocation.x + interactiveGridDim.x); i++) {
 				index = i * (int)(_gridY) + j;
-				if (cityIO.ShouldUpdateGrid(gridIndex)) {
+				// Update interactive part only
+				if (cityIO.ShouldUpdateGrid(gridIndex) && _masksList[index] == (int)Mask.INTERACTIVE) {
 					_typesList [index] = cityIO.GetGridType (gridIndex);
 					_floorsList [index] = cityIO.GetFloorHeight (gridIndex);
 					UpdateType (index);
@@ -468,7 +473,29 @@ public class HeatMaps : MonoBehaviour
 				gridIndex++;
 			}
 		}
-		
+	}
+
+	/// <summary>
+	/// Returns the value of the mask (from the ASCII file) at the given location in the Table grid.
+	/// </summary>
+	/// <returns>The mask.</returns>
+	/// <param name="index">Index.</param>
+	public int GetMask(int index) {
+		int currJ = index % (int)interactiveGridDim.y;
+		int currI = (int) (index / interactiveGridDim.y);
+		int i = (int) (interactiveGridLocation.y + interactiveGridDim.y) - currI;
+		int j = (int) interactiveGridLocation.x + currJ;
+		int remappedIndex = j * (int)(_gridY) + i;
+		Debug.Log ("current mask at index " + index + " with converted index " + remappedIndex + " is " + _masksList [remappedIndex]);
+
+		return _masksList[remappedIndex];
+	}
+
+	public bool IsInteractive(int index) {
+		if (GetMask (index) == (int)Mask.INTERACTIVE)
+			return true;
+		else
+			return false;
 	}
 
 }

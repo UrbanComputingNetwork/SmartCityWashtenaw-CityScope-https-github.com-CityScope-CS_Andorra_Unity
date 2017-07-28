@@ -133,7 +133,6 @@ public class cityIO : MonoBehaviour
                 _newCityioDataFlag = true;
 				if (_table.grid != null && update) {
 					EventManager.TriggerEvent ("updateData");
-					yield return new WaitForEndOfFrame ();
 					DrawTable();
 				}
             }
@@ -267,7 +266,7 @@ public class cityIO : MonoBehaviour
 
 	private void UpdateTable() {
 		for (int i = 0; i < _table.grid.Count; i++) { // loop through list of all cells grid objects 
-			if (_table.grid[i].update)
+			if (_table.grid[i].update && GameObject.Find ("HeatmapsHolder").GetComponent<HeatMaps> ().IsInteractive(i))
 				UpdateGridObject(i);
 		}
 	}
