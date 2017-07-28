@@ -30,15 +30,15 @@ public class Table
 		if (table.grid != null) {
 			for (int i = 0; i < currIds.GetLength (0); i++) {
 				for (int j = 0; j < currIds.GetLength (1); j++) {
-					int currType = table.grid [i * currIds.GetLength (0) + j].type;
+					int currType = table.grid [i * currIds.GetLength (1) + j].type;
 
 					if (currType != currIds [i, j]) {
-						table.grid [i * currIds.GetLength (0) + j].type = currIds [i, j];
+						table.grid [i * currIds.GetLength (1) + j].type = currIds [i, j];
 						needsUpdate = true;
-						table.grid [i * currIds.GetLength (0) + j].update = true;
+						table.grid [i * currIds.GetLength (1) + j].update = true;
 					}
 					else
-						table.grid [i * currIds.GetLength (0) + j].update = false;
+						table.grid [i * currIds.GetLength (1) + j].update = false;
 				}
 			}
 		}
@@ -50,8 +50,8 @@ public class Table
 				for (int j = 0; j < currIds.GetLength (1); j++) {
 					Grid currGrid = new Grid ();
 					currGrid.type = currIds [i, j];
-					currGrid.x = i;
-					currGrid.y = j;
+					currGrid.x = j;
+					currGrid.y = i;
 					currGrid.rot = 180;
 					currGrid.update = true;
 					table.grid.Add (currGrid);

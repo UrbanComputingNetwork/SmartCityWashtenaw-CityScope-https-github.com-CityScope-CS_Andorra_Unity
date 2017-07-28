@@ -69,6 +69,8 @@ public class cityIO : MonoBehaviour
     /// text mesh for type display 
     /// </summary>
     public GameObject textMeshPrefab;
+	private GameObject[] textMeshes;
+	private float textOffset = 20f;
     /// <summary> 
     /// list of types colors
     /// </summary>
@@ -177,7 +179,9 @@ public class cityIO : MonoBehaviour
 		_gridObjects[i].GetComponent<Renderer>().material = _material;
 		_gridObjects[i].transform.localPosition = gridObjectPosition; //compensate for scale shift due to height
 		_gridObjects[i].transform.localScale = gridObjectScale;
-		_gridObjects [i].SetActive (false);
+		//_gridObjects [i].SetActive (false);
+
+		AddBuildingTypeText (i, textOffset);
 	}
 
 	private void SetGridObject(int i) {
@@ -235,6 +239,8 @@ public class cityIO : MonoBehaviour
 			SetGridObject (i);
 		}
 		NameGridObject (i);
+		UpdateBuildingTypeText (i, true);
+
 		if (!_gridObjects[i].active)
 			_gridObjects [i].SetActive (true);
 	}
@@ -283,15 +289,31 @@ public class cityIO : MonoBehaviour
 		UpdateTable ();
     }
 
-//    private void ShowBuildingTypeText(int i, float height) //mesh type text metod 
-//    {
-//        GameObject textMesh = GameObject.Instantiate(textMeshPrefab, new Vector3((_table.grid[i].x * _cellSizeInMeters),
-//                                  height + 20, (_table.grid[i].y * _cellSizeInMeters)),
-//                                  _gridObject.transform.rotation, transform) as GameObject; //spwan prefab text
-//
-//        textMesh.GetComponent<TextMesh>().text = _table.grid[i].type.ToString();
-//        textMesh.GetComponent<TextMesh>().fontSize = 1000; // 
-//        textMesh.GetComponent<TextMesh>().color = Color.black;
-//        textMesh.GetComponent<TextMesh>().characterSize = 0.25f;
-//    }
+    private void AddBuildingTypeText(int i, float height) //mesh type text metod 
+    {
+		if (textMeshes == null)
+			textMeshes = new GameObject[_table.grid.Count];
+		
+		textMeshes[i] = GameObject.Instantiate(textMeshPrefab, new Vector3((_gridObjects[i].transform.position.x),
+			height + _gridObjects[i].transform.position.y + _gridObjects[i].transform.localScale.y, _gridObjects[i].transform.position.z),
+			_gridObjects[i].transform.rotation, transform) as GameObject; //spwan prefab text
+
+		Quaternion _tmpRot = textMeshes [i].transform.localRotation;
+		_tmpRot.eulerAngles = new Vector3(90, 0, 0.0f);
+		textMeshes [i].transform.localRotation = _tmpRot;
+
+		textMeshes[i].GetComponent<TextMesh>().text = _table.grid[i].type.ToString();
+		textMeshes[i].GetComponent<TextMesh>().fontSize = 1000; // 
+		textMeshes[i].GetComponent<TextMesh>().color = Color.black;
+		textMeshes[i].GetComponent<TextMesh>().characterSize = 0.25f;
+
+		textMeshes [i].SetActive (false);
+    }
+
+	private void UpdateBuildingTypeText(int i, bool enabled) {
+		if (enabled &&  _table.grid[i].type != (int)Brick.INVALID)
+			textMeshes [i].SetActive (true);
+		textMeshes[i].GetComponent<TextMesh>().text = _table.grid[i].type.ToString();
+		textMeshes[i].transform.localPosition = new Vector3(textMeshes[i].transform.localPosition.x, _gridObjects[i].transform.position.y + _gridObjects[i].transform.localScale.y, textMeshes[i].transform.localPosition.z);
+	}
 }
