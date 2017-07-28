@@ -171,12 +171,13 @@ public class cityIO : MonoBehaviour
 		_gridObjects[i].transform.parent = _gridHolder.transform; //put into parent object for later control
 
 		gridObjectPosition = new Vector3((_table.grid[i].x * _cellSizeInMeters), 0, (_table.grid[i].y * _cellSizeInMeters));
-		gridObjectScale = new Vector3(cellShrink * _cellSizeInMeters, 0.25f, cellShrink * _cellSizeInMeters);
+		gridObjectScale = new Vector3(cellShrink * _cellSizeInMeters, 0, cellShrink * _cellSizeInMeters);
 
 		// Objects properties 
 		_gridObjects[i].GetComponent<Renderer>().material = _material;
 		_gridObjects[i].transform.localPosition = gridObjectPosition; //compensate for scale shift due to height
 		_gridObjects[i].transform.localScale = gridObjectScale;
+		_gridObjects [i].SetActive (false);
 	}
 
 	private void SetGridObject(int i) {
@@ -234,6 +235,8 @@ public class cityIO : MonoBehaviour
 			SetGridObject (i);
 		}
 		NameGridObject (i);
+		if (!_gridObjects[i].active)
+			_gridObjects [i].SetActive (true);
 	}
 
 	private void NameGridObject(int i) {

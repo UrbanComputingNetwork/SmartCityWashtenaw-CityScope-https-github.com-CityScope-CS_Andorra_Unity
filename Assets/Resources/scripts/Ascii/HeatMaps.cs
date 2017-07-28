@@ -486,16 +486,17 @@ public class HeatMaps : MonoBehaviour
 		int i = (int) (interactiveGridLocation.y + interactiveGridDim.y) - currI;
 		int j = (int) interactiveGridLocation.x + currJ;
 		int remappedIndex = j * (int)(_gridY) + i;
-		Debug.Log ("current mask at index " + index + " with converted index " + remappedIndex + " is " + _masksList [remappedIndex]);
 
 		return _masksList[remappedIndex];
 	}
 
+	/// <summary>
+	/// Determines whether the mask shows that the module is interactive at the specified index.
+	/// </summary>
+	/// <returns><c>true</c> if this instance is interactive the specified index; otherwise, <c>false</c>.</returns>
+	/// <param name="index">Index.</param>
 	public bool IsInteractive(int index) {
-		if (GetMask (index) == (int)Mask.INTERACTIVE)
-			return true;
-		else
-			return false;
+		return (GetMask (index) == (int)Mask.INTERACTIVE);
 	}
 
 }
