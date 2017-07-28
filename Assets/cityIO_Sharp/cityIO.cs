@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Linq;
+using System;
 
 public class cityIO : MonoBehaviour
 {
@@ -144,8 +145,7 @@ public class cityIO : MonoBehaviour
 	public Color GetColor(int i) {
 		if (colors.Length > i)
 			return colors [i];
-		else
-			return Color.black;
+		return Color.black;
 	}
 
 	public int GetGridType(int index) {
@@ -155,8 +155,7 @@ public class cityIO : MonoBehaviour
 	public int GetFloorHeight(int index) {
 		if (buildingTypes.Contains(_table.grid [index].type))
 			return (int)((_table.objects.density [_table.grid [index].type] * _floorHeight) * 0.5f);
-		else
-			return -1;
+		return -1;
 	}
 
 	public bool ShouldUpdateGrid(int index) {
@@ -179,7 +178,7 @@ public class cityIO : MonoBehaviour
 		_gridObjects[i].GetComponent<Renderer>().material = _material;
 		_gridObjects[i].transform.localPosition = gridObjectPosition; //compensate for scale shift due to height
 		_gridObjects[i].transform.localScale = gridObjectScale;
-		//_gridObjects [i].SetActive (false);
+		_gridObjects [i].SetActive (false);
 
 		AddBuildingTypeText (i, textOffset);
 	}
@@ -241,7 +240,7 @@ public class cityIO : MonoBehaviour
 		NameGridObject (i);
 		UpdateBuildingTypeText (i, true);
 
-		if (!_gridObjects[i].active)
+		if (!_gridObjects[i].activeSelf)
 			_gridObjects [i].SetActive (true);
 	}
 
@@ -295,7 +294,7 @@ public class cityIO : MonoBehaviour
 			textMeshes = new GameObject[_table.grid.Count];
 		
 		textMeshes[i] = GameObject.Instantiate(textMeshPrefab, new Vector3((_gridObjects[i].transform.position.x),
-			height + _gridObjects[i].transform.position.y + _gridObjects[i].transform.localScale.y, _gridObjects[i].transform.position.z),
+			height + _gridObjects[i].transform.localScale.y, _gridObjects[i].transform.position.z),
 			_gridObjects[i].transform.rotation, transform) as GameObject; //spwan prefab text
 
 		Quaternion _tmpRot = textMeshes [i].transform.localRotation;
@@ -304,16 +303,20 @@ public class cityIO : MonoBehaviour
 
 		textMeshes[i].GetComponent<TextMesh>().text = _table.grid[i].type.ToString();
 		textMeshes[i].GetComponent<TextMesh>().fontSize = 1000; // 
-		textMeshes[i].GetComponent<TextMesh>().color = Color.black;
+		textMeshes[i].GetComponent<TextMesh>().color = Color.gray;
 		textMeshes[i].GetComponent<TextMesh>().characterSize = 0.25f;
 
 		textMeshes [i].SetActive (false);
     }
 
 	private void UpdateBuildingTypeText(int i, bool enabled) {
-		if (enabled &&  _table.grid[i].type != (int)Brick.INVALID)
+		if (enabled && _table.grid [i].type != (int)Brick.INVALID)
 			textMeshes [i].SetActive (true);
-		textMeshes[i].GetComponent<TextMesh>().text = _table.grid[i].type.ToString();
-		textMeshes[i].transform.localPosition = new Vector3(textMeshes[i].transform.localPosition.x, _gridObjects[i].transform.position.y + _gridObjects[i].transform.localScale.y, textMeshes[i].transform.localPosition.z);
+		else
+			textMeshes [i].SetActive (false); 
+		textMeshes [i].GetComponent<TextMesh> ().text = Enum.GetName (typeof(Brick), (_table.grid [i].type));
+		float xPos = textMeshes [i].transform.localPosition.x;
+		float zPos = textMeshes [i].transform.localPosition.z;
+		textMeshes[i].transform.localPosition = new Vector3(xPos, _gridObjects[i].transform.localPosition.y + _gridObjects[i].transform.localScale.y * 0.5f, zPos);
 	}
 }

@@ -50,8 +50,8 @@ public class Table
 				for (int j = 0; j < currIds.GetLength (1); j++) {
 					Grid currGrid = new Grid ();
 					currGrid.type = currIds [i, j];
-					currGrid.x = j;
-					currGrid.y = i;
+					currGrid.x = i;
+					currGrid.y = j;
 					currGrid.rot = 180;
 					currGrid.update = true;
 					table.grid.Add (currGrid);

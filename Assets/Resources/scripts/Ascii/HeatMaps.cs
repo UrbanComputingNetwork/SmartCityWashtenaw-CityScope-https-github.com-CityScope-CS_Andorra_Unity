@@ -113,12 +113,12 @@ public class HeatMaps : MonoBehaviour
 		interactiveGridDim = new Vector2 (0, 0);
 
 		// Find location of interactive grid
-		for (int x = 0; x < _gridX; x++) {
-			for (int y = 0; y < _gridY; y++) {
+		for (int i = 0; i < _gridX; i++) {
+			for (int j = 0; j < _gridY; j++) {
 				if (_masksList[index] == (int) Mask.GRID && interactiveIndex < 0) {
 					interactiveIndex = index;
-					interactiveGridLocation.x = x;
-					interactiveGridLocation.y = y;
+					interactiveGridLocation.x = j;
+					interactiveGridLocation.y = i;
 					Debug.Log ("Mask index is " + interactiveIndex);
 				}
 				index++;
@@ -460,8 +460,8 @@ public class HeatMaps : MonoBehaviour
 		/// The interactive grid is indexed the other way! 
 		/// so have to iterate r-l up-down
 		/// 
-		for (int j = (int)(interactiveGridLocation.y + interactiveGridDim.y); j > (int)interactiveGridLocation.y ; j--) {
-			for (int i = (int)interactiveGridLocation.x; i < (int)(interactiveGridLocation.x + interactiveGridDim.x); i++) {
+		for (int j = (int)(interactiveGridLocation.x + interactiveGridDim.x); j > (int)interactiveGridLocation.x ; j--) {
+			for (int i = (int)interactiveGridLocation.y; i < (int)(interactiveGridLocation.y + interactiveGridDim.y); i++) {
 				index = i * (int)(_gridY) + j;
 				// Update interactive part only
 				if (cityIO.ShouldUpdateGrid(gridIndex) && _masksList[index] == (int)Mask.INTERACTIVE) {
@@ -483,8 +483,8 @@ public class HeatMaps : MonoBehaviour
 	public int GetMask(int index) {
 		int currJ = index % (int)interactiveGridDim.y;
 		int currI = (int) (index / interactiveGridDim.y);
-		int i = (int) (interactiveGridLocation.y + interactiveGridDim.y) - currI;
-		int j = (int) interactiveGridLocation.x + currJ;
+		int i = (int) (interactiveGridLocation.x + interactiveGridDim.y) - currI;
+		int j = (int) interactiveGridLocation.y + currJ;
 		int remappedIndex = j * (int)(_gridY) + i;
 
 		return _masksList[remappedIndex];
