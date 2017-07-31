@@ -241,7 +241,7 @@ public class Scanners : MonoBehaviour
 		string key = "";
 		for (int i = 0; i < numOfScannersX; i += _gridSize) {
 			for (int j = 0; j < numOfScannersY; j += _gridSize) {
-				currentIds [i / _gridSize, j / _gridSize] = FindCurrentId(key, i, j);
+				currentIds [i / _gridSize, j / _gridSize] = FindCurrentId(key, i, j, ref scannersList, true);
 			}
 		}
 
@@ -260,11 +260,11 @@ public class Scanners : MonoBehaviour
 	/// <param name="key">Key.</param>
 	/// <param name="i">The index.</param>
 	/// <param name="j">J.</param>
-	private int FindCurrentId(string key, int i, int j) {
+	public int FindCurrentId(string key, int i, int j, ref GameObject[,] currScanners, bool isGrid = true) {
 		key = "";
 		for (int k = 0; k < _gridSize; k++) {
 			for (int m = 0; m < _gridSize; m++) {
-				key += FindColor (i + k, j + m); 
+				key += FindColor (i + k, j + m, ref currScanners, isGrid); 
 			}
 		} 
 
@@ -282,6 +282,64 @@ public class Scanners : MonoBehaviour
 			}
 		}
 		return -1;
+	}
+
+	/// <summary>
+	/// Finds the color below scanner item[i, j].
+	/// </summary>
+	/// <param name="i">The row index.</param>
+	/// <param name="j">The column index.</param>
+	private int FindColor(int i, int j, ref GameObject[,] currScanners, bool isGrid = true) {
+		if (Physics.Raycast (currScanners [i, j].transform.position, Vector3.down, out hit, 6)) {
+			// Get local tex coords w.r.t. triangle
+
+			if (!hitTex) {
+				Debug.Log ("No hit texture");
+				currScanners [i, j].GetComponent<Renderer> ().material.color = Color.magenta;
+				return -1;
+			} else {
+				int _locX = Mathf.RoundToInt (hit.textureCoord.x * hitTex.width);
+				int _locY = Mathf.RoundToInt (hit.textureCoord.y * hitTex.height); 
+				Color pixel = hitTex.GetPixel (_locX, _locY);
+				int currID = colorClassifier.GetClosestColorId (pixel);
+
+				if (isGrid) {
+					if (_useBuffer)
+						currID = GetIdAverage (i, j, currID);
+
+					// Save colors for 3D visualization
+					if (setup)
+						allColors [i + numOfScannersX * j] = pixel;
+				}
+
+				Color minColor;
+
+				// Display 3D colors & use scanned colors for scanner color
+				if (_isCalibrating && isGrid) {
+					minColor = pixel;
+					if (_showDebugColors) {
+						// Could improve by drawing only if sphere locations change
+						Vector3 origin = GameObject.Find ("Color space parent").transform.position;
+						Debug.DrawLine (origin + new Vector3 (pixel.r, pixel.g, pixel.b), origin + new Vector3 (sampleColors [currID].r, sampleColors [currID].g, sampleColors [currID].b), pixel, 1, false);
+					}
+				} else 
+					minColor = colorClassifier.GetColor (currID);
+
+				// Display rays cast at the keystoned quad
+				if (_showRays) {
+					Debug.DrawLine (scannersList [i, j].transform.position, hit.point, pixel, 200, false);
+					Debug.Log (hit.point);
+				}
+
+				// Paint scanner with the found color 
+				currScanners [i, j].GetComponent<Renderer> ().material.color = minColor;
+
+				return currID;
+			}
+		} else { 
+			currScanners [i, j].GetComponent<Renderer> ().material.color = Color.magenta; //paint scanner with Out of bounds / invalid  color 
+			return -1;
+		}
 	}
 
 
@@ -316,62 +374,6 @@ public class Scanners : MonoBehaviour
 	public Vector2 GetGridDimensions() {
 		return (new Vector2 (numOfScannersX * 0.5f, numOfScannersY * 0.5f));
 	}
-
-	/// <summary>
-	/// Finds the color below scanner item[i, j].
-	/// </summary>
-	/// <param name="i">The row index.</param>
-	/// <param name="j">The column index.</param>
-	private int FindColor(int i, int j) {
-		if (Physics.Raycast (scannersList [i, j].transform.position, Vector3.down, out hit, 6)) {
-			// Get local tex coords w.r.t. triangle
-
-			if (!hitTex) {
-				Debug.Log ("No hit texture");
-				scannersList [i, j].GetComponent<Renderer> ().material.color = Color.magenta;
-				return -1;
-			} else {
-				int _locX = Mathf.RoundToInt (hit.textureCoord.x * hitTex.width);
-				int _locY = Mathf.RoundToInt (hit.textureCoord.y * hitTex.height); 
-				Color pixel = hitTex.GetPixel (_locX, _locY);
-				int currID = colorClassifier.GetClosestColorId (pixel);
-
-				if (_useBuffer)
-					currID = GetIdAverage (i, j, currID);
-
-				// Save colors for 3D visualization
-				if (setup)
-					allColors [i + numOfScannersX * j] = pixel;
-				Color minColor;
-
-				// Display 3D colors & use scanned colors for scanner color
-				if (_isCalibrating) {
-					minColor = pixel;
-					if (_showDebugColors) {
-						// Could improve by drawing only if sphere locations change
-						Vector3 origin = GameObject.Find ("Color space parent").transform.position;
-						Debug.DrawLine (origin + new Vector3 (pixel.r, pixel.g, pixel.b), origin + new Vector3 (sampleColors [currID].r, sampleColors [currID].g, sampleColors [currID].b), pixel, 1, false);
-					}
-				} else 
-					minColor = colorClassifier.GetColor (currID);
-
-				// Display rays cast at the keystoned quad
-				if (_showRays) {
-					Debug.DrawLine (scannersList [i, j].transform.position, hit.point, pixel, 200, false);
-					Debug.Log (hit.point);
-				}
-
-				// Paint scanner with the found color 
-				scannersList [i, j].GetComponent<Renderer> ().material.color = minColor;
-
-				return currID;
-			}
-		} else { 
-			scannersList [i, j].GetComponent<Renderer> ().material.color = Color.magenta; //paint scanner with Out of bounds / invalid  color 
-			return -1;
-		}
-	}
-
 
 	private int GetIdAverage (int i, int j, int currID) {
 		int index = i * numOfScannersX + j;
