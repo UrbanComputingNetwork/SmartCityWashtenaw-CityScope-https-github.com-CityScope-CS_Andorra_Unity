@@ -41,7 +41,15 @@ public class Scanners : MonoBehaviour
 	private int numOfScannersY;
 	private Queue<int>[] idBuffer;
 
+	// Scanner objects
 	private GameObject _scanner;
+
+	private GameObject dockParent;
+	private GameObject[] dockScanners;
+
+	private GameObject sliderParent;
+	private GameObject[] sliderScanners;
+
 	RaycastHit hit;
 	RenderTexture rTex;
 	Texture2D _texture;
@@ -123,6 +131,10 @@ public class Scanners : MonoBehaviour
 		// Assign scanner colors
 		ScanColors();
 
+		// Update slider & dock readings
+		UpdateDock();
+		UpdateSlider ();
+
 		if (_debug)
 			PrintMatrix ();
 
@@ -155,13 +167,11 @@ public class Scanners : MonoBehaviour
 		MakeScanners ();
 		SetupSampleObjects ();
 
+		// Original keystoned object with webcam texture / video
 		cameraKeystonedQuad = GameObject.Find("CameraKeystoneQuad");
 
-		// Find copy mesh with RenderTexture
+		// Copy mesh with RenderTexture
 		keystonedQuad = GameObject.Find (colorTexturedQuadName);
-
-		if (!keystonedQuad)
-			Debug.Log ("Keystoned quad not found.");
 
 		_texture = new Texture2D (cameraKeystonedQuad.GetComponent<Renderer> ().material.mainTexture.width, 
 			cameraKeystonedQuad.GetComponent<Renderer> ().material.mainTexture.height);
@@ -422,6 +432,56 @@ public class Scanners : MonoBehaviour
 				scannersList[x, y] = this._scanner;
 			}
 		}
+
+		CreateDockScanner ();
+		CreateSlider ();
+	}
+
+	/// <summary>
+	/// Creates the dock scanner.
+	/// </summary>
+	private void CreateDockScanner() {
+		dockParent = new GameObject ();
+		dockParent.transform.parent = this.transform;
+		dockParent.transform.localPosition = new Vector3 (0, 0, 0);
+		dockParent.name = "Dock parent";
+
+		dockScanners = new GameObject[_gridSize * _gridSize];
+		int index = 0;
+
+		for (int x = 0; x < _gridSize; x++) {
+			for (int y = 0; y < _gridSize; y++) {
+				dockScanners[index] = GameObject.CreatePrimitive (PrimitiveType.Quad);
+				dockScanners[index].name = "dock_" + y + x;
+				dockScanners[index].transform.parent = dockParent.transform;
+				dockScanners[index].transform.localScale = new Vector3 (_scannerScale, _scannerScale, _scannerScale);  
+				dockScanners[index].transform.localPosition = new Vector3 (x * _scannerScale * 2, 0.2f, y * _scannerScale * 2);
+				dockScanners[index].transform.Rotate (90, 0, 0); 
+				index++;
+			}
+		}
+	}
+
+	/// <summary>
+	/// Creates the slider.
+	/// Compute distance to two endpoints from a given color slider object.
+	/// </summary>
+	private void CreateSlider() {
+		
+	}
+
+	/// <summary>
+	/// Updates the dock ID scanner.
+	/// </summary>
+	private void UpdateDock() {
+		
+	}
+
+	/// <summary>
+	/// Updates the slider.
+	/// </summary>
+	private void UpdateSlider() {
+		
 	}
 
 	/// <summary>
