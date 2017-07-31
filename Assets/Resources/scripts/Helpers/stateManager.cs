@@ -82,7 +82,6 @@ public class stateManager : MonoBehaviour
                 ShowContext(_andorraHeatmap);
                 _heatmapsScript.FloorsViz();
                 _floorsUI.SetActive(true);
-
                 print("State 1: Floors map" + '\n');
                 break;
 			case (int)HeatmapState.HEATMAP: // HEATMAP

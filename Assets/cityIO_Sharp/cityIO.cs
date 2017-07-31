@@ -95,7 +95,9 @@ public class cityIO : MonoBehaviour
 
         _table = new Table();
         _table.objects = new Objects();
-        _table.objects.density = new List<int>(new int[] { 5, 8, 4, 5, 10, 3 });
+		_table.objects.density = new List<int>();
+		for (int i = 0; i < buildingTypes.Length; i++)
+			_table.objects.density.Add((int)(UnityEngine.Random.Range(0f, 20f)));
 
         while (true)
         {
@@ -153,6 +155,8 @@ public class cityIO : MonoBehaviour
 	}
 
 	public int GetFloorHeight(int index) {
+		if (_table.grid.Count <= index)
+			return -1;
 		if (buildingTypes.Contains(_table.grid [index].type))
 			return (int)((_table.objects.density [_table.grid [index].type] * _floorHeight) * 0.5f);
 		return -1;

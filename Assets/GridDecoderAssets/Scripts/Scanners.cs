@@ -228,32 +228,7 @@ public class Scanners : MonoBehaviour
 		string key = "";
 		for (int i = 0; i < numOfScannersX; i += _gridSize) {
 			for (int j = 0; j < numOfScannersY; j += _gridSize) {
-				key = "";
-				for (int k = 0; k < _gridSize; k++) {
-					for (int m = 0; m < _gridSize; m++) {
-						key += FindColor (i + k, j + m); 
-					}
-				} 
-					
-				// keys read counterclockwise
-				key = new string(key.ToCharArray().Reverse().ToArray());
-
-				if (idList.ContainsKey (key)) {
-					currentIds [i / _gridSize, j / _gridSize] = (int)idList [key];
-				} 
-				else { // check rotation independence
-					bool isRotation = false;
-					string keyConcat = key + key;
-					foreach(string idKey in idList.Keys) {
-						if (keyConcat.Contains (idKey)) {
-							currentIds [i / _gridSize, j / _gridSize] = (int)idList [idKey];
-							isRotation = true;
-							break;
-						}
-					}
-					if (!isRotation)
-						currentIds [i / _gridSize, j / _gridSize] = -1;
-				}
+				currentIds [i / _gridSize, j / _gridSize] = FindCurrentId(key, i, j);
 			}
 		}
 
@@ -263,6 +238,39 @@ public class Scanners : MonoBehaviour
 		if (setup)
 			colorClassifier.Create3DColorPlot (allColors, _colorSpaceParent);
 	}
+
+
+	/// <summary>
+	/// Finds the current id for a block at i, j in the grid or for the dock module.
+	/// </summary>
+	/// <returns>The current identifier.</returns>
+	/// <param name="key">Key.</param>
+	/// <param name="i">The index.</param>
+	/// <param name="j">J.</param>
+	private int FindCurrentId(string key, int i, int j) {
+		key = "";
+		for (int k = 0; k < _gridSize; k++) {
+			for (int m = 0; m < _gridSize; m++) {
+				key += FindColor (i + k, j + m); 
+			}
+		} 
+
+		// keys read counterclockwise
+		key = new string(key.ToCharArray().Reverse().ToArray());
+
+		if (idList.ContainsKey (key)) {
+			return (int)idList [key];
+		} 
+		else { // check rotation independence & return key if it is a rotation
+			string keyConcat = key + key;
+			foreach(string idKey in idList.Keys) {
+				if (keyConcat.Contains (idKey))
+					return (int)idList [idKey];
+			}
+		}
+		return -1;
+	}
+
 
 	/// <summary>
 	/// Prints the ID matrix.
