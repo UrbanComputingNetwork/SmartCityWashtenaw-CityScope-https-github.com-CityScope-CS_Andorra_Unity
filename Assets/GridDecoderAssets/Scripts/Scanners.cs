@@ -105,10 +105,6 @@ public class Scanners : MonoBehaviour
 
 		InitVariables ();
 
-		// Create UX scanners
-		dock = new Dock (this.gameObject, _gridSize, _scannerScale);
-		slider = new LegoSlider (this.gameObject);
-
 		EventManager.StartListening ("reload", OnReload);
 		EventManager.StartListening ("save", OnSave);
 			
@@ -169,6 +165,10 @@ public class Scanners : MonoBehaviour
 
 		MakeScanners ();
 		SetupSampleObjects ();
+
+		// Create UX scanners
+		dock = new Dock (this.gameObject, _gridSize, _scannerScale);
+		slider = new LegoSlider (this.gameObject);
 
 		// Original keystoned object with webcam texture / video
 		cameraKeystonedQuad = GameObject.Find("CameraKeystoneQuad");
@@ -366,15 +366,6 @@ public class Scanners : MonoBehaviour
 		Debug.Log (matrix);
 	}
 
-	public int[,] GetCurrentIds() {
-		int[,] ids = currentIds.Clone () as int[,];
-		return ids;
-	}
-
-	public Vector2 GetGridDimensions() {
-		return (new Vector2 (numOfScannersX * 0.5f, numOfScannersY * 0.5f));
-	}
-
 	private int GetIdAverage (int i, int j, int currID) {
 		int index = i * numOfScannersX + j;
 
@@ -437,7 +428,6 @@ public class Scanners : MonoBehaviour
 				scannersList[x, y] = this._scanner;
 			}
 		}
-			
 	}
 
 	/// <summary>
@@ -459,6 +449,9 @@ public class Scanners : MonoBehaviour
 		}
 			
 		_gridParent.transform.position = colorSettings.gridPosition;
+
+		if (colorSettings.dockPosition != null)
+			dock.SetDockPosition (colorSettings.dockPosition);
 	}
 
 	/// <summary>
@@ -482,6 +475,8 @@ public class Scanners : MonoBehaviour
 		}
 
 		colorSettings.gridPosition = _gridParent.transform.position;
+
+		colorSettings.dockPosition = dock.GetDockPosition ();
 
 		string dataAsJson = JsonUtility.ToJson (colorSettings);
 		JsonParser.writeJSON (_colorSettingsFileName, dataAsJson);
@@ -512,4 +507,28 @@ public class Scanners : MonoBehaviour
 		SaveSamplers ();
 	}
 
+	/////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////
+	/// 
+	/// GETTERS
+	/// 
+	/////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////
+
+	/// <summary>
+	/// Gets the current identifiers.*/
+	/// </summary>
+	/// <returns>The current identifiers.</returns>
+	public int[,] GetCurrentIds() {
+		int[,] ids = currentIds.Clone () as int[,];
+		return ids;
+	}
+
+	public Vector2 GetGridDimensions() {
+		return (new Vector2 (numOfScannersX * 0.5f, numOfScannersY * 0.5f));
+	}
+
+	public int GetDockId() {
+		return this.dock.GetDockId ();
+	}
 }

@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Dock : LegoUI {
-	public GameObject[,] dockScanners;
+	private GameObject[,] dockScanners;
 
-	public Vector3 dockPosition; 
-
-	public int dockId;
+	private int dockId;
 
 	/// <summary>
 	/// Creates the dock scanner.
@@ -35,6 +33,18 @@ public class Dock : LegoUI {
 	public void UpdateDock() {
 		string key = "";
 		dockId = GameObject.Find ("ScannersParent").GetComponent<Scanners> ().FindCurrentId (key, 0, 0, ref dockScanners, false);
+	}
+
+	public Vector3 GetDockPosition() {
+		return uiParent.transform.position;
+	}
+
+	public int GetDockId() {
+		return dockId;
+	}
+
+	public void SetDockPosition(Vector3 position) {
+		uiParent.transform.position = position;
 	}
 		
 }
