@@ -20,32 +20,46 @@ public class Table
 	/// Returns true if there are changes to the grid.
 	/// </summary>
 	/// <param name="table">Table.</param>
-	public static bool CreateFromDecoder(ref Table table, string scannersParentName)
+	public bool CreateFromDecoder(string scannersParentName)
 	{
 		bool needsUpdate = false;
+		CreateGrid(scannersParentName, ref needsUpdate);
+
+		CreateObjects (scannersParentName, ref needsUpdate);
+
+		return needsUpdate;
+	}
+
+	/// <summary>
+	/// Creates the grid with data passed from the Scanners class.
+	/// </summary>
+	/// <returns><c>true</c>, if grid was created, <c>false</c> otherwise.</returns>
+	/// <param name="table">Table.</param>
+	/// <param name="scannersParentName">Scanners parent name.</param>
+	private bool CreateGrid(string scannersParentName, ref bool needsUpdate) {
 		int[,] currIds = GameObject.Find (scannersParentName).GetComponent<Scanners> ().GetCurrentIds();
 		if (currIds == null)
 			return false;
 
-		if (table.grid != null) {
+		if (this.grid != null) {
 			for (int i = 0; i < currIds.GetLength (0); i++) {
 				for (int j = 0; j < currIds.GetLength (1); j++) {
-					int currType = table.grid [i * currIds.GetLength (1) + j].type;
+					int currType = this.grid [i * currIds.GetLength (1) + j].type;
 
 					if (currType != currIds [i, j]) {
-						table.grid [i * currIds.GetLength (1) + j].type = currIds [i, j];
+						this.grid [i * currIds.GetLength (1) + j].type = currIds [i, j];
 						needsUpdate = true;
-						table.grid [i * currIds.GetLength (1) + j].update = true;
+						this.grid [i * currIds.GetLength (1) + j].update = true;
 					}
 					else
-						table.grid [i * currIds.GetLength (1) + j].update = false;
+						this.grid [i * currIds.GetLength (1) + j].update = false;
 				}
 			}
 		}
 		else {
 			needsUpdate = true;
 			Debug.Log ("Creating new table grid list");
-			table.grid = new List<Grid> ();
+			this.grid = new List<Grid> ();
 			for (int i = 0; i < currIds.GetLength (0); i++) {
 				for (int j = 0; j < currIds.GetLength (1); j++) {
 					Grid currGrid = new Grid ();
@@ -54,12 +68,23 @@ public class Table
 					currGrid.y = j;
 					currGrid.rot = 180;
 					currGrid.update = true;
-					table.grid.Add (currGrid);
+					this.grid.Add (currGrid);
 					currGrid = null;
 				}
 			}
 		}
 
 		return needsUpdate;
+	}
+
+	/// <summary>
+	/// Populates the Table class' Objects with dock ID, slider values, etc from the Scanners class.
+	/// </summary>
+	/// <returns><c>true</c>, if objects was created, <c>false</c> otherwise.</returns>
+	/// <param name="table">Table.</param>
+	/// <param name="scannerParentName">Scanner parent name.</param>
+	/// <param name="needsUpdate">Needs update.</param>
+	private bool CreateObjects(string scannerParentName, ref bool needsUpdate) {
+		return false;
 	}
 }

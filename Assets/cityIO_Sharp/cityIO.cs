@@ -93,11 +93,7 @@ public class cityIO : MonoBehaviour
 		height = 0f;
 		yPos = 0f;
 
-        _table = new Table();
-        _table.objects = new Objects();
-		_table.objects.density = new List<int>();
-		for (int i = 0; i < buildingTypes.Length; i++)
-			_table.objects.density.Add((int)(UnityEngine.Random.Range(0f, 20f)));
+		CreateTable ();
 
         while (true)
         {
@@ -111,55 +107,65 @@ public class cityIO : MonoBehaviour
             // For JSON parsing
             if (_dataSource != DataSource.INTERNAL) // if table data is online 
             {
-                WWW _www = new WWW(_url);
-                yield return _www;
-                if (!string.IsNullOrEmpty(_www.error))
-                {
-                    Debug.Log(_www.error); // use this for transfering to local server 
-                }
-                else
-                {
-                    if (_www.text != _oldData)
-                    {
-                        _oldData = _www.text; //new data has arrived from server 
-                        _table = Table.CreateFromJSON(_www.text); // get parsed JSON into Cells variable --- MUST BE BEFORE CALLING ANYTHING FROM CELLS!!
-                        _newCityioDataFlag = true;
-                        DrawTable();
-                        // prints last update time to console 
-                        System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
-                        var lastUpdateTime = epochStart.AddSeconds(System.Math.Round(_table.timestamp / 1000d)).ToLocalTime();
-                        print("CityIO new data has arrived." + '\n' + "JSON was created at: " + lastUpdateTime + '\n' + _www.text);
-                    }
-                }
+				_www = new WWW(_url);
+				yield return _www;
+				UpdateTableFromUrl ();
             }
             else
 			{ // for app data _gridHolder.transform.name
-				bool update = Table.CreateFromDecoder(ref _table, "ScannersParent");
-                _newCityioDataFlag = true;
-				if (_table.grid != null && update) {
-					EventManager.TriggerEvent ("updateData");
-					DrawTable();
-				}
+				UpdateTableInternal();
             }
         }
     }
 
-	public Color GetColor(int i) {
-		if (colors.Length > i)
-			return colors [i];
-		return Color.black;
+	/// <summary>
+	/// Initializes the table.
+	/// </summary>
+	private void CreateTable() {
+		_table = new Table();
+		_table.objects = new Objects();
+
+		// Initialize with random densities
+		_table.objects.density = new List<int>();
+		for (int i = 0; i < buildingTypes.Length; i++)
+			_table.objects.density.Add((int)(UnityEngine.Random.Range(0f, 20f)));
+
 	}
 
-	public int GetGridType(int index) {
-		return _table.grid [index].type;
+	/// <summary>
+	/// Updates the table with data read from URL.
+	/// </summary>
+	private void UpdateTableFromUrl() {
+		if (!string.IsNullOrEmpty(_www.error))
+		{
+			Debug.Log(_www.error); // use this for transfering to local server 
+		}
+		else
+		{
+			if (_www.text != _oldData)
+			{
+				_oldData = _www.text; //new data has arrived from server 
+				_table = Table.CreateFromJSON(_www.text); // get parsed JSON into Cells variable --- MUST BE BEFORE CALLING ANYTHING FROM CELLS!!
+				_newCityioDataFlag = true;
+				DrawTable();
+				// prints last update time to console 
+				System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
+				var lastUpdateTime = epochStart.AddSeconds(System.Math.Round(_table.timestamp / 1000d)).ToLocalTime();
+				print("CityIO new data has arrived." + '\n' + "JSON was created at: " + lastUpdateTime + '\n' + _www.text);
+			}
+		}
 	}
 
-	public int GetFloorHeight(int index) {
-		if (_table.grid.Count <= index)
-			return -1;
-		if (buildingTypes.Contains(_table.grid [index].type))
-			return (int)((_table.objects.density [_table.grid [index].type] * _floorHeight) * 0.5f);
-		return -1;
+	/// <summary>
+	/// Updates the table from the grid scanned internally in Unity.
+	/// </summary>
+	private void UpdateTableInternal() {
+		bool update = _table.CreateFromDecoder("ScannersParent");
+		_newCityioDataFlag = true;
+		if (_table.grid != null && update) {
+			EventManager.TriggerEvent ("updateData");
+			DrawTable();
+		}
 	}
 
 	public bool ShouldUpdateGrid(int index) {
@@ -322,5 +328,31 @@ public class cityIO : MonoBehaviour
 		float xPos = textMeshes [i].transform.localPosition.x;
 		float zPos = textMeshes [i].transform.localPosition.z;
 		textMeshes[i].transform.localPosition = new Vector3(xPos, _gridObjects[i].transform.localPosition.y + _gridObjects[i].transform.localScale.y * 0.5f, zPos);
+	}
+
+	/////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////
+	/// 
+	/// GETTERS
+	/// 
+	/////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////
+
+	public Color GetColor(int i) {
+		if (colors.Length > i)
+			return colors [i];
+		return Color.black;
+	}
+
+	public int GetGridType(int index) {
+		return _table.grid [index].type;
+	}
+
+	public int GetFloorHeight(int index) {
+		if (_table.grid.Count <= index)
+			return -1;
+		if (buildingTypes.Contains(_table.grid [index].type))
+			return (int)((_table.objects.density [_table.grid [index].type] * _floorHeight) * 0.5f);
+		return -1;
 	}
 }

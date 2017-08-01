@@ -450,8 +450,7 @@ public class Scanners : MonoBehaviour
 			
 		_gridParent.transform.position = colorSettings.gridPosition;
 
-		if (colorSettings.dockPosition != null)
-			dock.SetDockPosition (colorSettings.dockPosition);
+		dock.SetDockPosition (colorSettings.dockPosition);
 	}
 
 	/// <summary>
