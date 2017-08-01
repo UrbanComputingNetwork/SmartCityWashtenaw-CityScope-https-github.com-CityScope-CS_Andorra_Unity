@@ -168,7 +168,7 @@ public class Scanners : MonoBehaviour
 
 		// Create UX scanners
 		dock = new Dock (this.gameObject, _gridSize, _scannerScale);
-		slider = new LegoSlider (this.gameObject);
+		slider = new LegoSlider (this.gameObject, _scannerScale);
 
 		// Original keystoned object with webcam texture / video
 		cameraKeystonedQuad = GameObject.Find("CameraKeystoneQuad");
@@ -535,5 +535,9 @@ public class Scanners : MonoBehaviour
 
 	public int GetDockId() {
 		return this.dock.GetDockId ();
+	}
+
+	public int GetSliderValue() {
+		return this.slider.GetSliderValue ();
 	}
 }

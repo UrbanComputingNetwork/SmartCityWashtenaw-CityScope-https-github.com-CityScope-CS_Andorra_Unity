@@ -102,12 +102,15 @@ public class Table
 	}
 
 	private void UpdateObjects(ref Scanners scanners, ref bool needsUpdate) {
+		// Update dock
 		int newDockId = scanners.GetDockId ();
-
 		if (newDockId != this.objects.dockID) {
 			this.objects.SetDockId (newDockId);
 			needsUpdate = true;
 		}
+
+		// Update slider
+		int newSliderVal = scanners.GetSliderValue();
 	}
 
 	private void SetupObjects(ref Scanners scanners) {
