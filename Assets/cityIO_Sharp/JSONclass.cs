@@ -34,6 +34,14 @@ public class Objects
     public int pop_young;
     public int pop_mid;
     public int pop_old;
+
+	public void SetDockId(int newDockId) {
+		this.dockID = newDockId;	
+	}
+
+	public void SetSlider(int newSliderVal) {
+		slider1 = newSliderVal;
+	}
 }
 
 /// <summary> class end </summary>

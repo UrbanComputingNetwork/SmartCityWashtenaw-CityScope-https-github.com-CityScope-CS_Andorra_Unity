@@ -93,7 +93,7 @@ public class cityIO : MonoBehaviour
 		height = 0f;
 		yPos = 0f;
 
-		CreateTable ();
+		_table = new Table();
 
         while (true)
         {
@@ -117,20 +117,6 @@ public class cityIO : MonoBehaviour
             }
         }
     }
-
-	/// <summary>
-	/// Initializes the table.
-	/// </summary>
-	private void CreateTable() {
-		_table = new Table();
-		_table.objects = new Objects();
-
-		// Initialize with random densities
-		_table.objects.density = new List<int>();
-		for (int i = 0; i < buildingTypes.Length; i++)
-			_table.objects.density.Add((int)(UnityEngine.Random.Range(0f, 20f)));
-
-	}
 
 	/// <summary>
 	/// Updates the table with data read from URL.
@@ -351,8 +337,12 @@ public class cityIO : MonoBehaviour
 	public int GetFloorHeight(int index) {
 		if (_table.grid.Count <= index)
 			return -1;
-		if (buildingTypes.Contains(_table.grid [index].type))
+		if (buildingTypes.Contains(_table.grid [index].type) && _table.objects.density != null)
 			return (int)((_table.objects.density [_table.grid [index].type] * _floorHeight) * 0.5f);
 		return -1;
+	}
+
+	public int GetBuildingTypeCount() {
+		return (int) buildingTypes.Length;
 	}
 }

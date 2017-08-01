@@ -36,7 +36,7 @@ public class Dock : LegoUI {
 	}
 
 	public Vector3 GetDockPosition() {
-		return uiParent.transform.position;
+		return this.uiParent.transform.localPosition;
 	}
 
 	public int GetDockId() {
@@ -44,7 +44,6 @@ public class Dock : LegoUI {
 	}
 
 	public void SetDockPosition(Vector3 position) {
-		uiParent.transform.position = position;
+		this.uiParent.transform.localPosition = position;
 	}
-		
 }

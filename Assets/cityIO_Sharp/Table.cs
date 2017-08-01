@@ -10,6 +10,10 @@ public class Table
 	public string id;
 	public long timestamp;
 
+	public Table() {
+		this.objects = new Objects ();
+	}
+
 	public static Table CreateFromJSON(string jsonString)
 	{ // static function that returns Table which holds Class objects 
 		return JsonUtility.FromJson<Table>(jsonString);
@@ -23,9 +27,10 @@ public class Table
 	public bool CreateFromDecoder(string scannersParentName)
 	{
 		bool needsUpdate = false;
-		CreateGrid(scannersParentName, ref needsUpdate);
+		Scanners scanners = GameObject.Find (scannersParentName).GetComponent<Scanners> ();
+		CreateGrid(ref scanners, ref needsUpdate);
 
-		CreateObjects (scannersParentName, ref needsUpdate);
+		CreateObjects (ref scanners, ref needsUpdate);
 
 		return needsUpdate;
 	}
@@ -36,8 +41,8 @@ public class Table
 	/// <returns><c>true</c>, if grid was created, <c>false</c> otherwise.</returns>
 	/// <param name="table">Table.</param>
 	/// <param name="scannersParentName">Scanners parent name.</param>
-	private bool CreateGrid(string scannersParentName, ref bool needsUpdate) {
-		int[,] currIds = GameObject.Find (scannersParentName).GetComponent<Scanners> ().GetCurrentIds();
+	private bool CreateGrid(ref Scanners scanners, ref bool needsUpdate) {
+		int[,] currIds = scanners.GetCurrentIds();
 		if (currIds == null)
 			return false;
 
@@ -84,7 +89,41 @@ public class Table
 	/// <param name="table">Table.</param>
 	/// <param name="scannerParentName">Scanner parent name.</param>
 	/// <param name="needsUpdate">Needs update.</param>
-	private bool CreateObjects(string scannerParentName, ref bool needsUpdate) {
-		return false;
+	private bool CreateObjects(ref Scanners scanners, ref bool needsUpdate) {
+		if (this.objects.density != null) {
+			UpdateObjects (ref scanners, ref needsUpdate);
+		}
+		else {
+			SetupObjects (ref scanners);
+			needsUpdate = true;
+		}
+
+		return true;
+	}
+
+	private void UpdateObjects(ref Scanners scanners, ref bool needsUpdate) {
+		int newDockId = scanners.GetDockId ();
+
+		if (newDockId != this.objects.dockID) {
+			this.objects.SetDockId (newDockId);
+			needsUpdate = true;
+		}
+	}
+
+	private void SetupObjects(ref Scanners scanners) {
+		this.objects = new Objects();
+
+		// Initialize with random densities
+		this.objects.density = new List<int>();
+		int buildingTypesCount = GameObject.Find ("cityIO").GetComponent<cityIO> ().GetBuildingTypeCount ();
+
+		Debug.Log ("blg type # : " + buildingTypesCount);
+
+		for (int i = 0; i < buildingTypesCount; i++)
+			this.objects.density.Add((int)(UnityEngine.Random.Range(0f, 20f)));
+
+		this.objects.SetDockId (scanners.GetDockId());
+
+		this.objects.SetSlider (0);
 	}
 }

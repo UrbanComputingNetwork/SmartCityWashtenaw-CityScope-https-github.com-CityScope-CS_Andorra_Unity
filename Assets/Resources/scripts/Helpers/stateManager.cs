@@ -25,7 +25,7 @@ public class stateManager : MonoBehaviour
     {
         if (_demoModeBool != true)
         {
-            _sliderState = _cityIOscript._table.objects.toggle1; //gets the slider 
+			_sliderState = (int)_cityIOscript._table.objects.slider1; //gets the slider 
             _oldState = _sliderState;
             StateControl(_sliderState);
         }
@@ -36,7 +36,7 @@ public class stateManager : MonoBehaviour
     }
     void Update()
     {
-        _sliderState = _cityIOscript._table.objects.toggle1; //gets the slider 
+		_sliderState = (int)_cityIOscript._table.objects.slider1; //gets the slider 
         if (_sliderState != _oldState)
         {
             StateControl(_sliderState);

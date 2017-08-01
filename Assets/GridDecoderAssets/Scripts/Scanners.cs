@@ -179,7 +179,7 @@ public class Scanners : MonoBehaviour
 		_texture = new Texture2D (cameraKeystonedQuad.GetComponent<Renderer> ().material.mainTexture.width, 
 			cameraKeystonedQuad.GetComponent<Renderer> ().material.mainTexture.height);
 
-		LoadSamplers ();
+		LoadScannerSettings ();
 
 		EventManager.TriggerEvent ("scannersInitialized");
 	}
@@ -433,10 +433,16 @@ public class Scanners : MonoBehaviour
 	/// <summary>
 	/// Loads the color sampler objects from a JSON.
 	/// </summary>
-	private void LoadSamplers() {
+	private void LoadScannerSettings() {
 		Debug.Log ("Loading color sampling settings from  " + _colorSettingsFileName);
 
 		string dataAsJson = JsonParser.loadJSON (_colorSettingsFileName, _debug);
+		if (String.IsNullOrEmpty(dataAsJson)) {
+			Debug.Log ("No such file: " + _colorSettingsFileName);
+			return;
+		}
+			
+
 		colorSettings = JsonUtility.FromJson<ColorSettings>(dataAsJson);
 
 		if (colorSettings == null) return;
@@ -454,10 +460,10 @@ public class Scanners : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Saves the color sampler objects to a JSON.
+	/// Saves the sampler objects (color & dock etc positions) to a JSON.
 	/// </summary>
-	private void SaveSamplers() {
-		Debug.Log ("Saving color sampling settings to " + _colorSettingsFileName);
+	private void SaveScannerSettings() {
+		Debug.Log ("Saving scanner settings to " + _colorSettingsFileName);
 
 		if (colorSettings == null || colorSettings.color == null) {
 			colorSettings = new ColorSettings ();
@@ -486,10 +492,10 @@ public class Scanners : MonoBehaviour
 	/// </summary>
 	private void onKeyPressed ()
 	{
-		if (Input.GetKey (KeyCode.S) && _isCalibrating) {
-			SaveSamplers ();
+		if (Input.GetKey (KeyCode.S)) {
+			SaveScannerSettings ();
 		} else if (Input.GetKey (KeyCode.L)) {
-			LoadSamplers ();
+			LoadScannerSettings ();
 		}
 	}
 
@@ -497,13 +503,13 @@ public class Scanners : MonoBehaviour
 	/// Reloads configuration / keystone settings when the scene is refreshed.
 	/// </summary>
 	void OnReload() {
-		Debug.Log ("Color config was reloaded!");
+		Debug.Log ("Scanner config was reloaded!");
 		SetupSampleObjects ();
-		LoadSamplers ();
+		LoadScannerSettings ();
 	}
 
 	public void OnSave() {
-		SaveSamplers ();
+		SaveScannerSettings ();
 	}
 
 	/////////////////////////////////////////////////////////
