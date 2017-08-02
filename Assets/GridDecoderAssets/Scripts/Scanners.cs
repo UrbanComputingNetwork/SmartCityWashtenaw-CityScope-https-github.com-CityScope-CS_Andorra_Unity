@@ -289,7 +289,7 @@ public class Scanners : MonoBehaviour
 	/// </summary>
 	/// <param name="i">The row index.</param>
 	/// <param name="j">The column index.</param>
-	private int FindColor(int i, int j, ref GameObject[,] currScanners, bool isGrid = true) {
+	public int FindColor(int i, int j, ref GameObject[,] currScanners, bool isGrid = true) {
 		if (Physics.Raycast (currScanners [i, j].transform.position, Vector3.down, out hit, 6)) {
 			// Get local tex coords w.r.t. triangle
 

@@ -120,8 +120,6 @@ public class Table
 		this.objects.density = new List<int>();
 		int buildingTypesCount = GameObject.Find ("cityIO").GetComponent<cityIO> ().GetBuildingTypeCount ();
 
-		Debug.Log ("blg type # : " + buildingTypesCount);
-
 		for (int i = 0; i < buildingTypesCount; i++)
 			this.objects.density.Add((int)(UnityEngine.Random.Range(0f, 20f)));
 

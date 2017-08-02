@@ -27,19 +27,22 @@ public class LegoSlider : LegoUI {
 	/// Updates the slider.
 	/// </summary>
 	public void UpdateSlider() {
+		if (sliderScanners.GetLength (1) == 0)
+			return;
+
+		Debug.Log ("Slider scanner length: " + sliderScanners.GetLength (1));
+
 		int[] currIds = new int[sliderScanners.GetLength(1)];
-		string key = "";
 
 		for (int i = 0; i < sliderScanners.GetLength(1); i++) {
-			key = "";
-			currIds[i] = GameObject.Find ("ScannersParent").GetComponent<Scanners> ().FindCurrentId (key, 0, i, ref sliderScanners, false);
+			currIds[i] = GameObject.Find ("ScannersParent").GetComponent<Scanners> ().FindColor (0, i, ref sliderScanners, false);
 			
 		}
 	}
 
 	private void CreateSlider(float _scannerScale) {
 		if (sliderScanners == null) {
-			sliderScanners = new GameObject[NUM_SCANNERS];
+			sliderScanners = new GameObject[1, NUM_SCANNERS];
 
 			Vector3 startPos = new Vector3(0, 0, 0);
 			Vector3 endPos = new Vector3 (0, 0, 0.5f);
