@@ -62,6 +62,8 @@ public class cityIO : MonoBehaviour
     /// </summary>
     public Material _material;
     public Table _table;
+
+	private bool uiChanged = false;
     /// <summary> 
     /// parent of grid GOs
     /// </summary>
@@ -87,14 +89,20 @@ public class cityIO : MonoBehaviour
     private int[] notBuildingTypes = new int[] { (int)Brick.INVALID, (int)Brick.MASK, (int)Brick.ROAD, (int)Brick.PARK, (int)Brick.PARKING, (int)Brick.STREET };
     private int[] buildingTypes = new int[] { (int)Brick.RL, (int)Brick.RM, (int)Brick.RS, (int)Brick.RL, (int)Brick.OL, (int)Brick.OM, (int)Brick.OS };
 
-    IEnumerator Start()
-    {
+
+	void Awake() {
 		_tmpColor = Color.black;
 		height = 0f;
 		yPos = 0f;
-
 		_table = new Table();
 
+		// Listeners to update slider & dock values
+		EventManager.StartListening ("sliderChange", OnSliderChanged);
+		EventManager.StartListening ("dockChange", OnDockChanged);
+	}
+
+    IEnumerator Start()
+    {
         while (true)
         {
             if (_dataSource == DataSource.REMOTE)
@@ -146,16 +154,24 @@ public class cityIO : MonoBehaviour
 	/// Updates the table from the grid scanned internally in Unity.
 	/// </summary>
 	private void UpdateTableInternal() {
-		bool update = _table.CreateFromDecoder("ScannersParent");
+		// Update UI values (slider, dock)
+ 		if (uiChanged)
+			_table.UpdateObjectsFromDecoder ("ScannersParent");
+
+		// Update Grid values
+		bool update = _table.CreateGridFromDecoder("ScannersParent");
 		_newCityioDataFlag = true;
-		if (_table.grid != null && update) {
+		if (_table.grid != null && (update || uiChanged)) {
 			EventManager.TriggerEvent ("updateData");
 			DrawTable();
 		}
+
+		if (uiChanged)
+			uiChanged = false;
 	}
 
 	public bool ShouldUpdateGrid(int index) {
-		return _table.grid [index].update;
+		return (_table.grid [index].update || uiChanged);
 	}
 
 	/// <summary>
@@ -200,6 +216,10 @@ public class cityIO : MonoBehaviour
 			yPos = _table.objects.density[_table.grid[i].type] * _floorHeight;
 			_tmpColor = colors[_table.grid[i].type];
 			_tmpColor.a = 0.8f;
+
+			if (_table.grid[i].type == 4) {
+				Debug.Log ("Type 4 density : " + _table.objects.density [_table.grid [i].type]);
+			}
 
 			SetGridObject (i);
 		}
@@ -270,7 +290,7 @@ public class cityIO : MonoBehaviour
 
 	private void UpdateTable() {
 		for (int i = 0; i < _table.grid.Count; i++) { // loop through list of all cells grid objects 
-			if (_table.grid[i].update && GameObject.Find ("HeatmapsHolder").GetComponent<HeatMaps> ().IsInteractive(i))
+			if ((_table.grid[i].update || uiChanged) && GameObject.Find ("HeatmapsHolder").GetComponent<HeatMaps> ().IsInteractive(i))
 				UpdateGridObject(i);
 		}
 	}
@@ -344,5 +364,21 @@ public class cityIO : MonoBehaviour
 
 	public int GetBuildingTypeCount() {
 		return (int) buildingTypes.Length;
+	}
+
+	/////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////
+	/// 
+	/// EVENTS
+	/// 
+	/////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////
+
+	public void OnSliderChanged() {
+		uiChanged = true;
+	}
+
+	public void OnDockChanged() {
+		uiChanged = true;
 	}
 }

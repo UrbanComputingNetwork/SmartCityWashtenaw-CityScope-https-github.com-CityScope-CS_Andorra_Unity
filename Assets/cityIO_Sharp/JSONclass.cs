@@ -23,6 +23,7 @@ public class Grid
 public class Objects
 {
     public float slider1;
+	public float slider2;
     public int toggle1;
     public int toggle2;
     public int toggle3;
@@ -36,11 +37,22 @@ public class Objects
     public int pop_old;
 
 	public void SetDockId(int newDockId) {
-		this.dockID = newDockId;	
+		if (this.dockID == newDockId)
+			return;
+		
+		this.dockID = newDockId;
+		UpdateDensity ();
 	}
 
 	public void SetSlider(int newSliderVal) {
 		slider1 = newSliderVal;
+		UpdateDensity ();
+	}
+
+	private void UpdateDensity() {
+		Debug.Log ("Dock id: " + dockID + " slider value " + slider1);
+		if (this.dockID >= 0 && this.dockID < density.Count)
+			this.density [dockID] = (int) slider1;
 	}
 }
 

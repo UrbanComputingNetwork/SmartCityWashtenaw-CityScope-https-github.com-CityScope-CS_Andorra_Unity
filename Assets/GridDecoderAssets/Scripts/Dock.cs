@@ -32,7 +32,13 @@ public class Dock : LegoUI {
 	/// </summary>
 	public void UpdateDock() {
 		string key = "";
-		dockId = GameObject.Find ("ScannersParent").GetComponent<Scanners> ().FindCurrentId (key, 0, 0, ref dockScanners, false);
+		int currDockId = GameObject.Find ("ScannersParent").GetComponent<Scanners> ().FindCurrentId (key, 0, 0, ref dockScanners, false);
+
+		// Notify CityIO
+		if (dockId != currDockId) {
+			dockId = currDockId;
+			EventManager.TriggerEvent ("dockChange");
+		}
 	}
 
 	public Vector3 GetDockPosition() {

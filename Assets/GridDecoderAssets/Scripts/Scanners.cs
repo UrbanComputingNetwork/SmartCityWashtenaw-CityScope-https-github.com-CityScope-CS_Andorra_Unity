@@ -47,6 +47,7 @@ public class Scanners : MonoBehaviour
 	// UI scanners
 	private Dock dock;
 	private LegoSlider slider;
+	public int _sliderRange = 30;
 
 	RaycastHit hit;
 	RenderTexture rTex;
@@ -168,7 +169,7 @@ public class Scanners : MonoBehaviour
 
 		// Create UX scanners
 		dock = new Dock (this.gameObject, _gridSize, _scannerScale);
-		slider = new LegoSlider (this.gameObject, _scannerScale);
+		slider = new LegoSlider (this.gameObject, _scannerScale, _sliderRange);
 
 		// Original keystoned object with webcam texture / video
 		cameraKeystonedQuad = GameObject.Find("CameraKeystoneQuad");
