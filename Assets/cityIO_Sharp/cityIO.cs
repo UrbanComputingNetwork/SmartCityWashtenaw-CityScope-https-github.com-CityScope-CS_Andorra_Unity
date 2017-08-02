@@ -196,7 +196,7 @@ public class cityIO : MonoBehaviour
 	}
 
 	private void SetGridObject(int i) {
-		//compensate for scale shift and x,y array
+		// compensate for scale shift and x,y array
 		gridObjectPosition = new Vector3((_table.grid[i].x * _cellSizeInMeters), yPos, (_table.grid[i].y * _cellSizeInMeters));
 		gridObjectScale = new Vector3(cellShrink * _cellSizeInMeters, height, cellShrink * _cellSizeInMeters);
 
@@ -216,10 +216,6 @@ public class cityIO : MonoBehaviour
 			yPos = _table.objects.density[_table.grid[i].type] * _floorHeight;
 			_tmpColor = colors[_table.grid[i].type];
 			_tmpColor.a = 0.8f;
-
-			if (_table.grid[i].type == 4) {
-				Debug.Log ("Type 4 density : " + _table.objects.density [_table.grid [i].type]);
-			}
 
 			SetGridObject (i);
 		}
@@ -288,6 +284,9 @@ public class cityIO : MonoBehaviour
 			CreateGridObject(i);
 	}
 
+	/// <summary>
+	/// Updates the table if the given grid object changed or if the slider/ dock changed
+	/// </summary>
 	private void UpdateTable() {
 		for (int i = 0; i < _table.grid.Count; i++) { // loop through list of all cells grid objects 
 			if ((_table.grid[i].update || uiChanged) && GameObject.Find ("HeatmapsHolder").GetComponent<HeatMaps> ().IsInteractive(i))
