@@ -6,7 +6,7 @@ public class LegoSlider : LegoUI {
 	private GameObject sliderStartObject;
 	private GameObject sliderEndObject;
 
-	private GameObject[] sliderScanners;
+	private GameObject[,] sliderScanners;
 	private const int NUM_SCANNERS = 30;
 
 	private float length;
@@ -27,41 +27,41 @@ public class LegoSlider : LegoUI {
 	/// Updates the slider.
 	/// </summary>
 	public void UpdateSlider() {
+		int[] currIds = new int[sliderScanners.GetLength(1)];
+		string key = "";
 
+		for (int i = 0; i < sliderScanners.GetLength(1); i++) {
+			key = "";
+			currIds[i] = GameObject.Find ("ScannersParent").GetComponent<Scanners> ().FindCurrentId (key, 0, i, ref sliderScanners, false);
+			
+		}
 	}
 
 	private void CreateSlider(float _scannerScale) {
 		if (sliderScanners == null) {
 			sliderScanners = new GameObject[NUM_SCANNERS];
 
-			sliderStartObject = GameObject.CreatePrimitive (PrimitiveType.Quad);
-			sliderStartObject.transform.parent = this.uiParent.transform;
-			sliderStartObject.transform.localPosition = new Vector3 (0, 0.2f, 0);
-			sliderStartObject.transform.localScale = new Vector3 (_scannerScale, _scannerScale, _scannerScale);  
-			sliderStartObject.transform.Rotate (90, 0, 0);
+			Vector3 startPos = new Vector3(0, 0, 0);
+			Vector3 endPos = new Vector3 (0, 0, 0.5f);
 
-			sliderEndObject = GameObject.CreatePrimitive (PrimitiveType.Quad);
-			sliderEndObject.transform.parent = this.uiParent.transform;
-			sliderEndObject.transform.localPosition = new Vector3 (0, 0.2f, 1);
-			sliderEndObject.transform.localScale = new Vector3 (_scannerScale, _scannerScale, _scannerScale);  
-			sliderEndObject.transform.Rotate (90, 0, 0);
+			CreateEndObject (ref sliderStartObject, startPos, _scannerScale);
+			CreateEndObject (ref sliderEndObject, endPos, _scannerScale);
 		}
-
-		length = Vector3.Distance (sliderStartObject.transform.localPosition, sliderEndObject.transform.localPosition);
-		float currentPosition = 0f;
-
-		this.value = (currentPosition / length);
-
-		float offsetDist = length / NUM_SCANNERS;
+			
+		Vector3 dir = sliderEndObject.transform.position - sliderStartObject.transform.position;
+		Vector3 offsetVector = dir / NUM_SCANNERS;
 
 		for (int i = 0; i < NUM_SCANNERS; i++) {
-			sliderScanners [i] = new GameObject ();
-
-			sliderScanners[i].name = "slider_" + i;
-			sliderScanners[i].transform.parent = this.uiParent.transform;
-			sliderScanners[i].transform.localPosition = new Vector3 (0, 0.2f, i * offsetDist);
-			sliderScanners[i].transform.Rotate (90, 0, 0); 
+			CreateEndObject (ref sliderScanners [0,i], offsetVector * i, _scannerScale);
 		}
+	}
+
+	private void CreateEndObject(ref GameObject currObject, Vector3 pos, float _scannerScale) {
+		currObject = GameObject.CreatePrimitive (PrimitiveType.Quad);
+		currObject.transform.parent = this.uiParent.transform;
+		currObject.transform.localPosition = new Vector3 (pos.x, 0.2f, pos.z);
+		currObject.transform.localScale = new Vector3 (_scannerScale, _scannerScale, _scannerScale);  
+		currObject.transform.Rotate (90, 0, 0);
 	}
 
 
