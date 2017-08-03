@@ -50,7 +50,6 @@ public class Objects
 	}
 
 	private void UpdateDensity() {
-		Debug.Log ("Dock id: " + dockID + " slider value " + slider1);
 		if (this.dockID >= 0 && this.dockID < density.Count)
 			this.density [dockID] = (int) slider1;
 	}

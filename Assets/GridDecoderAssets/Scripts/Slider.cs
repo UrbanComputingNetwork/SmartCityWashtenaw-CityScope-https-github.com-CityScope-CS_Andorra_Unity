@@ -96,15 +96,15 @@ public class LegoSlider : LegoUI {
 	/// <param name="refColorIndex">Reference color index.</param>
 	private void RecomputeSliderValue (ref List<int> refColorIndex) {
 		int refIndex = refColorIndex.Sum () / refColorIndex.Count;
-		if (debug)
-			sliderScanners [0, refIndex].GetComponent<Renderer> ().material.color = Color.cyan;
-
 		int newValue = (int) (((float) refIndex / (float) NUM_SCANNERS) * (float)this.range);
-		Debug.Log ("Current value is: " + newValue + " with range " + this.range);
+
+		if (debug) {
+			sliderScanners [0, refIndex].GetComponent<Renderer> ().material.color = Color.cyan;
+			Debug.Log ("Current value is: " + newValue + " with range " + this.range);
+		}
 
 		if (this.value != newValue) {
 			this.value = newValue;
-
 			// Notify CityIO
 			EventManager.TriggerEvent("sliderChange");
 		}

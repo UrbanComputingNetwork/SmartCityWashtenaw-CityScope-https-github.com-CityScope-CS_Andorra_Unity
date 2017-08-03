@@ -84,7 +84,6 @@ public class Table
 				}
 			}
 		}
-
 		return needsUpdate;
 	}
 
@@ -103,7 +102,6 @@ public class Table
 			SetupObjects (ref scanners);
 			needsUpdate = true;
 		}
-
 		return true;
 	}
 
