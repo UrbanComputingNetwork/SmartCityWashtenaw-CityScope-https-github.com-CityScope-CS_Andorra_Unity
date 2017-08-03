@@ -156,11 +156,4 @@ public class LegoSlider : LegoUI {
 	public int GetSliderValue() {
 		return (int) this.value;
 	}
-
-	public void SetSliderPosition(Vector3 start, Vector3 end) {
-		this.sliderStartObject.transform.localPosition = start;
-		this.sliderEndObject.transform.localPosition = end;
-
-		// update slider
-	}
 }
