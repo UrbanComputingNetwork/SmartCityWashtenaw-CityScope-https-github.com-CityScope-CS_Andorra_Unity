@@ -29,7 +29,6 @@ public class Table
 		bool needsUpdate = false;
 		Scanners scanners = GameObject.Find (scannersParentName).GetComponent<Scanners> ();
 		CreateGrid(ref scanners, ref needsUpdate);
-
 		return needsUpdate;
 	}
 
@@ -111,7 +110,6 @@ public class Table
 	}
 
 	private void UpdateDock(ref Scanners scanners) {
-		// Update dock
 		int newDockId = scanners.GetDockId ();
 		if (newDockId != this.objects.dockID) {
 			this.objects.SetDockId (newDockId);
@@ -119,7 +117,6 @@ public class Table
 	}
 
 	private void UpdateSlider(ref Scanners scanners) {
-		// Update slider
 		int newSliderVal = scanners.GetSliderValue();
 		if (newSliderVal != this.objects.slider1) {
 			this.objects.SetSlider (newSliderVal);

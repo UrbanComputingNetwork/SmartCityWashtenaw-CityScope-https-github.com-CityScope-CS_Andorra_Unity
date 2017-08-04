@@ -54,7 +54,7 @@ public class cityIO : MonoBehaviour
     /// </summary>
     public float _floorHeight;
     ///<summary>
-    /// the grid basic unit mesh (prbably cube)
+    /// the grid basic unit cubes
     /// </summary>
     private GameObject[] _gridObjects;
     ///<summary>

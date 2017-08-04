@@ -1,4 +1,9 @@
-﻿using System;
+﻿/// <summary>
+/// Scanners samples a 2D quad with a set of objects on a grid. 
+/// 
+/// </summary>
+
+using System;
 using UnityEditor;
 using UnityEngine;
 using System.Collections;
@@ -80,8 +85,6 @@ public class Scanners : MonoBehaviour
 	private Texture2D hitTex;
 
 	private Color[] allColors;
-
-	enum Brick { RL = 0, RM = 1, RS = 2, OL = 3, OM = 4, OS = 5, ROAD = 6 };
 
 	private Dictionary<string, Brick> idList = new Dictionary<string, Brick>
 	{
@@ -293,7 +296,6 @@ public class Scanners : MonoBehaviour
 	public int FindColor(int i, int j, ref GameObject[,] currScanners, bool isGrid = true) {
 		if (Physics.Raycast (currScanners [i, j].transform.position, Vector3.down, out hit, 6)) {
 			// Get local tex coords w.r.t. triangle
-
 			if (!hitTex) {
 				Debug.Log ("No hit texture");
 				currScanners [i, j].GetComponent<Renderer> ().material.color = Color.magenta;
@@ -367,6 +369,10 @@ public class Scanners : MonoBehaviour
 		Debug.Log (matrix);
 	}
 
+	/// <summary>
+	/// Gets the average color ID from a given number of readings defined by _bufferSize
+	/// to reduce flickering in reading of video stream.
+	/// </summary>
 	private int GetIdAverage (int i, int j, int currID) {
 		int index = i * numOfScannersX + j;
 
@@ -396,7 +402,7 @@ public class Scanners : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Sets the texture.
+	/// Sets the texture from a static image or from the webcam.
 	/// </summary>
 	private void SetTexture() {
 		if (_useWebcam) {
@@ -442,7 +448,6 @@ public class Scanners : MonoBehaviour
 			Debug.Log ("No such file: " + _colorSettingsFileName);
 			return;
 		}
-			
 
 		colorSettings = JsonUtility.FromJson<ColorSettings>(dataAsJson);
 
@@ -481,7 +486,6 @@ public class Scanners : MonoBehaviour
 		}
 
 		colorSettings.gridPosition = _gridParent.transform.position;
-
 		colorSettings.dockPosition = dock.GetDockPosition ();
 
 		string dataAsJson = JsonUtility.ToJson (colorSettings);
@@ -522,7 +526,7 @@ public class Scanners : MonoBehaviour
 	/////////////////////////////////////////////////////////
 
 	/// <summary>
-	/// Gets the current identifiers.*/
+	/// Gets the current identifiers.
 	/// </summary>
 	/// <returns>The current identifiers.</returns>
 	public int[,] GetCurrentIds() {
