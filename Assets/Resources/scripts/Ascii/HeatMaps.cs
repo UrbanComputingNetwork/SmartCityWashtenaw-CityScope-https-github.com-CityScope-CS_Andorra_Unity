@@ -5,119 +5,6 @@ using UnityEditor;
 using System.IO;
 using System.Linq;
 
-
-public class HeatMap {
-	GameObject heatmapParent; 
-	GameObject[] heatmapGeos;
-
-	List<Brick> searchTypes;
-	List<Brick> originTypes;
-
-	string name;
-	int gridX;
-	int gridY;
-	float cellSize;
-	float yOffset;
-
-	int searchDim;
-
-	int[,] _typesArray;
-
-	public HeatMap(int sizeX, int sizeY, int searchDimension) {
-		this.heatmapGeos = new GameObject[sizeX * sizeY];
-		this.gridX = sizeX;
-		this.gridY = sizeY;
-
-		this.searchDim = searchDimension;
-
-		this._typesArray = new int[sizeX,sizeY];
-	}
-
-	public void SetSearchTypes(ref List<Brick> searched) {
-		this.searchTypes = searched;
-	}
-
-	public void SetOriginTypes(ref List<Brick> origins) {
-		this.originTypes = origins;
-	}
-
-	public void SetParent(GameObject parentObject) {
-		this.heatmapParent = parentObject;
-	}
-
-	public GameObject GetParentObject() {
-		return heatmapParent;
-	}
-
-	public void CreateHeatmapGeo(int x, int y, int index, float _cellSize, float _addToYHeight, int type) {
-		if (this.cellSize != _cellSize)
-			this.cellSize = _cellSize;
-
-		if (this.yOffset != _addToYHeight)
-			this.yOffset = _addToYHeight;
-
-		heatmapGeos[index] = GameObject.CreatePrimitive(PrimitiveType.Quad); //make cell cube
-		heatmapGeos[index].name = (this.name + " Type: " + type);
-		heatmapGeos[index].transform.localPosition =
-			new Vector3(x * _cellSize, _addToYHeight, y * _cellSize);
-		Quaternion _tmpRot = heatmapParent.transform.localRotation;
-		_tmpRot.eulerAngles = new Vector3(90, 0, 0.0f);
-		heatmapGeos[index].transform.localRotation = _tmpRot;
-		heatmapGeos[index].transform.localScale = new Vector3(_cellSize, _cellSize, _cellSize);
-		heatmapGeos[index].transform.GetComponent<Renderer>().receiveShadows = false;
-		heatmapGeos[index].transform.GetComponent<Renderer>().shadowCastingMode =
-			UnityEngine.Rendering.ShadowCastingMode.Off;
-		heatmapGeos[index].transform.parent = heatmapParent.transform; //put into parent object for later control
-	}
-
-	/// <summary>
-	/// Searches the neighbors // brute force
-	/// </summary>
-	public void UpdateHeatmap(int x, int y, int type, int index) 
-	{
-		if (this.originTypes.Contains((Brick)type))
-		{ // if inside the physical model space
-			_typesArray[x, y] = type;
-
-			if (this.searchTypes.Contains((Brick)_typesArray[x, y])) // what is the cells type we're searching for? 
-			{
-				heatmapGeos[index].transform.GetComponent<Renderer>().material.color = Color.green;
-				heatmapGeos[index].transform.localScale = new Vector3(cellSize, cellSize, cellSize);
-				int _cellScoreCount = 0; //decalre a tmp counter  
-
-				for (int _windowX = x - this.searchDim; _windowX < x + this.searchDim; _windowX++)
-				{
-					for (int _windowY = y - searchDim; _windowY < y + searchDim; _windowY++)
-					{
-						if (_windowX > 0
-							&& _windowY > 0
-							&& _windowX < gridX
-							&& _windowY < gridY)
-						{ // make sure window area is not outside grid bounds 
-							if (_typesArray[_windowX, _windowY] > 6 && _typesArray[_windowX, _windowY] < 9)
-							{
-								_cellScoreCount = _cellScoreCount + 1;
-								heatmapGeos[index].transform.localPosition =
-									new Vector3(x * cellSize, yOffset + (_cellScoreCount * 2), y * cellSize);
-								heatmapGeos[index].name = ("Results count: " + _cellScoreCount.ToString());
-								var _tmpColor = _cellScoreCount / Mathf.Pow(2 * searchDim, 2); // color color spectrum based on cell score/max potential score 
-								heatmapGeos[index].transform.GetComponent<Renderer>().material.color =
-									Color.HSVToRGB(_tmpColor, 1, 1);
-							}
-						}
-					}
-				}
-			}
-			else
-			{
-				heatmapGeos[index].transform.GetComponent<Renderer>().material.color = Color.HSVToRGB(0, 0, 0);
-				heatmapGeos[index].transform.localScale = new Vector3(cellSize, cellSize, cellSize);
-			}
-		}
-	}
-}
-
-
 public class HeatMaps : MonoBehaviour
 {
     public cityIO _city_IO_script;
@@ -409,25 +296,27 @@ public class HeatMaps : MonoBehaviour
 			heatmaps = new HeatMap[NUM_HEATMAPS];
 		}
 
+		float cellSize = _cellShrink * _cellSize;
 		for (int i = 0; i < NUM_HEATMAPS; i++) {
-			heatmaps[i] = new HeatMap(_gridX-1, _gridY, _windowSearchDim);
+			heatmaps[i] = new HeatMap(_gridX-1, _gridY, _windowSearchDim, cellSize, _addToYHeight, ((HeatmapType)i).ToString());
 			heatmaps [i].SetParent (heatmapsParent);
 
 			// Set up search types & origin types for each heatmap
-			switch (i) {
-			case (int) HeatmapType.OFFICE:
-				heatmaps [i].SetOriginTypes (ref resTypes);
-				heatmaps [i].SetSearchTypes (ref officeTypes);
-				break;
-			case (int) HeatmapType.RES:
-				heatmaps [i].SetOriginTypes (ref resTypes);
-				heatmaps [i].SetSearchTypes (ref officeTypes);
-				break;
-			case (int) HeatmapType.PARK:
-				// TEMP
-				heatmaps [i].SetOriginTypes (ref resTypes);
-				heatmaps [i].SetSearchTypes (ref officeTypes);
-				break;
+			switch (i) 
+			{
+				case (int) HeatmapType.OFFICE:
+					heatmaps [i].SetOriginTypes (resTypes);
+					heatmaps [i].SetSearchTypes (officeTypes);
+					break;
+				case (int) HeatmapType.RES:
+					heatmaps [i].SetOriginTypes (resTypes);
+					heatmaps [i].SetSearchTypes (officeTypes);
+					break;
+				case (int) HeatmapType.PARK:
+					// TEMP
+					heatmaps [i].SetOriginTypes (resTypes);
+					heatmaps [i].SetSearchTypes (officeTypes);
+					break;
 			}
 		}
 
@@ -436,11 +325,9 @@ public class HeatMaps : MonoBehaviour
 			for (int y = 0; y < _gridY; y++) {
 				_loopsCounter++;
 				if (_typesList [_loopsCounter] != _outOfBoundsType) { // if not on the area which is out of the physical model space
-					float cellSize = _cellShrink * _cellSize;
-
 					// Init heatmap geometries for each heatmap object
 					foreach (HeatMap hm in heatmaps) {
-						hm.CreateHeatmapGeo (x, y, _loopsCounter, cellSize, _addToYHeight, _typesList [_loopsCounter]);
+						hm.CreateHeatmapGeo (x, y, _loopsCounter, _typesList [_loopsCounter]);
 					}
 				}
 			}
@@ -453,8 +340,10 @@ public class HeatMaps : MonoBehaviour
 		int index = 0;
 		for (int x = 0; x < _gridX-1; x++) {
 			for (int y = 0; y < _gridY; y++) {
-				foreach (HeatMap hm in heatmaps) {
-					hm.UpdateHeatmap (x, y, _typesList[index], index);
+				if (_typesList [index] != _outOfBoundsType) {
+					foreach (HeatMap hm in heatmaps) {
+						hm.UpdateHeatmap (x, y, _typesList [index], index);
+					}
 				}
 				index++;
 			}

@@ -13,7 +13,7 @@ public class stateManager : MonoBehaviour
     public GameObject _andorraCityScope;
     public GameObject _andorraHeatmap;
     public GameObject _floorsUI;
-    private int _sliderState = 1;
+    private int _sliderState = 3;
     private int _oldState;
     public bool _demoModeBool = true;
     public int _changeModeEverySeconds = 60;
