@@ -289,7 +289,7 @@ public class cityIO : MonoBehaviour
 	/// </summary>
 	private void UpdateTable() {
 		for (int i = 0; i < _table.grid.Count; i++) { // loop through list of all cells grid objects 
-			if ((_table.grid[i].update || uiChanged) && GameObject.Find ("HeatmapsHolder").GetComponent<HeatMaps> ().IsInteractive(i))
+			if ((_table.grid[i].update || uiChanged) && GameObject.Find ("HeatmapsHolder").GetComponent<Visualizations> ().IsInteractive(i))
 				UpdateGridObject(i);
 		}
 	}

@@ -5,7 +5,7 @@ using UnityEditor;
 using System.IO;
 using System.Linq;
 
-public class HeatMaps : MonoBehaviour
+public class Visualizations : MonoBehaviour
 {
     public cityIO _city_IO_script;
     /// <summary>
@@ -68,7 +68,7 @@ public class HeatMaps : MonoBehaviour
 
 	// Heatmaps
 	private const int NUM_HEATMAPS = 3;
-	private enum HeatmapType { RES = 0, OFFICE = 1, PARK = 2 };
+	public enum HeatmapType { RES = 0, OFFICE = 1, PARK = 2 };
 	private HeatMap[] heatmaps;
 	private GameObject heatmapsParent;
 
@@ -309,8 +309,8 @@ public class HeatMaps : MonoBehaviour
 					heatmaps [i].SetSearchTypes (officeTypes);
 					break;
 				case (int) HeatmapType.RES:
-					heatmaps [i].SetOriginTypes (resTypes);
-					heatmaps [i].SetSearchTypes (officeTypes);
+					heatmaps [i].SetOriginTypes (officeTypes);
+					heatmaps [i].SetSearchTypes (resTypes);
 					break;
 				case (int) HeatmapType.PARK:
 					// TEMP
@@ -408,13 +408,19 @@ public class HeatMaps : MonoBehaviour
     ///
     /// </summary>
 
-    public void SearchNeighborsViz()
+    public void HeatmapViz(HeatmapType heatmapType)
     {
 		if (heatmapsParent == null)
 			SetupHeatmaps ();
 
 		heatmapsParent.SetActive (true);
-		heatmaps[(int) HeatmapType.OFFICE].GetParentObject().SetActive (true);
+
+		for (int i = 0; i < heatmaps.Length; i++) {
+			if (i == (int) heatmapType)
+				heatmaps[(int) heatmapType].SetParentActive (true);
+			else
+				heatmaps[(int) heatmapType].SetParentActive (false);
+		}
     }
 		
 	/// <summary>

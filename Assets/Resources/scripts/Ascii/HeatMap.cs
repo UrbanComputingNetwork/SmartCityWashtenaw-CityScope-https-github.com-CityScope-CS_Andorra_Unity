@@ -28,6 +28,7 @@ public class HeatMap {
 		this.yOffset = _addToYHeight;
 
 		currentHeatmapParent = new GameObject ();
+		currentHeatmapParent.SetActive (false);
 		this.currentHeatmapParent.name = name;
 	}
 
@@ -45,7 +46,11 @@ public class HeatMap {
 	}
 
 	public GameObject GetParentObject() {
-		return heatmapParent;
+		return currentHeatmapParent;
+	}
+
+	public void SetParentActive(bool isActive) {
+		this.currentHeatmapParent.SetActive (isActive);
 	}
 
 	public void CreateHeatmapGeo(int x, int y, int index, int type) {
