@@ -183,7 +183,6 @@ public class Visualizations : MonoBehaviour
 
 
 	private void UpdateFloor(int index) {
-		
 		if (_floorsGeometries [index] == null)
 			return;
 
@@ -239,7 +238,7 @@ public class Visualizations : MonoBehaviour
 						_cellShrink * _cellSize);
 					_typesGeometries[_loopsCounter].transform.parent = typesParent.transform; //put into parent object for later control
 
-					if (_typesList[_loopsCounter] == -1)
+					if (_typesList[_loopsCounter] == (int) Brick.INVALID)
 					{
 						_typesGeometries[_loopsCounter].transform.localScale = new Vector3(0.25f * _cellSize, 0.25f * _cellSize, 0.25f * _cellSize);
 						_typesGeometries[_loopsCounter].transform.GetComponent<Renderer>().material.color = Color.black;
@@ -253,6 +252,11 @@ public class Visualizations : MonoBehaviour
 					_typesGeometries[_loopsCounter].transform.GetComponent<Renderer>().receiveShadows = false;
 					_typesGeometries[_loopsCounter].transform.GetComponent<Renderer>().shadowCastingMode =
 						UnityEngine.Rendering.ShadowCastingMode.Off;
+				}
+
+				// Update type for heatmaps too
+				foreach (HeatMap hm in heatmaps) {
+					hm.UpdateType (x, y, _typesList[_loopsCounter]);
 				}
 
 				_loopsCounter++;
@@ -327,25 +331,18 @@ public class Visualizations : MonoBehaviour
 					// Init heatmap geometries for each heatmap object
 					foreach (HeatMap hm in heatmaps) {
 						hm.CreateHeatmapGeo (x, y, _loopsCounter, _typesList [_loopsCounter]);
-						hm.UpdateHeatmap (x, y, _typesList [_loopsCounter], _loopsCounter);
 					}
 				}
 				_loopsCounter++;
 			}
 		}
+
+		UpdateHeatmaps ();
 	}
 
 	private void UpdateHeatmaps() {
-		int index = 0;
-		for (int x = 0; x < _gridX-1; x++) {
-			for (int y = 0; y < _gridY; y++) {
-				if (_typesList [index] != _outOfBoundsType) {
-					foreach (HeatMap hm in heatmaps) {
-						hm.UpdateHeatmap (x, y, _typesList [index], index);
-					}
-				}
-				index++;
-			}
+		foreach (HeatMap hm in heatmaps) {
+			hm.UpdateHeatmap ();
 		}
 	}
 
@@ -453,6 +450,11 @@ public class Visualizations : MonoBehaviour
 					_floorsList [index] = cityIO.GetFloorHeight (gridIndex);
 					UpdateType (index);
 					UpdateFloor (index);
+
+					// Update type for heatmaps too
+					foreach (HeatMap hm in heatmaps) {
+						hm.UpdateType (i, j, _typesList[index]);
+					}
 				}
 				gridIndex++;
 			}

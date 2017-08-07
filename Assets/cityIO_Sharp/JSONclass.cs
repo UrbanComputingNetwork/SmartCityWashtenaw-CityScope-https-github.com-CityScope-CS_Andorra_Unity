@@ -7,7 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Brick { RL = 0, RM = 1, RS = 2, OL = 3, OM = 4, OS = 5, ROAD = 6, PARK = 7, PARKING = 8, STREET = 9, INVALID = -1, MASK = -2 };
+public enum Brick { RL = 0, RM = 1, RS = 2, OL = 3, OM = 4, OS = 5, ROAD = 6, AMENITIES = 7, PARK = 8, STREET = 9, INVALID = -1, MASK = -2 };
 
 [System.Serializable]  // have to have this in every JSON class!
 public class Grid

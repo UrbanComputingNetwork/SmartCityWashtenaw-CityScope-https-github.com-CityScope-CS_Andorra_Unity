@@ -86,7 +86,7 @@ public class cityIO : MonoBehaviour
 	private Vector3 gridObjectScale;
 
 
-    private int[] notBuildingTypes = new int[] { (int)Brick.INVALID, (int)Brick.MASK, (int)Brick.ROAD, (int)Brick.PARK, (int)Brick.PARKING, (int)Brick.STREET };
+    private int[] notBuildingTypes = new int[] { (int)Brick.INVALID, (int)Brick.MASK, (int)Brick.ROAD, (int)Brick.PARK, (int)Brick.AMENITIES, (int)Brick.STREET };
     private int[] buildingTypes = new int[] { (int)Brick.RL, (int)Brick.RM, (int)Brick.RS, (int)Brick.RL, (int)Brick.OL, (int)Brick.OM, (int)Brick.OS };
 
 
@@ -229,7 +229,7 @@ public class cityIO : MonoBehaviour
 				yPos = 0;
 				height = 0.25f;
 			}
-			else if (_table.grid[i].type == (int)Brick.PARKING) 
+			else if (_table.grid[i].type == (int)Brick.AMENITIES) 
 			{
 				yPos = 0f;
 				height = 0.25f;
