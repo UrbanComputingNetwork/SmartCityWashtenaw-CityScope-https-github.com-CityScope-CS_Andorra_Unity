@@ -27,8 +27,8 @@ public class HeatMap {
 		this.cellSize = _cellSize;
 		this.yOffset = _addToYHeight;
 
-		currentHeatmapParent = new GameObject ();
-		currentHeatmapParent.SetActive (false);
+		this.currentHeatmapParent = new GameObject ();
+		this.currentHeatmapParent.SetActive (false);
 		this.currentHeatmapParent.name = name;
 	}
 

@@ -18,7 +18,7 @@ public class stateManager : MonoBehaviour
     public bool _demoModeBool = true;
     public int _changeModeEverySeconds = 60;
 
-	private const int NUM_STATES = 5;
+	private const int NUM_STATES = 6;
 	private enum HeatmapState { CITYIO = 0, LANDUSE = 1, FLOORS = 2, RES_PROXIMITY = 3, OFFICE_PROXIMITY = 4, PARK_PROXIMITY = 5, CELL = 6 };
 
     void Awake()
@@ -65,7 +65,6 @@ public class stateManager : MonoBehaviour
                 ShowContext(_andorraCityScope);
                 print("Default: Basic Sat view and cityIO grid" + '\n');
                 _floorsUI.SetActive(false);
-
                 break;
 			case (int) HeatmapState.CITYIO:
                 ShowContext(_andorraCityScope);

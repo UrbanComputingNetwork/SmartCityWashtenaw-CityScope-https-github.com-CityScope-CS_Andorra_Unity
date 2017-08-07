@@ -299,41 +299,35 @@ public class Visualizations : MonoBehaviour
 		float cellSize = _cellShrink * _cellSize;
 		for (int i = 0; i < NUM_HEATMAPS; i++) {
 			heatmaps[i] = new HeatMap(_gridX-1, _gridY, _windowSearchDim, cellSize, _addToYHeight, ((HeatmapType)i).ToString());
-			heatmaps [i].SetParent (heatmapsParent);
+			heatmaps[i].SetParent (heatmapsParent);
 
 			// Set up search types & origin types for each heatmap
-			switch (i) 
-			{
-				case (int) HeatmapType.OFFICE:
-					heatmaps [i].SetOriginTypes (resTypes);
-					heatmaps [i].SetSearchTypes (officeTypes);
-					break;
-				case (int) HeatmapType.RES:
-					heatmaps [i].SetOriginTypes (officeTypes);
-					heatmaps [i].SetSearchTypes (resTypes);
-					break;
-				case (int) HeatmapType.PARK:
-					// TEMP
-					heatmaps [i].SetOriginTypes (resTypes);
-					heatmaps [i].SetSearchTypes (officeTypes);
-					break;
+			if (i == (int)HeatmapType.OFFICE) {
+				heatmaps [i].SetOriginTypes (resTypes);
+				heatmaps [i].SetSearchTypes (officeTypes);
+			} else if (i == (int)HeatmapType.RES) {
+				heatmaps [i].SetOriginTypes (officeTypes);
+				heatmaps [i].SetSearchTypes (resTypes);
+			} else if (i == (int)HeatmapType.PARK) {
+				// TEMP
+				heatmaps [i].SetOriginTypes (resTypes);
+				heatmaps [i].SetSearchTypes (officeTypes);
 			}
 		}
 
 		// Initialize geos
 		for (int x = 0; x < _gridX - 1; x++) {
 			for (int y = 0; y < _gridY; y++) {
-				_loopsCounter++;
 				if (_typesList [_loopsCounter] != _outOfBoundsType) { // if not on the area which is out of the physical model space
 					// Init heatmap geometries for each heatmap object
 					foreach (HeatMap hm in heatmaps) {
 						hm.CreateHeatmapGeo (x, y, _loopsCounter, _typesList [_loopsCounter]);
+						hm.UpdateHeatmap (x, y, _typesList [_loopsCounter], _loopsCounter);
 					}
 				}
+				_loopsCounter++;
 			}
 		}
-
-		UpdateHeatmaps ();
 	}
 
 	private void UpdateHeatmaps() {
@@ -416,10 +410,10 @@ public class Visualizations : MonoBehaviour
 		heatmapsParent.SetActive (true);
 
 		for (int i = 0; i < heatmaps.Length; i++) {
-			if (i == (int) heatmapType)
-				heatmaps[(int) heatmapType].SetParentActive (true);
+			if ((HeatmapType)i == heatmapType)
+				heatmaps[i].SetParentActive (true);
 			else
-				heatmaps[(int) heatmapType].SetParentActive (false);
+				heatmaps[i].SetParentActive (false);
 		}
     }
 		
