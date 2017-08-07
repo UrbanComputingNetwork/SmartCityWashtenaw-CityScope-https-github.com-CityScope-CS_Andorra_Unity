@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 using System.Linq;
+using System;
 
 public class Visualizations : MonoBehaviour
 {
@@ -75,9 +76,6 @@ public class Visualizations : MonoBehaviour
     private int _cellScoreCount = 0;
 
 	private enum Mask { INTERACTIVE = 0, GRID = 1, FULL_SITE = 2, OUTSIDE = 3 };
-
-	List<Brick> officeTypes = new List<Brick> { Brick.OL, Brick.OM, Brick.OS };
-	List<Brick> resTypes = new List<Brick> { Brick.RL, Brick.RM, Brick.RS };
 
 	private int interactiveIndex;
 	private Vector2 interactiveGridLocation;
@@ -285,7 +283,6 @@ public class Visualizations : MonoBehaviour
 		}
 	}
 
-
 	private void SetupHeatmaps() {
 		_loopsCounter = 0;
 
@@ -294,6 +291,15 @@ public class Visualizations : MonoBehaviour
 			CreateParent (ref heatmapsParent);
 			heatmapsParent.name = "Heatmaps";
 			heatmaps = new HeatMap[NUM_HEATMAPS];
+		}
+
+		// Init custom search lists
+		List<Brick> officeTypes = new List<Brick> { Brick.OL, Brick.OM, Brick.OS };
+		List<Brick> resTypes = new List<Brick> { Brick.RL, Brick.RM, Brick.RS };
+		List<Brick> parkTypes = new List<Brick> { Brick.PARK };
+		List<Brick> allTypes = new List<Brick> ();
+		foreach(Brick brick in System.Enum.GetValues(typeof(Brick))) {
+			allTypes.Add (brick);
 		}
 
 		float cellSize = _cellShrink * _cellSize;
@@ -309,9 +315,8 @@ public class Visualizations : MonoBehaviour
 				heatmaps [i].SetOriginTypes (officeTypes);
 				heatmaps [i].SetSearchTypes (resTypes);
 			} else if (i == (int)HeatmapType.PARK) {
-				// TEMP
-				heatmaps [i].SetOriginTypes (resTypes);
-				heatmaps [i].SetSearchTypes (officeTypes);
+				heatmaps [i].SetOriginTypes (allTypes);
+				heatmaps [i].SetSearchTypes (parkTypes);
 			}
 		}
 
@@ -357,7 +362,6 @@ public class Visualizations : MonoBehaviour
 	////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////
-
 
 	/// 
     /// <summary>
@@ -409,6 +413,7 @@ public class Visualizations : MonoBehaviour
 
 		heatmapsParent.SetActive (true);
 
+		// Toggle heatmap parents
 		for (int i = 0; i < heatmaps.Length; i++) {
 			if ((HeatmapType)i == heatmapType)
 				heatmaps[i].SetParentActive (true);

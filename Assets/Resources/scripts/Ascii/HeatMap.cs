@@ -17,6 +17,8 @@ public class HeatMap {
 	int searchDim;
 	int[,] _typesArray;
 
+	float gradientScale = 0.4f;
+
 	public HeatMap(int sizeX, int sizeY, int searchDimension, float _cellSize, float _addToYHeight, string name) {
 		this.heatmapGeos = new GameObject[sizeX * sizeY];
 		this.gridX = sizeX;
@@ -76,7 +78,10 @@ public class HeatMap {
 	{
 		_typesArray[x, y] = type;
 
-		if (this.searchTypes.Contains((Brick)_typesArray[x, y])) // what is the cells type we're searching for? 
+		// for the brick at (x, y), 
+		// check if it's one of the origin types that needs a score
+		// if so, check if its neighbors are in the search type array & increment score if so
+		if (this.originTypes.Contains((Brick)_typesArray[x, y]))
 		{
 			heatmapGeos[index].transform.GetComponent<Renderer>().material.color = Color.green;
 			heatmapGeos[index].transform.localScale = new Vector3(cellSize, cellSize, cellSize);
@@ -88,13 +93,13 @@ public class HeatMap {
 				{
 					if (_windowX > 0 && _windowY > 0 && _windowX < gridX && _windowY < gridY)
 					{ // make sure window area is not outside grid bounds 
-						if (_typesArray[_windowX, _windowY] > 6 && _typesArray[_windowX, _windowY] < 9)
+						if (this.searchTypes.Contains((Brick)_typesArray[_windowX, _windowY]))
 						{
 							_cellScoreCount = _cellScoreCount + 1;
 							heatmapGeos[index].transform.localPosition =
 								new Vector3(x * cellSize, yOffset + (_cellScoreCount * 2), y * cellSize);
 							heatmapGeos[index].name = ("Results count: " + _cellScoreCount.ToString());
-							var _tmpColor = _cellScoreCount / Mathf.Pow(2 * searchDim, 2); // color color spectrum based on cell score/max potential score 
+							var _tmpColor = (_cellScoreCount / Mathf.Pow(2 * searchDim, 2)) * gradientScale; // color color spectrum based on cell score/max potential score 
 							heatmapGeos [index].transform.GetComponent<Renderer> ().material.color =
 								Color.HSVToRGB (_tmpColor, 1, 1);
 						}
@@ -105,7 +110,7 @@ public class HeatMap {
 		else
 		{
 			heatmapGeos[index].transform.GetComponent<Renderer>().material.color = Color.HSVToRGB(0, 0, 0);
-			heatmapGeos[index].transform.localScale = new Vector3(cellSize, cellSize, cellSize);
+			heatmapGeos[index].transform.localScale = new Vector3(cellSize * 0.9f, cellSize * 0.9f, cellSize * 0.9f);
 		}
 	}
 }
