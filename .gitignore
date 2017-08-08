@@ -1,6 +1,7 @@
 # Mac stuff
 .DS_Store
 
+/[Ll]ibrary/metadata
 /[Tt]emp/
 /[Oo]bj/
 /[Bb]uild/
