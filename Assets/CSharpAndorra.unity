@@ -15,7 +15,7 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 8
   m_Fog: 0
-  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.591}
   m_FogMode: 3
   m_FogDensity: 0.01
   m_LinearFogStart: 0
@@ -27,7 +27,7 @@ RenderSettings:
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0, g: 0, b: 0, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
-  m_HaloStrength: 0.5
+  m_HaloStrength: 0.148
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
   m_HaloTexture: {fileID: 0}
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 2142124936}
-  m_IndirectSpecularColor: {r: 0.45028722, g: 0.4979465, b: 0.56263393, a: 1}
+  m_IndirectSpecularColor: {r: 0.45026898, g: 0.49792844, b: 0.56262606, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -1366,8 +1366,9 @@ MonoBehaviour:
   _useBuffer: 1
   _gridParent: {fileID: 1163447381}
   _colorSpaceParent: {fileID: 136326348}
-  _gridSizeX: 20
-  _gridSizeY: 20
+  _gridSizeX: 16
+  _gridSizeY: 16
+  _sliderRange: 30
   _refreshRate: 1
   _scannerScale: 0.012
   _useWebcam: 0
@@ -1377,7 +1378,7 @@ MonoBehaviour:
   _showDebugColors: 0
   sampleColors: []
   _numColors: 3
-  _colorSettingsFileName: sampleColorSettings.json
+  _colorSettingsFileName: scannerSettings.json
 --- !u!114 &417497867
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6572,6 +6573,7 @@ MonoBehaviour:
     grid: []
     objects:
       slider1: 0
+      slider2: 0
       toggle1: 2
       toggle2: 0
       toggle3: 0
@@ -7758,7 +7760,7 @@ MonoBehaviour:
   _randomColors: []
   _zAxisMultiplier: 20
   _addToYHeight: 600
-  _winodwSearchDim: 5
+  _windowSearchDim: 10
 --- !u!1 &2108115987
 GameObject:
   m_ObjectHideFlags: 0
