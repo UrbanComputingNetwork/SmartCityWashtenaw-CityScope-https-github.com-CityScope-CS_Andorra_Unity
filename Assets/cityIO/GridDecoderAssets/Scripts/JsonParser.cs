@@ -12,7 +12,7 @@ public class JsonParser {
 	/// <returns><c>true</c>, if JSO was loaded, <c>false</c> otherwise.</returns>
 	/// <param name="fileName">File name.</param>
 	public static string loadJSON(string _settingsFileName, bool debug) {
-		string filePath = "Assets/Settings/" +  _settingsFileName;
+		string filePath = "Assets/cityIO/Settings/" +  _settingsFileName;
 
 		if (File.Exists(filePath))
 		{
@@ -35,7 +35,7 @@ public class JsonParser {
 	/// </summary>
 	/// <returns><c>true</c>, if JSO was writed, <c>false</c> otherwise.</returns>
 	public static bool writeJSON(string _settingsFileName, string dataAsJson) {
-		string filePath = "Assets/Settings/" + _settingsFileName;
+		string filePath = "Assets/cityIO/Settings/" + _settingsFileName;
 		File.WriteAllText (filePath, dataAsJson);
 		return true;
 	}
