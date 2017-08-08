@@ -64,7 +64,7 @@ public class Visualizations : MonoBehaviour
     /// <summary>
     /// vars for neighbor searching 
     /// </summary>
-    public int _windowSearchDim = 10;
+    public int _windowSearchDim = 40;
 
 
 	// Heatmaps
@@ -256,7 +256,7 @@ public class Visualizations : MonoBehaviour
 
 				// Update type for heatmaps too
 				foreach (HeatMap hm in heatmaps) {
-					hm.UpdateType (x, y, _typesList[_loopsCounter]);
+					hm.UpdateType (x, y, _typesList[_loopsCounter], _loopsCounter);
 				}
 
 				_loopsCounter++;
@@ -453,7 +453,7 @@ public class Visualizations : MonoBehaviour
 
 					// Update type for heatmaps too
 					foreach (HeatMap hm in heatmaps) {
-						hm.UpdateType (i, j, _typesList[index]);
+						hm.UpdateType (i, j, _typesList[index], index);
 					}
 				}
 				gridIndex++;
