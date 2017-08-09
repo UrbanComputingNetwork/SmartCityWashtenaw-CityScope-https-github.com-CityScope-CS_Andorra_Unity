@@ -872,6 +872,51 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _resetAfterMinutes: 5
+--- !u!1 &183971140
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 183971141}
+  - component: {fileID: 183971142}
+  m_Layer: 0
+  m_Name: SiteData
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &183971141
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 183971140}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1877268380}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &183971142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 183971140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a60303e02bfef40058a150a1dea34d75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _asciiTypes: {fileID: 4900000, guid: 90e89bfe5d48d400f9c26623b91c3936, type: 3}
+  _asciiFloors: {fileID: 4900000, guid: 0d6ce251b0df744d2a512c267c4da6cb, type: 3}
+  _asciiMasks: {fileID: 4900000, guid: 42a5dade6335c474eb0ee09788271882, type: 3}
+  _gridX: 60
+  _gridY: 96
 --- !u!1 &199217330
 GameObject:
   m_ObjectHideFlags: 0
@@ -6671,6 +6716,7 @@ Transform:
   m_Children:
   - {fileID: 2107124966}
   - {fileID: 1020138165}
+  - {fileID: 183971141}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
@@ -7813,11 +7859,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _city_IO_script: {fileID: 1877268379}
-  _asciiTypes: {fileID: 4900000, guid: 90e89bfe5d48d400f9c26623b91c3936, type: 3}
-  _asciiFloors: {fileID: 4900000, guid: 0d6ce251b0df744d2a512c267c4da6cb, type: 3}
-  _asciiMasks: {fileID: 4900000, guid: 42a5dade6335c474eb0ee09788271882, type: 3}
-  _gridX: 60
-  _gridY: 96
+  siteData: {fileID: 183971142}
   _cellShrink: 0.9
   _cellSize: 34.75
   _outOfBoundsType: -1
@@ -7825,7 +7867,7 @@ MonoBehaviour:
   _zAxisMultiplier: 20
   _addToYHeight: 600
   _windowSearchDim: 10
-  _showHeatmaps: 0
+  _staticHeatmaps: 1
 --- !u!1 &2108115987
 GameObject:
   m_ObjectHideFlags: 0

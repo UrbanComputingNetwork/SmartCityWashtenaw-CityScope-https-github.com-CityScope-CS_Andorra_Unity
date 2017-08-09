@@ -12,7 +12,6 @@ public class AsciiParser : MonoBehaviour
     /// <param name="txtFile">Text file.</param>
     public static List<int> AsciiParserMethod(TextAsset txtFile)
     {
-        //cityIO _io = new cityIO();
         List<int> _tmpList = new List<int>();
         string _txtRemovedNewlines = txtFile.text.Replace('\n', ' ');
         string[] _strValues = _txtRemovedNewlines.Split(' ');

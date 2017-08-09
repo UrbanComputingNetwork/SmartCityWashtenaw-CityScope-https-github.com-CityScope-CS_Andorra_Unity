@@ -9,27 +9,9 @@ using System;
 public class Visualizations : MonoBehaviour
 {
     public cityIO _city_IO_script;
-    /// <summary>
-    /// The ASCII types txt files.
-    /// </summary>
-    public TextAsset _asciiTypes;
-    /// <summary>
-    /// The ASCII floors txt files.
-    /// </summary>
-    public TextAsset _asciiFloors;
-    /// <summary>
-    /// The ASCII masks txt files.
-    /// </summary>
-    public TextAsset _asciiMasks;
-    private List<int> _typesList = new List<int>();
-    private List<int> _floorsList = new List<int>();
-    private List<int> _masksList = new List<int>();
 
-    /// <summary>
-    /// to be replaced with x,y dim from ascii parsing
-    /// </summary>
-    public int _gridX;
-    public int _gridY;
+	public SiteData siteData;
+
     /// <summary>
     /// counter for the double loop
     /// </summary>
@@ -69,8 +51,6 @@ public class Visualizations : MonoBehaviour
 	public bool _staticHeatmaps = false;
 	private bool firstUpdate = true;
 
-
-
 	// Heatmaps
 	private const int NUM_HEATMAPS = 3;
 	public enum HeatmapType { RES = 0, OFFICE = 1, PARK = 2 };
@@ -79,13 +59,15 @@ public class Visualizations : MonoBehaviour
 
     private int _cellScoreCount = 0;
 
-	private enum Mask { INTERACTIVE = 0, GRID = 1, FULL_SITE = 2, OUTSIDE = 3 };
+	private int _gridX;
+	private int _gridY;
 
-	private int interactiveIndex;
-	private Vector2 interactiveGridLocation;
-	private Vector2 interactiveGridDim;
+	private bool setup;
 
 	private cityIO cityIO;
+
+	private List<int> _typesList = new List<int>();
+	private List<int> _floorsList = new List<int>();
 
 	////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////
@@ -104,42 +86,23 @@ public class Visualizations : MonoBehaviour
     void Awake()
     {
 		cityIO = GameObject.Find ("cityIO").GetComponent<cityIO> ();
+		siteData = GameObject.Find ("SiteData").GetComponent<SiteData> ();
 
-        _floorsList = AsciiParser.AsciiParserMethod(_asciiFloors);
-        _typesList = AsciiParser.AsciiParserMethod(_asciiTypes);
-        _masksList = AsciiParser.AsciiParserMethod(_asciiMasks);
+		setup = false;
+
+		EventManager.StartListening ("updateData", OnUpdateData);
+		EventManager.StartListening ("scannersInitialized", OnSiteInitialized);
+    }
+
+	private void OnSiteInitialized() {
+		_gridX = (int)siteData.GetGridSize ().x;
+		_gridY = (int)siteData.GetGridSize ().y;
 
 		SetupFloors ();
 		SetupHeatmaps ();
 		SetupTypesViz ();
 
-		EventManager.StartListening ("updateData", OnUpdateData);
-		EventManager.StartListening ("scannersInitialized", FindInteractiveZone);
-
-    }
-
-	private void FindInteractiveZone() {
-		interactiveIndex = -1;
-		int index = 0;
-		interactiveGridLocation = new Vector2 (0, 0);
-		interactiveGridDim = new Vector2 (0, 0);
-
-		// Find location of interactive grid
-		for (int i = 0; i < _gridX; i++) {
-			for (int j = 0; j < _gridY; j++) {
-				if (_masksList[index] == (int) Mask.GRID && interactiveIndex < 0) {
-					interactiveIndex = index;
-					interactiveGridLocation.x = j;
-					interactiveGridLocation.y = i;
-					Debug.Log ("Mask index is " + interactiveIndex);
-				}
-				index++;
-			}
-		}
-
-		interactiveGridDim = GameObject.Find ("ScannersParent").GetComponent<Scanners> ().GetGridDimensions();
-
-		Debug.Log ("Interactive grid starts at " + interactiveGridLocation + "   and has dimensions:   " + interactiveGridDim + " with index " + interactiveIndex);
+		setup = true;
 	}
 
 	private void CreateParent(ref GameObject parent) {
@@ -161,21 +124,22 @@ public class Visualizations : MonoBehaviour
 		}
 
 		_floorsGeometries = new GameObject[(_gridX-1) * _gridY];
-		_rangeOfFloors = (Mathf.Abs(_floorsList.Max()) + Mathf.Abs(_floorsList.Min()));
+		_rangeOfFloors = siteData.GetMaxFloor() + siteData.GetMinFloor();
 
 		for (int x = 0; x < _gridX - 1; x++) {
 			for (int y = 0; y < _gridY; y++) {
-				var _shiftFloorsHeightAboveZero = _floorsList[index] + Mathf.Abs(_floorsList.Min()); // move list item from subzero
+				var _shiftFloorsHeightAboveZero = siteData.GetFloor(index) + siteData.GetMinFloor(); // move list item from subzero
+				_floorsList.Add(siteData.GetFloor (index));
 
-				if (_typesList[index] != _outOfBoundsType && _floorsList[index] > 0)
+				if (siteData.GetType(index)  != _outOfBoundsType && siteData.GetFloor(index) > 0)
 				{ 
 					// if not on the area which is out of the physical model space
 					_floorsGeometries[index] = GameObject.CreatePrimitive(PrimitiveType.Cube); //make cell cube
-					_floorsGeometries[index].name = (_floorsList[index].ToString() + "Floors ");
+					_floorsGeometries[index].name = (siteData.GetFloor(index).ToString() + "Floors ");
 					_floorsGeometries[index].transform.parent = floorsParent.transform;
 					_floorsGeometries[index].transform.localPosition = new Vector3(x * _cellSize, _shiftFloorsHeightAboveZero * (_zAxisMultiplier / 2) + _addToYHeight, y * _cellSize); //compensate for scale shift due to height                                                                                                                                                    
 					//color the thing
-					_floorsGeometries[index].transform.GetComponent<Renderer>().material.color = Color.HSVToRGB(1, 1, (_floorsList[index]) / _rangeOfFloors);// this creates color based on value of cell!
+					_floorsGeometries[index].transform.GetComponent<Renderer>().material.color = Color.HSVToRGB(1, 1, (siteData.GetFloor(index)) / _rangeOfFloors);// this creates color based on value of cell!
 					_floorHeight = _shiftFloorsHeightAboveZero * _zAxisMultiplier;
 					_floorsGeometries[index].transform.localScale = new Vector3(_cellShrink * _cellSize, _floorHeight, _cellShrink * _cellSize);
 				}
@@ -222,14 +186,16 @@ public class Visualizations : MonoBehaviour
 		{
 			for (int y = 0; y < _gridY; y++)
 			{
-				var _shiftTypeListAboveZero = _typesList [_loopsCounter];
+				var _shiftTypeListAboveZero = siteData.GetType(_loopsCounter);
 					//+ Mathf.Abs(_typesList.Min()); // move list item from subzero
 				// var _shiftFloorListAboveZero = _floorsList[_loopsCounter] + Mathf.Abs(_floorsList.Min()); // move list item from subzero
 
-				if (_typesList[_loopsCounter] != _outOfBoundsType)
+				_typesList.Add(siteData.GetType (_loopsCounter));
+
+				if (siteData.GetType(_loopsCounter) != _outOfBoundsType)
 				{ // if not on the area which is out of the physical model space
 					_typesGeometries[_loopsCounter] = GameObject.CreatePrimitive(PrimitiveType.Quad); //make cell cube
-					_typesGeometries[_loopsCounter].name = ("Types " + _typesList[_loopsCounter].ToString() + " " + _loopsCounter.ToString());
+					_typesGeometries[_loopsCounter].name = ("Types " + siteData.GetType(_loopsCounter).ToString() + " " + _loopsCounter.ToString());
 					/*_typesGeometries.transform.localPosition = new Vector3(x * _cellSize,
                        _shiftFloorListAboveZero * _zAxisMultiplier + _addToYHeight,
                       y * _cellSize);   //move and rotate */
@@ -242,7 +208,7 @@ public class Visualizations : MonoBehaviour
 						_cellShrink * _cellSize);
 					_typesGeometries[_loopsCounter].transform.parent = typesParent.transform; //put into parent object for later control
 
-					if (_typesList[_loopsCounter] == (int) Brick.INVALID)
+					if (siteData.GetType(_loopsCounter) == (int) Brick.INVALID)
 					{
 						_typesGeometries[_loopsCounter].transform.localScale = new Vector3(0.25f * _cellSize, 0.25f * _cellSize, 0.25f * _cellSize);
 						_typesGeometries[_loopsCounter].transform.GetComponent<Renderer>().material.color = Color.black;
@@ -260,7 +226,7 @@ public class Visualizations : MonoBehaviour
 
 				// Update type for heatmaps too
 				foreach (HeatMap hm in heatmaps) {
-					hm.UpdateType (x, y, _typesList[_loopsCounter], _loopsCounter);
+					hm.UpdateType (x, y, siteData.GetType(_loopsCounter), _loopsCounter);
 				}
 
 				_loopsCounter++;
@@ -276,7 +242,7 @@ public class Visualizations : MonoBehaviour
 		
 		var _shiftTypeListAboveZero = _typesList[index]; 
 
-		_typesGeometries[index].name = ("Types " + _typesList[_loopsCounter].ToString());
+		_typesGeometries[index].name = ("Types " + _typesList[index].ToString());
 
 		if (_typesList[index] == -1)
 		{
@@ -331,10 +297,10 @@ public class Visualizations : MonoBehaviour
 		// Initialize geos
 		for (int x = 0; x < _gridX - 1; x++) {
 			for (int y = 0; y < _gridY; y++) {
-				if (_typesList [_loopsCounter] != _outOfBoundsType) { // if not on the area which is out of the physical model space
+				if (siteData.GetType(_loopsCounter) != _outOfBoundsType) { // if not on the area which is out of the physical model space
 					// Init heatmap geometries for each heatmap object
 					foreach (HeatMap hm in heatmaps) {
-						hm.CreateHeatmapGeo (x, y, _loopsCounter, _typesList [_loopsCounter]);
+						hm.CreateHeatmapGeo (x, y, _loopsCounter, siteData.GetType(_loopsCounter));
 					}
 				}
 				_loopsCounter++;
@@ -373,9 +339,6 @@ public class Visualizations : MonoBehaviour
     {
 		if (_typesList.Count < 0)
 			return;
-		
-		if (_floorsGeometries == null || _floorsGeometries.Length <= 0)
-			SetupFloors ();
 
 		floorsParent.SetActive (true);
     }
@@ -385,9 +348,6 @@ public class Visualizations : MonoBehaviour
     /// </summary>
     public void TypesViz() // create types map //
     {
-		if (_typesGeometries == null)
-			SetupTypesViz ();
-
 		typesParent.SetActive (true);
     }
 
@@ -429,6 +389,9 @@ public class Visualizations : MonoBehaviour
 	/// Raises the update data event.
 	/// </summary>
 	public void OnUpdateData() {
+		if (!setup)
+			return;
+		
 		UpdateFloorsAndTypes ();
 
 		if (_staticHeatmaps && !firstUpdate)
@@ -445,18 +408,21 @@ public class Visualizations : MonoBehaviour
 	private void UpdateFloorsAndTypes() {
 		Debug.Log ("Update floors & types in Visualizations.");
 
-		int index = interactiveIndex;
+		int index = siteData.GetInteractiveIndex();
 		int gridIndex = 0;
 
 		///
 		/// The interactive grid is indexed the other way! 
 		/// so have to iterate r-l up-down
 		/// 
-		for (int j = (int)(interactiveGridLocation.x + interactiveGridDim.x); j > (int)interactiveGridLocation.x ; j--) {
-			for (int i = (int)interactiveGridLocation.y; i < (int)(interactiveGridLocation.y + interactiveGridDim.y); i++) {
+		int interactiveEndX = (int) (siteData.GetInteractiveGridLocation().x + siteData.GetInteractiveGridDim().x);
+		int interactiveEndY = (int) (siteData.GetInteractiveGridLocation().y + siteData.GetInteractiveGridDim().y);
+
+		for (int j = interactiveEndX; j > (int)siteData.GetInteractiveGridLocation().x ; j--) {
+			for (int i = (int)siteData.GetInteractiveGridLocation().y; i < interactiveEndY; i++) {
 				index = i * (int)(_gridY) + j;
 				// Update interactive part only
-				if (cityIO.ShouldUpdateGrid(gridIndex) && _masksList[index] == (int)Mask.INTERACTIVE) {
+				if (cityIO.ShouldUpdateGrid(gridIndex) && siteData.IsIndexInsideInteractiveArea(index)) {
 					_typesList [index] = cityIO.GetGridType (gridIndex);
 					_floorsList [index] = cityIO.GetFloorHeight (gridIndex);
 					UpdateType (index);
@@ -470,30 +436,6 @@ public class Visualizations : MonoBehaviour
 				gridIndex++;
 			}
 		}
-	}
-
-	/// <summary>
-	/// Returns the value of the mask (from the ASCII file) at the given location in the Table grid.
-	/// </summary>
-	/// <returns>The mask.</returns>
-	/// <param name="index">Index.</param>
-	public int GetMask(int index) {
-		int currJ = index % (int)interactiveGridDim.y;
-		int currI = (int) (index / interactiveGridDim.y);
-		int i = (int) (interactiveGridLocation.x + interactiveGridDim.y) - currI;
-		int j = (int) interactiveGridLocation.y + currJ;
-		int remappedIndex = j * (int)(_gridY) + i;
-
-		return _masksList[remappedIndex];
-	}
-
-	/// <summary>
-	/// Determines whether the mask shows that the module is interactive at the specified index.
-	/// </summary>
-	/// <returns><c>true</c> if this instance is interactive the specified index; otherwise, <c>false</c>.</returns>
-	/// <param name="index">Index.</param>
-	public bool IsInteractive(int index) {
-		return (GetMask (index) == (int)Mask.INTERACTIVE);
 	}
 
 }
