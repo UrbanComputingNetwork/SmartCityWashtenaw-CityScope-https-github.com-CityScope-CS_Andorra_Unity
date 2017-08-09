@@ -162,7 +162,8 @@ public class HeatMap {
 		else {
 			for (int x = 0; x < gridX; x++) {
 				for (int y = 0; y < gridY; y++) {
-					UpdateHeatmapItem (x, y, _typesArray [x, y], index);
+					if (_typesArray [x, y] >= 0)
+						UpdateHeatmapItem (x, y, _typesArray [x, y], index);
 					index++;
 				}
 			}

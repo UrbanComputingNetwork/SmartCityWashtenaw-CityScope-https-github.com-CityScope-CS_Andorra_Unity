@@ -52,6 +52,7 @@ public class Scanners : MonoBehaviour
 	// UI scanners
 	private Dock dock;
 	private LegoSlider slider;
+	public bool _enableUI = false;
 	public int _sliderRange = 30;
 
 	RaycastHit hit;
@@ -135,8 +136,10 @@ public class Scanners : MonoBehaviour
 		ScanColors();
 
 		// Update slider & dock readings
-		dock.UpdateDock();
-		slider.UpdateSlider ();
+		if (_enableUI) {
+			dock.UpdateDock();
+			slider.UpdateSlider ();
+		}
 
 		if (_debug)
 			PrintMatrix ();

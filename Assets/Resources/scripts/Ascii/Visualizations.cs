@@ -66,6 +66,10 @@ public class Visualizations : MonoBehaviour
     /// </summary>
     public int _windowSearchDim = 40;
 
+	public bool _staticHeatmaps = false;
+	private bool firstUpdate = true;
+
+
 
 	// Heatmaps
 	private const int NUM_HEATMAPS = 3;
@@ -344,6 +348,7 @@ public class Visualizations : MonoBehaviour
 		foreach (HeatMap hm in heatmaps) {
 			hm.UpdateHeatmap ();
 		}
+		Debug.Log ("Updated heatmaps.");
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -425,14 +430,20 @@ public class Visualizations : MonoBehaviour
 	/// </summary>
 	public void OnUpdateData() {
 		UpdateFloorsAndTypes ();
+
+		if (_staticHeatmaps && !firstUpdate)
+			return;
 		UpdateHeatmaps ();
+
+		if (_staticHeatmaps)
+			firstUpdate = false;
 	}
 
 	/// <summary>
 	/// Updates the types // only update interactive part
 	/// </summary>
 	private void UpdateFloorsAndTypes() {
-		Debug.Log ("Update floors & types in HeatMaps.");
+		Debug.Log ("Update floors & types in Visualizations.");
 
 		int index = interactiveIndex;
 		int gridIndex = 0;

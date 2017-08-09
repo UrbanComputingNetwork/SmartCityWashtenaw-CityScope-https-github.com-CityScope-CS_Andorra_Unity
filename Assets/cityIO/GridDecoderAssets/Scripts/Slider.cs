@@ -65,6 +65,9 @@ public class LegoSlider : LegoUI {
 		if (sliderScanners.GetLength (1) == 0)
 			return;
 
+		if (!this.enable)
+			return;
+
 		if (sliderStartObject.transform.position != sliderScanners [0, 0].transform.position || sliderEndObject.transform.position != sliderScanners [0, NUM_SCANNERS-1].transform.position)
 			CreateSlider (sliderScanners [0, 0].transform.localScale.x);
 

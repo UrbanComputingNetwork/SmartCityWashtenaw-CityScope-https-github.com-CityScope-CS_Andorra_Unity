@@ -1368,10 +1368,11 @@ MonoBehaviour:
   _colorSpaceParent: {fileID: 136326348}
   _gridSizeX: 16
   _gridSizeY: 16
+  _enableUI: 0
   _sliderRange: 30
   _refreshRate: 1
   _scannerScale: 0.012
-  _useWebcam: 0
+  _useWebcam: 1
   _showRays: 0
   _debug: 0
   _isCalibrating: 0
@@ -1385,7 +1386,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 417497864}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 13d68c4d054ae41d88f6af6f3cc1a7be, type: 3}
   m_Name: 
@@ -7824,6 +7825,7 @@ MonoBehaviour:
   _zAxisMultiplier: 20
   _addToYHeight: 600
   _windowSearchDim: 10
+  _showHeatmaps: 0
 --- !u!1 &2108115987
 GameObject:
   m_ObjectHideFlags: 0
