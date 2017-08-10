@@ -31,7 +31,7 @@ public class Visualizations : MonoBehaviour
     /// <summary>
     /// the type that is out of the table are for matters of calc
     /// </summary>
-    public int _outOfBoundsType = -2; // make sure this is indeed the type 
+    public int _outOfBoundsType = -1; // make sure this is indeed the type 
     public List<Color> _randomColors = new List<Color>();
     [Range(1f, 100)]
     public int _zAxisMultiplier;
@@ -91,17 +91,21 @@ public class Visualizations : MonoBehaviour
 		setup = false;
 
 		EventManager.StartListening ("updateData", OnUpdateData);
-		EventManager.StartListening ("scannersInitialized", OnSiteInitialized);
+		EventManager.StartListening ("siteInitialized", OnSiteInitialized);
     }
 
 	private void OnSiteInitialized() {
 		_gridX = (int)siteData.GetGridSize ().x;
 		_gridY = (int)siteData.GetGridSize ().y;
 
+		_floorsList = siteData.GetFloors ();
+		_typesList = siteData.GetTypes ();
+
 		SetupFloors ();
 		SetupHeatmaps ();
 		SetupTypesViz ();
 
+		Debug.Log ("Site setup in Visualizations complete.");
 		setup = true;
 	}
 
@@ -122,24 +126,24 @@ public class Visualizations : MonoBehaviour
 			CreateParent (ref floorsParent);
 			floorsParent.name = "Floors";
 		}
-
+			
 		_floorsGeometries = new GameObject[(_gridX-1) * _gridY];
-		_rangeOfFloors = siteData.GetMaxFloor() + siteData.GetMinFloor();
+		_rangeOfFloors = (Mathf.Abs(_floorsList.Max()) + Mathf.Abs(_floorsList.Min()));
 
 		for (int x = 0; x < _gridX - 1; x++) {
 			for (int y = 0; y < _gridY; y++) {
-				var _shiftFloorsHeightAboveZero = siteData.GetFloor(index) + siteData.GetMinFloor(); // move list item from subzero
-				_floorsList.Add(siteData.GetFloor (index));
+				
+				var _shiftFloorsHeightAboveZero = _floorsList[index] + Mathf.Abs(_floorsList.Min()); // move list item from subzero
 
-				if (siteData.GetType(index)  != _outOfBoundsType && siteData.GetFloor(index) > 0)
+				if (_typesList[index] != _outOfBoundsType && _floorsList[index] > 0)
 				{ 
 					// if not on the area which is out of the physical model space
 					_floorsGeometries[index] = GameObject.CreatePrimitive(PrimitiveType.Cube); //make cell cube
-					_floorsGeometries[index].name = (siteData.GetFloor(index).ToString() + "Floors ");
+					_floorsGeometries[index].name = (_floorsList[index].ToString() + "Floors ");
 					_floorsGeometries[index].transform.parent = floorsParent.transform;
 					_floorsGeometries[index].transform.localPosition = new Vector3(x * _cellSize, _shiftFloorsHeightAboveZero * (_zAxisMultiplier / 2) + _addToYHeight, y * _cellSize); //compensate for scale shift due to height                                                                                                                                                    
 					//color the thing
-					_floorsGeometries[index].transform.GetComponent<Renderer>().material.color = Color.HSVToRGB(1, 1, (siteData.GetFloor(index)) / _rangeOfFloors);// this creates color based on value of cell!
+					_floorsGeometries[index].transform.GetComponent<Renderer>().material.color = Color.HSVToRGB(1, 1, (_floorsList[index]) / _rangeOfFloors);// this creates color based on value of cell!
 					_floorHeight = _shiftFloorsHeightAboveZero * _zAxisMultiplier;
 					_floorsGeometries[index].transform.localScale = new Vector3(_cellShrink * _cellSize, _floorHeight, _cellShrink * _cellSize);
 				}
@@ -186,16 +190,14 @@ public class Visualizations : MonoBehaviour
 		{
 			for (int y = 0; y < _gridY; y++)
 			{
-				var _shiftTypeListAboveZero = siteData.GetType(_loopsCounter);
-					//+ Mathf.Abs(_typesList.Min()); // move list item from subzero
+				var _shiftTypeListAboveZero = _typesList [_loopsCounter];
+				//+ Mathf.Abs(_typesList.Min()); // move list item from subzero
 				// var _shiftFloorListAboveZero = _floorsList[_loopsCounter] + Mathf.Abs(_floorsList.Min()); // move list item from subzero
 
-				_typesList.Add(siteData.GetType (_loopsCounter));
-
-				if (siteData.GetType(_loopsCounter) != _outOfBoundsType)
+				if (_typesList[_loopsCounter] != _outOfBoundsType)
 				{ // if not on the area which is out of the physical model space
 					_typesGeometries[_loopsCounter] = GameObject.CreatePrimitive(PrimitiveType.Quad); //make cell cube
-					_typesGeometries[_loopsCounter].name = ("Types " + siteData.GetType(_loopsCounter).ToString() + " " + _loopsCounter.ToString());
+					_typesGeometries[_loopsCounter].name = ("Types " + _typesList[_loopsCounter].ToString() + " " + _loopsCounter.ToString());
 					/*_typesGeometries.transform.localPosition = new Vector3(x * _cellSize,
                        _shiftFloorListAboveZero * _zAxisMultiplier + _addToYHeight,
                       y * _cellSize);   //move and rotate */
@@ -208,7 +210,7 @@ public class Visualizations : MonoBehaviour
 						_cellShrink * _cellSize);
 					_typesGeometries[_loopsCounter].transform.parent = typesParent.transform; //put into parent object for later control
 
-					if (siteData.GetType(_loopsCounter) == (int) Brick.INVALID)
+					if (_typesList[_loopsCounter] == (int) Brick.INVALID)
 					{
 						_typesGeometries[_loopsCounter].transform.localScale = new Vector3(0.25f * _cellSize, 0.25f * _cellSize, 0.25f * _cellSize);
 						_typesGeometries[_loopsCounter].transform.GetComponent<Renderer>().material.color = Color.black;
@@ -226,7 +228,7 @@ public class Visualizations : MonoBehaviour
 
 				// Update type for heatmaps too
 				foreach (HeatMap hm in heatmaps) {
-					hm.UpdateType (x, y, siteData.GetType(_loopsCounter), _loopsCounter);
+					hm.UpdateType (x, y, _typesList[_loopsCounter], _loopsCounter);
 				}
 
 				_loopsCounter++;
@@ -337,7 +339,7 @@ public class Visualizations : MonoBehaviour
     /// </summary>
     public void FloorsViz() // make the height map //
     {
-		if (_typesList.Count < 0)
+		if (floorsParent == null)
 			return;
 
 		floorsParent.SetActive (true);
@@ -348,6 +350,9 @@ public class Visualizations : MonoBehaviour
     /// </summary>
     public void TypesViz() // create types map //
     {
+		if (typesParent == null)
+			return;
+		
 		typesParent.SetActive (true);
     }
 
@@ -371,7 +376,7 @@ public class Visualizations : MonoBehaviour
     public void HeatmapViz(HeatmapType heatmapType)
     {
 		if (heatmapsParent == null)
-			SetupHeatmaps ();
+			return;
 
 		heatmapsParent.SetActive (true);
 

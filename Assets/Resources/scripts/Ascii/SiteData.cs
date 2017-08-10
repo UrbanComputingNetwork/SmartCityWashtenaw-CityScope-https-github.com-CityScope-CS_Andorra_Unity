@@ -31,17 +31,26 @@ public class SiteData : MonoBehaviour {
 	public int _gridX;
 	public int _gridY;
 
+	private bool setup;
+
 	private enum Mask { INTERACTIVE = 0, GRID = 1, FULL_SITE = 2, OUTSIDE = 3 };
 
 	// Use this for initialization
 	void Awake () {
+		setup = true;
 		_floorsList = AsciiParser.AsciiParserMethod(_asciiFloors);
 		_typesList = AsciiParser.AsciiParserMethod(_asciiTypes);
 		_masksList = AsciiParser.AsciiParserMethod(_asciiMasks);
 
 		EventManager.StartListening ("scannersInitialized", FindInteractiveZone);
-		EventManager.TriggerEvent ("siteInitialized");
 
+	}
+
+	void Update() {
+		if (_masksList.Count > 0 && setup) {
+			setup = false;
+			EventManager.TriggerEvent ("siteInitialized");
+		}
 	}
 
 	private void FindInteractiveZone() {
@@ -122,6 +131,10 @@ public class SiteData : MonoBehaviour {
 		return (_masksList [index] == (int)Mask.INTERACTIVE);
 	}
 
+	public bool IsInInteractive(int id) {
+		return (id == (int)Mask.INTERACTIVE);
+	}
+
 	/// <summary>
 	/// Returns the value of the mask (from the ASCII file) at the given location in the Table grid.
 	/// </summary>
@@ -135,6 +148,14 @@ public class SiteData : MonoBehaviour {
 		int remappedIndex = j * (int)(_gridY) + i;
 
 		return _masksList[remappedIndex];
+	}
+
+	public List<int> GetFloors() {
+		return this._floorsList;
+	}
+
+	public List<int> GetTypes() {
+		return this._typesList;
 	}
 
 }

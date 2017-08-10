@@ -887,7 +887,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &183971141
 Transform:
   m_ObjectHideFlags: 0
@@ -7822,7 +7822,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2107124965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7863,7 +7863,11 @@ MonoBehaviour:
   _cellShrink: 0.9
   _cellSize: 34.75
   _outOfBoundsType: -1
-  _randomColors: []
+  _randomColors:
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
   _zAxisMultiplier: 20
   _addToYHeight: 600
   _windowSearchDim: 10

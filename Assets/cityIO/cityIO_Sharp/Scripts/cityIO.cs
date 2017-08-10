@@ -73,6 +73,7 @@ public class cityIO : MonoBehaviour
     /// </summary>
     public GameObject textMeshPrefab;
 	private GameObject[] textMeshes;
+	private GameObject textParent;
 	private float textOffset = 20f;
     /// <summary> 
     /// list of types colors
@@ -291,7 +292,11 @@ public class cityIO : MonoBehaviour
 		for (int i = 0; i < _table.grid.Count; i++) { // loop through list of all cells grid objects 
 			if (_table.grid[i].update || uiChanged) {
 				if (GameObject.Find ("SiteData") != null) {
-					if (GameObject.Find ("SiteData").GetComponent<SiteData> ().IsIndexInsideInteractiveArea(i))
+					// If there's a mask, i.e. the cityIO grid is a part of a larger site
+					// need to find the index in that larger matrix
+					// and figure out if it's inside the interactive area (by calling GetMask)
+					int remappedId = GameObject.Find ("SiteData").GetComponent<SiteData> ().GetMask (i);
+					if (GameObject.Find ("SiteData").GetComponent<SiteData> ().IsInInteractive(remappedId))
 						UpdateGridObject(i);
 				}
 				else 
@@ -311,12 +316,18 @@ public class cityIO : MonoBehaviour
 
     private void AddBuildingTypeText(int i, float height) //mesh type text metod 
     {
-		if (textMeshes == null)
+		if (textMeshes == null) {
 			textMeshes = new GameObject[_table.grid.Count];
+			textParent = new GameObject ();
+			textParent.transform.parent = this.transform;
+			textParent.name = "Labels";
+		}
 		
 		textMeshes[i] = GameObject.Instantiate(textMeshPrefab, new Vector3((_gridObjects[i].transform.position.x),
 			height + _gridObjects[i].transform.localScale.y, _gridObjects[i].transform.position.z),
 			_gridObjects[i].transform.rotation, transform) as GameObject; //spwan prefab text
+
+		textMeshes [i].transform.parent = textParent.transform;
 
 		Quaternion _tmpRot = textMeshes [i].transform.localRotation;
 		_tmpRot.eulerAngles = new Vector3(90, 0, 0.0f);
