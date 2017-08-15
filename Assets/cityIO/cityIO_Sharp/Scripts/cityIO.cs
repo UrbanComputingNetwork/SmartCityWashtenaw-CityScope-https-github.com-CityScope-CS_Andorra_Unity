@@ -290,7 +290,7 @@ public class cityIO : MonoBehaviour
 	/// </summary>
 	private void UpdateTable() {
 		for (int i = 0; i < _table.grid.Count; i++) { // loop through list of all cells grid objects 
-			if (_table.grid[i].update || uiChanged) {
+			if (_table.grid[i].update || uiChanged || _dataSource == DataSource.REMOTE) {
 				if (GameObject.Find ("SiteData") != null) {
 					// If there's a mask, i.e. the cityIO grid is a part of a larger site
 					// need to find the index in that larger matrix
@@ -324,13 +324,13 @@ public class cityIO : MonoBehaviour
 		}
 		
 		textMeshes[i] = GameObject.Instantiate(textMeshPrefab, new Vector3((_gridObjects[i].transform.position.x),
-			height + _gridObjects[i].transform.localScale.y, _gridObjects[i].transform.position.z),
+			height + _gridObjects[i].transform.position.y + _gridObjects[i].transform.localScale.y, _gridObjects[i].transform.position.z),
 			_gridObjects[i].transform.rotation, transform) as GameObject; //spwan prefab text
 
 		textMeshes [i].transform.parent = textParent.transform;
 
 		Quaternion _tmpRot = textMeshes [i].transform.localRotation;
-		_tmpRot.eulerAngles = new Vector3(90, 0, 0.0f);
+		_tmpRot.eulerAngles = new Vector3(90, 0, -90.0f);
 		textMeshes [i].transform.localRotation = _tmpRot;
 
 		textMeshes[i].GetComponent<TextMesh>().text = _table.grid[i].type.ToString();
@@ -349,7 +349,7 @@ public class cityIO : MonoBehaviour
 		textMeshes [i].GetComponent<TextMesh> ().text = Enum.GetName (typeof(Brick), (_table.grid [i].type));
 		float xPos = textMeshes [i].transform.localPosition.x;
 		float zPos = textMeshes [i].transform.localPosition.z;
-		textMeshes[i].transform.localPosition = new Vector3(xPos, _gridObjects[i].transform.localPosition.y + _gridObjects[i].transform.localScale.y * 0.5f, zPos);
+		textMeshes[i].transform.localPosition = new Vector3(xPos, _gridObjects[i].transform.localPosition.y + _gridObjects[i].transform.localScale.y, zPos);
 	}
 
 	/////////////////////////////////////////////////////////

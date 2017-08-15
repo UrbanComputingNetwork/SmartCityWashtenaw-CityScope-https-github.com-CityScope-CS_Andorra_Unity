@@ -86,7 +86,8 @@ public class Visualizations : MonoBehaviour
     void Awake()
     {
 		cityIO = GameObject.Find ("cityIO").GetComponent<cityIO> ();
-		siteData = GameObject.Find ("SiteData").GetComponent<SiteData> ();
+        if (GameObject.Find("SiteData"))
+		    siteData = GameObject.Find ("SiteData").GetComponent<SiteData> ();
 
 		setup = false;
 

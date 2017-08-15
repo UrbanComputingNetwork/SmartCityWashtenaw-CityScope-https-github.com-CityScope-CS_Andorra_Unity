@@ -59,50 +59,43 @@ public class stateManager : MonoBehaviour
     void StateControl(int _sliderState)
     {
 		CleanOldViz(_contextHolder, _heatmapHolder);
+        ShowContext(_andorraCityScope);
         switch (_sliderState)
         {
             default:
-                ShowContext(_andorraCityScope);
                 print("Default: Basic Sat view and cityIO grid" + '\n');
                 _floorsUI.SetActive(false);
                 break;
 			case (int) HeatmapState.CITYIO:
-                ShowContext(_andorraCityScope);
                 print("State 0: Basic Sat view and cityIO grid" + '\n');
                 _floorsUI.SetActive(false);
                 break;
 			case (int)HeatmapState.LANDUSE: // LANDUSE 
-                ShowContext(_andorraHeatmap);
                 _heatmapsScript.TypesViz();
                 print("State 2: Land use map" + '\n');
                 _floorsUI.SetActive(false);
                 break;
 			case (int)HeatmapState.FLOORS: // FLOORS
-                ShowContext(_andorraHeatmap);
                 _heatmapsScript.FloorsViz();
                 _floorsUI.SetActive(true);
                 print("State 1: Floors map" + '\n');
                 break;
 			case (int)HeatmapState.RES_PROXIMITY: // HEATMAP
-                ShowContext(_andorraHeatmap);
 				_heatmapsScript.HeatmapViz(Visualizations.HeatmapType.RES);
                 print("State 3: Proximity to Res HeatMap" + '\n');
                 _floorsUI.SetActive(false);
                 break;
 			case (int)HeatmapState.OFFICE_PROXIMITY: // HEATMAP
-				ShowContext(_andorraHeatmap);
 				_heatmapsScript.HeatmapViz(Visualizations.HeatmapType.OFFICE);
 				print("State 4: Proximity to Offices HeatMap" + '\n');
 				_floorsUI.SetActive(false);
 				break;
 			case (int)HeatmapState.PARK_PROXIMITY: // HEATMAP
-				ShowContext(_andorraHeatmap);
 				_heatmapsScript.HeatmapViz(Visualizations.HeatmapType.PARK);
 				print("State 5: Proximity to Parks HeatMap" + '\n');
 				_floorsUI.SetActive(false);
 				break;
 			case (int)HeatmapState.CELL: // Cell towers
-                ShowContext(_andorraHeatmap);
                 ShowContext(_cellTowers);
                 print("State 6: Celltowers heatmap" + '\n');
                 _floorsUI.SetActive(false);

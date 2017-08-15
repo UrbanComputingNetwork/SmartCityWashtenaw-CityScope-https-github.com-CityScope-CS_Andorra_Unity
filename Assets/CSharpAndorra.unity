@@ -42,7 +42,7 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 11
+  serializedVersion: 9
   m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
@@ -54,7 +54,7 @@ LightmapSettings:
     m_EnableBakedLightmaps: 1
     m_EnableRealtimeLightmaps: 1
   m_LightmapEditorSettings:
-    serializedVersion: 9
+    serializedVersion: 8
     m_Resolution: 2
     m_BakeResolution: 40
     m_TextureWidth: 1024
@@ -89,7 +89,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigma: 1
   m_LightingDataAsset: {fileID: 112000002, guid: 83ee935938c89420086da53148a858a4,
     type: 2}
-  m_UseShadowmask: 1
+  m_ShadowMaskMode: 2
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -887,7 +887,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &183971141
 Transform:
   m_ObjectHideFlags: 0
@@ -943,7 +943,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 199217330}
   m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: 10, y: 20, z: 10}
+  m_LocalPosition: {x: 765, y: 388, z: 2101}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1409394315}
@@ -987,10 +987,10 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 50
+  far clip plane: 500
   field of view: 60
   orthographic: 1
-  orthographic size: 11
+  orthographic size: 500
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -1408,14 +1408,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _bufferSize: 10
-  _useBuffer: 1
+  _useBuffer: 0
   _gridParent: {fileID: 1163447381}
   _colorSpaceParent: {fileID: 136326348}
-  _gridSizeX: 16
-  _gridSizeY: 16
+  _gridSizeX: 20
+  _gridSizeY: 20
   _enableUI: 0
   _sliderRange: 30
-  _refreshRate: 1
+  _refreshRate: 0.1
   _scannerScale: 0.012
   _useWebcam: 1
   _showRays: 0
@@ -2507,6 +2507,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1762d70eaeb4e6c43a0455a3dfb3365c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameras: []
 --- !u!4 &828391467
 Transform:
   m_ObjectHideFlags: 0
@@ -2695,7 +2696,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &957373279
 Transform:
   m_ObjectHideFlags: 0
@@ -2741,20 +2742,6 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_FalloffTable:
-    m_Table[0]: 0
-    m_Table[1]: 0
-    m_Table[2]: 0
-    m_Table[3]: 0
-    m_Table[4]: 0
-    m_Table[5]: 0
-    m_Table[6]: 0
-    m_Table[7]: 0
-    m_Table[8]: 0
-    m_Table[9]: 0
-    m_Table[10]: 0
-    m_Table[11]: 0
-    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -3801,13 +3788,13 @@ Transform:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1163447381}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 417497865}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &1197328555
 GameObject:
   m_ObjectHideFlags: 0
@@ -6311,7 +6298,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _vertices: []
   selectedCorner: 0
-  _spheresScale: 0.5
+  _spheresScale: 0.1
   _settingsFileName: projectionSettings.json
   _useKeystone: 1
   _debug: 0
@@ -6666,10 +6653,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c95f04ff72c2a4f94b62bdfec70ef34d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dataSource: 2
+  _dataSource: 1
   _tableName: 1
-  _delayWWW: 1
-  _newCityioDataFlag: 0
+  _delayWWW: 0.2
+  _newCityioDataFlag: 1
   _tableX: 20
   _tableY: 20
   _cellSizeInMeters: 37.5
@@ -6698,12 +6685,12 @@ MonoBehaviour:
   textMeshPrefab: {fileID: 1457066846111462, guid: ff90403af63cc40e29c8b2c34e7abee4,
     type: 2}
   colors:
-  - {r: 0.72258866, g: 0.99264705, b: 0.9320732, a: 0}
-  - {r: 0.4828071, g: 0.6911765, b: 0.64443946, a: 0}
-  - {r: 0.22361593, g: 0.32352942, b: 0.30111894, a: 0}
-  - {r: 0.8235294, g: 0.7336138, b: 0.6782007, a: 0}
-  - {r: 0.8088235, g: 0.54757315, b: 0.38657004, a: 0}
-  - {r: 0.7794118, g: 0.29718575, b: 0, a: 0}
+  - {r: 0.83793104, g: 0.82470244, b: 0.38815922, a: 0}
+  - {r: 0.8172414, g: 0.65464145, b: 0.2644016, a: 0}
+  - {r: 0.77586204, g: 0.5693962, b: 0.16544114, a: 0}
+  - {r: 0.5975912, g: 0.6975439, b: 0.8931034, a: 0}
+  - {r: 0.3200811, g: 0.3373404, b: 0.90689653, a: 0}
+  - {r: 0.049361505, g: 0.039959427, b: 0.6793103, a: 0}
 --- !u!4 &1877268380
 Transform:
   m_ObjectHideFlags: 0
@@ -7822,7 +7809,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2107124965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7925,7 +7912,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2142124935
 Transform:
   m_ObjectHideFlags: 0
@@ -7971,20 +7958,6 @@ Light:
   m_Lightmapping: 2
   m_AreaSize: {x: 500, y: 500}
   m_BounceIntensity: 1
-  m_FalloffTable:
-    m_Table[0]: 0
-    m_Table[1]: 0
-    m_Table[2]: 0
-    m_Table[3]: 0
-    m_Table[4]: 0
-    m_Table[5]: 0
-    m_Table[6]: 0
-    m_Table[7]: 0
-    m_Table[8]: 0
-    m_Table[9]: 0
-    m_Table[10]: 0
-    m_Table[11]: 0
-    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
