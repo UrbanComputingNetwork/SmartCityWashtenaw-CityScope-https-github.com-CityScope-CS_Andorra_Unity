@@ -6667,11 +6667,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _dataSource: 1
-  _tableName: 1
+  _tableName: 0
   _delayWWW: 0.2
   _newCityioDataFlag: 1
-  _tableX: 20
-  _tableY: 20
+  _tableX: 22
+  _tableY: 22
   _cellSizeInMeters: 37.5
   cellShrink: 0.95
   _floorHeight: 4

@@ -21,7 +21,7 @@ public class cityIO : MonoBehaviour
     private string _urlStart = "https://cityio.media.mit.edu/api/table/citymatrix";
     private string _urlLocalHost = "http://localhost:8080//table/citymatrix";
 
-    public enum DataSource { LOCAL = 0, REMOTE = 1, INTERNAL = 2 }; // select data stream source in editor
+    public enum DataSource { LOCALHOST = 0, REMOTE = 1, INTERNAL = 2 }; // select data stream source in editor
     public DataSource _dataSource = DataSource.INTERNAL;
     ///<summary>
     /// table name list
@@ -108,7 +108,7 @@ public class cityIO : MonoBehaviour
         {
             if (_dataSource == DataSource.REMOTE)
                 _url = _urlStart + _tableName.ToString();
-            else if (_dataSource == DataSource.LOCAL)
+            else if (_dataSource == DataSource.LOCALHOST)
                 _url = _urlLocalHost;
 			
             yield return new WaitForSeconds(_delayWWW);
@@ -147,6 +147,7 @@ public class cityIO : MonoBehaviour
 				System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
 				var lastUpdateTime = epochStart.AddSeconds(System.Math.Round(_table.timestamp / 1000d)).ToLocalTime();
 				print("CityIO new data has arrived." + '\n' + "JSON was created at: " + lastUpdateTime + '\n' + _www.text);
+				EventManager.TriggerEvent ("updateData");
 			}
 		}
 	}
