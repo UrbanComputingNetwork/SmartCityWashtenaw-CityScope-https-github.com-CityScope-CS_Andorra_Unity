@@ -32,7 +32,6 @@ public class Visualizations : MonoBehaviour
     /// the type that is out of the table are for matters of calc
     /// </summary>
     public int _outOfBoundsType = -1; // make sure this is indeed the type 
-    public List<Color> _randomColors = new List<Color>();
     [Range(1f, 100)]
     public int _zAxisMultiplier;
     public int _addToYHeight = 450;

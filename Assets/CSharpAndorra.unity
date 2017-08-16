@@ -1064,8 +1064,8 @@ MonoBehaviour:
   _useBuffer: 0
   _gridParent: {fileID: 1163447381}
   _colorSpaceParent: {fileID: 136326348}
-  _gridSizeX: 20
-  _gridSizeY: 20
+  _gridSizeX: 22
+  _gridSizeY: 22
   _enableUI: 0
   _sliderRange: 30
   _refreshRate: 0.1
@@ -3348,7 +3348,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1409394315
 Transform:
   m_ObjectHideFlags: 0
@@ -4117,12 +4117,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c95f04ff72c2a4f94b62bdfec70ef34d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dataSource: 0
+  _dataSource: 2
+  _delay: 0.2
   _tableName: 0
-  _delayWWW: 0.2
   _newCityioDataFlag: 1
-  _tableX: 22
-  _tableY: 22
   _cellSizeInMeters: 37.5
   cellShrink: 0.95
   _floorHeight: 4
@@ -4369,7 +4367,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1973213708
 Transform:
   m_ObjectHideFlags: 0
@@ -4788,11 +4786,6 @@ MonoBehaviour:
   _cellShrink: 0.9
   _cellSize: 34.75
   _outOfBoundsType: -1
-  _randomColors:
-  - {r: 0, g: 0, b: 0, a: 0}
-  - {r: 0, g: 0, b: 0, a: 0}
-  - {r: 0, g: 0, b: 0, a: 0}
-  - {r: 0, g: 0, b: 0, a: 0}
   _zAxisMultiplier: 20
   _addToYHeight: 600
   _windowSearchDim: 10

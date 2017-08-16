@@ -60,7 +60,7 @@ public class SiteData : MonoBehaviour {
 	private void FindInteractiveZone() {
 		interactiveIndex = -1;
 		int index = 0;
-		interactiveGridLocation = new Vector2 (0, 0);
+		interactiveGridLocation = new Vector2 (-1, -1);
 		interactiveGridDim = new Vector2 (0, 0);
 
 		// Find location of interactive grid
@@ -72,11 +72,20 @@ public class SiteData : MonoBehaviour {
 					interactiveGridLocation.y = i;
 					Debug.Log ("Mask index is " + interactiveIndex);
 				}
+				if (interactiveGridLocation.x == j && _masksList[index] == (int) Mask.GRID) {
+					interactiveGridDim.y++;
+				}
+				if (interactiveGridLocation.y == i && _masksList[index] == (int) Mask.GRID) {
+					interactiveGridDim.x++;
+				}
+					
 				index++;
 			}
 		}
 
-		interactiveGridDim = GameObject.Find ("cityIO").GetComponent<cityIO> ().GetGridDimensions();
+		// Assume square grid
+		interactiveGridDim.y = interactiveGridDim.x;
+
 		Debug.Log ("Interactive grid starts at " + interactiveGridLocation + "   and has dimensions:   " + interactiveGridDim + " with index " + interactiveIndex);
 	}
 
