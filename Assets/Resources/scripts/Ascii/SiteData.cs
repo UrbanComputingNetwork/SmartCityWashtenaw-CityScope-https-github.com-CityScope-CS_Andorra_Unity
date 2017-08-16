@@ -42,7 +42,11 @@ public class SiteData : MonoBehaviour {
 		_typesList = AsciiParser.AsciiParserMethod(_asciiTypes);
 		_masksList = AsciiParser.AsciiParserMethod(_asciiMasks);
 
-		EventManager.StartListening ("scannersInitialized", FindInteractiveZone);
+		GameObject scannersParent = GameObject.Find ("ScannersParent");
+		if (scannersParent != null)
+			EventManager.StartListening ("scannersInitialized", FindInteractiveZone);
+		else
+			FindInteractiveZone ();
 
 	}
 
@@ -72,7 +76,7 @@ public class SiteData : MonoBehaviour {
 			}
 		}
 
-		interactiveGridDim = GameObject.Find ("ScannersParent").GetComponent<Scanners> ().GetGridDimensions();
+		interactiveGridDim = GameObject.Find ("cityIO").GetComponent<cityIO> ().GetGridDimensions();
 		Debug.Log ("Interactive grid starts at " + interactiveGridLocation + "   and has dimensions:   " + interactiveGridDim + " with index " + interactiveIndex);
 	}
 

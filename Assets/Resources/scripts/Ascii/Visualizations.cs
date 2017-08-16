@@ -57,7 +57,6 @@ public class Visualizations : MonoBehaviour
 	private HeatMap[] heatmaps;
 	private GameObject heatmapsParent;
 
-    private int _cellScoreCount = 0;
 
 	private int _gridX;
 	private int _gridY;
@@ -153,7 +152,6 @@ public class Visualizations : MonoBehaviour
 		}
 		return true;
 	}
-
 
 	private void UpdateFloor(int index) {
 		if (_floorsGeometries [index] == null)
@@ -275,7 +273,7 @@ public class Visualizations : MonoBehaviour
 		List<Brick> resTypes = new List<Brick> { Brick.RL, Brick.RM, Brick.RS };
 		List<Brick> parkTypes = new List<Brick> { Brick.PARK };
 		List<Brick> allTypes = new List<Brick> ();
-		foreach(Brick brick in System.Enum.GetValues(typeof(Brick))) {
+		foreach (Brick brick in System.Enum.GetValues(typeof(Brick))) {
 			allTypes.Add (brick);
 		}
 

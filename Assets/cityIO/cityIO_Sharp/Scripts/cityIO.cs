@@ -382,6 +382,10 @@ public class cityIO : MonoBehaviour
 		return (int) buildingTypes.Length;
 	}
 
+	public Vector2 GetGridDimensions() {
+		return (new Vector2 (_tableX, _tableY));
+	}
+
 	/////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////
 	/// 

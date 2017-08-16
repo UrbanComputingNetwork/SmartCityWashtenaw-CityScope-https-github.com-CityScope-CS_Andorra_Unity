@@ -98,13 +98,12 @@ public class Scanners : MonoBehaviour
 		{ "2101", Brick.ROAD }
 	};
 
-	IEnumerator Start ()
-	{
+	void Awake() {
 		if (_useWebcam) {
 			if (!GetComponent<Webcam> ().enabled)
 				GetComponent<Webcam> ().enabled = true;
 		}
-		 
+
 		scannerThread = new Thread(UpdateScanners);
 		scannerThread.Start ();
 
@@ -112,7 +111,10 @@ public class Scanners : MonoBehaviour
 
 		EventManager.StartListening ("reload", OnReload);
 		EventManager.StartListening ("save", OnSave);
-			
+	}
+
+	IEnumerator Start ()
+	{
 		while (true) {
 			////
 			//// Wait one frame for GPU
