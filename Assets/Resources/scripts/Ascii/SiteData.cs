@@ -141,6 +141,9 @@ public class SiteData : MonoBehaviour {
 	/// <returns>The mask.</returns>
 	/// <param name="index">Index.</param>
 	public int GetMask(int index) {
+        if (interactiveGridDim.y == 0)
+            return -1;
+
 		int currJ = index % (int)interactiveGridDim.y;
 		int currI = (int) (index / interactiveGridDim.y);
 		int i = (int) (interactiveGridLocation.x + interactiveGridDim.y) - currI;
