@@ -64,6 +64,7 @@ public class HeatMap {
 		titleText.text = titleString;
 		title.name = currentHeatmapParent.name + "_name";
 		this.title.transform.localScale = new Vector3(1, 1, 1);
+		this.title.transform.GetComponent<RectTransform>().sizeDelta = new Vector2(200, 50);
 
 		Font ArialFont = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
 		titleText.font = ArialFont;
@@ -71,6 +72,7 @@ public class HeatMap {
 		titleText.fontStyle = FontStyle.Bold;
 		//titleText.resizeTextForBestFit = true;
 		titleText.resizeTextMinSize = 1;
+		titleText.horizontalOverflow = HorizontalWrapMode.Overflow;
 		titleText.SetNativeSize ();
 
 
