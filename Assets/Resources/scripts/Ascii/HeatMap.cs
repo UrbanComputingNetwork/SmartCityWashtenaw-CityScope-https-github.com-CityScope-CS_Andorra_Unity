@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HeatMapItem {
 	public int x;
@@ -14,6 +15,8 @@ public class HeatMap {
 	GameObject heatmapParent; 
 	HeatMapItem[] heatmapItems;
 	private GameObject currentHeatmapParent;
+	public GameObject title;
+	Text titleText;
 
 	List<Brick> searchTypes;
 	List<Brick> originTypes;
@@ -50,6 +53,29 @@ public class HeatMap {
 		this.currentHeatmapParent = new GameObject ();
 		this.currentHeatmapParent.SetActive (false);
 		this.currentHeatmapParent.name = name;
+
+	}
+
+	public void CreateTitle(string titleString) {
+		GameObject canvas = GameObject.Find ("HeatmapTitles");
+		this.title = new GameObject ();
+		title.transform.parent = canvas.transform;
+		titleText = title.AddComponent<Text> ();
+		titleText.text = titleString;
+		title.name = currentHeatmapParent.name + "_name";
+		this.title.transform.localScale = new Vector3(1, 1, 1);
+
+		Font ArialFont = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
+		titleText.font = ArialFont;
+		titleText.fontSize = 30;
+		titleText.fontStyle = FontStyle.Bold;
+		//titleText.resizeTextForBestFit = true;
+		titleText.resizeTextMinSize = 1;
+		titleText.SetNativeSize ();
+
+
+		this.title.SetActive (false);
+
 	}
 
 	public void SetSearchTypes(List<Brick> searched) {
@@ -71,6 +97,8 @@ public class HeatMap {
 
 	public void SetParentActive(bool isActive) {
 		this.currentHeatmapParent.SetActive (isActive);
+
+		this.title.SetActive (isActive);
 	}
 
 	public void CreateHeatmapGeo(int x, int y, int index, int type) {

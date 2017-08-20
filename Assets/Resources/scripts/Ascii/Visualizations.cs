@@ -285,12 +285,15 @@ public class Visualizations : MonoBehaviour
 			if (i == (int)HeatmapType.OFFICE) {
 				heatmaps [i].SetOriginTypes (resTypes);
 				heatmaps [i].SetSearchTypes (officeTypes);
+				heatmaps [i].CreateTitle ("Proximity to work spaces");
 			} else if (i == (int)HeatmapType.RES) {
 				heatmaps [i].SetOriginTypes (officeTypes);
 				heatmaps [i].SetSearchTypes (resTypes);
+				heatmaps [i].CreateTitle ("Proximity to residential spaces");
 			} else if (i == (int)HeatmapType.PARK) {
 				heatmaps [i].SetOriginTypes (allTypes);
 				heatmaps [i].SetSearchTypes (parkTypes);
+				heatmaps [i].CreateTitle ("Proximity to parks");
 			}
 		}
 
