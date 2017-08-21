@@ -114,6 +114,8 @@ public class stateManager : MonoBehaviour
         {
 			child.gameObject.SetActive(false);
         }
+
+		_heatmapsScript.HideTitles ();
     }
     void ShowContext(GameObject t)
     {

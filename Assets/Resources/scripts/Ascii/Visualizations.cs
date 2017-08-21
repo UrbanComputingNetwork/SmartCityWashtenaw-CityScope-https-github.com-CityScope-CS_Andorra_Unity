@@ -346,6 +346,13 @@ public class Visualizations : MonoBehaviour
 		floorsParent.SetActive (true);
     }
 
+	public void HideTitles() {
+		// Toggle heatmap parents
+		for (int i = 0; i < heatmaps.Length; i++) {
+			heatmaps[i].SetParentActive (false);
+		}
+	}
+
     /// <summary>
     /// Viz of different landuse types 
     /// </summary>
@@ -382,12 +389,7 @@ public class Visualizations : MonoBehaviour
 		heatmapsParent.SetActive (true);
 
 		// Toggle heatmap parents
-		for (int i = 0; i < heatmaps.Length; i++) {
-			if ((HeatmapType)i == heatmapType)
-				heatmaps[i].SetParentActive (true);
-			else
-				heatmaps[i].SetParentActive (false);
-		}
+		heatmaps[(int)heatmapType].SetParentActive (true);
     }
 		
 	/// <summary>

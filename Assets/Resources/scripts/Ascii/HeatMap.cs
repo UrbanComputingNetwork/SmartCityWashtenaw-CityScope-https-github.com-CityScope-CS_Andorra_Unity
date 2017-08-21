@@ -75,7 +75,6 @@ public class HeatMap {
 		titleText.horizontalOverflow = HorizontalWrapMode.Overflow;
 		titleText.SetNativeSize ();
 
-
 		this.title.SetActive (false);
 
 	}
@@ -99,7 +98,6 @@ public class HeatMap {
 
 	public void SetParentActive(bool isActive) {
 		this.currentHeatmapParent.SetActive (isActive);
-
 		this.title.SetActive (isActive);
 	}
 
