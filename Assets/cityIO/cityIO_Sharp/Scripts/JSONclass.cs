@@ -16,7 +16,15 @@ public class Grid
     public int x;
     public int y;
     public int rot;
-	public bool update;
+	private bool update;
+
+	public bool ShouldUpdate() {
+		return this.update;
+	}
+
+	public void SetUpdate(bool up) {
+		this.update = up;
+	}
 }
 
 [System.Serializable] // have to have this in every JSON class!
@@ -53,6 +61,8 @@ public class Objects
 		if (this.dockID >= 0 && this.dockID < density.Count)
 			this.density [dockID] = (int) slider1;
 	}
+
+
 }
 
 /// <summary> class end </summary>

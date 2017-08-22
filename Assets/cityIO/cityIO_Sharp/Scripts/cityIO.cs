@@ -238,7 +238,7 @@ public class cityIO : MonoBehaviour
 	}
 
 	public bool ShouldUpdateGrid(int index) {
-		return (_table.grid [index].update || uiChanged);
+		return (_table.grid [index].ShouldUpdate() || uiChanged);
 	}
 
 	/// <summary>
@@ -356,7 +356,7 @@ public class cityIO : MonoBehaviour
 	/// </summary>
 	private void UpdateTable() {
 		for (int i = 0; i < _table.grid.Count; i++) { // loop through list of all cells grid objects 
-			if (_table.grid[i].update || uiChanged || _dataSource == DataSource.REMOTE) {
+			if (_table.grid[i].ShouldUpdate() || uiChanged || _dataSource == DataSource.REMOTE) {
 				if (GameObject.Find ("SiteData") != null) {
 					// If there's a mask, i.e. the cityIO grid is a part of a larger site
 					// need to find the index in that larger matrix
