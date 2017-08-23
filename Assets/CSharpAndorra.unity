@@ -42,7 +42,7 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 9
+  serializedVersion: 11
   m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
@@ -54,7 +54,7 @@ LightmapSettings:
     m_EnableBakedLightmaps: 1
     m_EnableRealtimeLightmaps: 1
   m_LightmapEditorSettings:
-    serializedVersion: 8
+    serializedVersion: 9
     m_Resolution: 2
     m_BakeResolution: 40
     m_TextureWidth: 1024
@@ -89,7 +89,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigma: 1
   m_LightingDataAsset: {fileID: 112000002, guid: 83ee935938c89420086da53148a858a4,
     type: 2}
-  m_ShadowMaskMode: 2
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -502,7 +502,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 162730928}
-  - component: {fileID: 162730929}
   m_Layer: 0
   m_Name: UI
   m_TagString: Untagged
@@ -527,27 +526,6 @@ Transform:
   m_Father: {fileID: 1314241580}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &162730929
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 162730927}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b1ece9d458f943528e15e282abc37de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _contextHolder: {fileID: 451275316}
-  _cellTowers: {fileID: 2108115987}
-  _heatmapHolder: {fileID: 2107124964}
-  _cityIOscript: {fileID: 1877268379}
-  _heatmapsScript: {fileID: 2107124967}
-  _andorraCityScope: {fileID: 2050935378}
-  _andorraHeatmap: {fileID: 1300289217}
-  _floorsUI: {fileID: 2103548903}
-  _demoModeBool: 1
-  _changeModeEverySeconds: 5
 --- !u!1 &183971140
 GameObject:
   m_ObjectHideFlags: 0
@@ -1720,6 +1698,20 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
+  m_FalloffTable:
+    m_Table[0]: 0
+    m_Table[1]: 0
+    m_Table[2]: 0
+    m_Table[3]: 0
+    m_Table[4]: 0
+    m_Table[5]: 0
+    m_Table[6]: 0
+    m_Table[7]: 0
+    m_Table[8]: 0
+    m_Table[9]: 0
+    m_Table[10]: 0
+    m_Table[11]: 0
+    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -3694,7 +3686,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1409394315
 Transform:
   m_ObjectHideFlags: 0
@@ -4490,6 +4482,7 @@ GameObject:
   - component: {fileID: 1877268380}
   - component: {fileID: 1877268381}
   - component: {fileID: 1877268379}
+  - component: {fileID: 1877268382}
   m_Layer: 0
   m_Name: cityIO
   m_TagString: Untagged
@@ -4512,7 +4505,7 @@ MonoBehaviour:
   _delay: 0
   _sendData: 0
   postTableURL: https://cityio.media.mit.edu/api/table/update/citymatrix
-  _tableName: 1
+  _tableName: 0
   _newCityioDataFlag: 1
   _cellSizeInMeters: 34.75
   cellShrink: 0.95
@@ -4595,6 +4588,27 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &1877268382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1877268378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b1ece9d458f943528e15e282abc37de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _contextHolder: {fileID: 451275316}
+  _cellTowers: {fileID: 2108115987}
+  _heatmapHolder: {fileID: 2107124964}
+  _cityIOscript: {fileID: 1877268379}
+  _heatmapsScript: {fileID: 2107124967}
+  _andorraCityScope: {fileID: 2050935378}
+  _andorraHeatmap: {fileID: 1300289217}
+  _floorsUI: {fileID: 2103548903}
+  _demoModeBool: 1
+  _changeModeEverySeconds: 5
 --- !u!1 &1919941637
 GameObject:
   m_ObjectHideFlags: 0
@@ -4761,7 +4775,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1973213708
 Transform:
   m_ObjectHideFlags: 0
@@ -5283,6 +5297,20 @@ Light:
   m_Lightmapping: 2
   m_AreaSize: {x: 500, y: 500}
   m_BounceIntensity: 1
+  m_FalloffTable:
+    m_Table[0]: 0
+    m_Table[1]: 0
+    m_Table[2]: 0
+    m_Table[3]: 0
+    m_Table[4]: 0
+    m_Table[5]: 0
+    m_Table[6]: 0
+    m_Table[7]: 0
+    m_Table[8]: 0
+    m_Table[9]: 0
+    m_Table[10]: 0
+    m_Table[11]: 0
+    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
