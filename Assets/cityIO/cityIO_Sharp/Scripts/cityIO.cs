@@ -51,7 +51,7 @@ public class cityIO : MonoBehaviour
     /// table name list
     /// </summary>
 
-    public enum TableName { _andorra = 0, _volpe = 1, _test = 2 }; // select data stream source in editor
+    public enum TableName { _andorra = 0, _volpe = 1, _citymatrix = 2 }; // select data stream source in editor
 	[Header("If data source is remote or localhost:")]
     public TableName _tableName = TableName._volpe;
     private string _url;
