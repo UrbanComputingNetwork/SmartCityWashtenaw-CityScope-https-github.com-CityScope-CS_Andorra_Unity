@@ -39,10 +39,12 @@ public class stateManager : MonoBehaviour
 		_sliderState = (int)_cityIOscript._table.objects.slider1; //gets the slider 
         if (_sliderState != _oldState)
         {
+			Debug.Log ("Slider state changed to " + _sliderState);
             StateControl(_sliderState);
             _oldState = _sliderState;
         }
     }
+
     IEnumerator DemoMode()
     {
         while (true)
@@ -60,6 +62,7 @@ public class stateManager : MonoBehaviour
     {
 		CleanOldViz(_contextHolder, _heatmapHolder);
         ShowContext(_andorraCityScope);
+
         switch (_sliderState)
         {
             default:

@@ -157,9 +157,9 @@ public class SiteData : MonoBehaviour {
         if (interactiveGridDim.y == 0)
             return -1;
 
-		int currJ = index % (int)interactiveGridDim.y;
-		int currI = (int) (index / interactiveGridDim.y);
-		int i = (int) (interactiveGridLocation.x + interactiveGridDim.y) - currI;
+		int currI = index % (int) interactiveGridDim.y;
+		int currJ = (int) (index / interactiveGridDim.y);
+		int i = (int) interactiveGridLocation.x + currI;
 		int j = (int) interactiveGridLocation.y + currJ;
 		int remappedIndex = j * (int)(_gridY) + i;
 

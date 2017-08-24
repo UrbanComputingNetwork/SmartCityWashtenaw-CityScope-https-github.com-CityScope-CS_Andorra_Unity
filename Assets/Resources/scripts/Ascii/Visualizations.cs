@@ -348,6 +348,9 @@ public class Visualizations : MonoBehaviour
 
 	public void HideTitles() {
 		// Toggle heatmap parents
+		if (heatmaps == null)
+			return;
+		
 		for (int i = 0; i < heatmaps.Length; i++) {
 			heatmaps[i].SetParentActive (false);
 		}
@@ -430,17 +433,20 @@ public class Visualizations : MonoBehaviour
 			for (int i = (int)siteData.GetInteractiveGridLocation().y; i < interactiveEndY; i++) {
 				index = i * (int)(_gridY) + j;
 				// Update interactive part only
-				if (cityIO.ShouldUpdateGrid(gridIndex) && siteData.IsIndexInsideInteractiveArea(index)) {
-					_typesList [index] = cityIO.GetGridType (gridIndex);
-					_floorsList [index] = cityIO.GetFloorHeight (gridIndex);
-					UpdateType (index);
-					UpdateFloor (index);
+				// outer check only in data source is INTERNAL or has bool for update
+				//if (cityIO.ShouldUpdateGrid (gridIndex)) {
+					if (siteData.IsIndexInsideInteractiveArea (index)) {
+						_typesList [index] = cityIO.GetGridType (gridIndex);
+						_floorsList [index] = cityIO.GetFloorHeight (gridIndex);
+						UpdateType (index);
+						UpdateFloor (index);
 
-					// Update type for heatmaps too
-					foreach (HeatMap hm in heatmaps) {
-						hm.UpdateType (i, j, _typesList[index], index);
+						// Update type for heatmaps too
+						foreach (HeatMap hm in heatmaps) {
+							hm.UpdateType (i, j, _typesList [index], index);
+						}
 					}
-				}
+				//}
 				gridIndex++;
 			}
 		}
