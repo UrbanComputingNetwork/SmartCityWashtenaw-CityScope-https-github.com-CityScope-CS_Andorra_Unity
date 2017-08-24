@@ -157,6 +157,7 @@ public class SiteData : MonoBehaviour {
         if (interactiveGridDim.y == 0)
             return -1;
 
+		// I and J are flipped for the full site!
 		int currI = index % (int) interactiveGridDim.y;
 		int currJ = (int) (index / interactiveGridDim.y);
 		int i = (int) interactiveGridLocation.x + currI;

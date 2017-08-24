@@ -248,8 +248,8 @@ public class Scanners : MonoBehaviour
 	/// </summary>
 	private void ScanColors() {
 		string key = "";
-		for (int i = 0; i < numOfScannersX; i += _gridSize) {
-			for (int j = 0; j < numOfScannersY; j += _gridSize) {
+		for (int i = 0; i < numOfScannersY; i += _gridSize) {
+			for (int j = 0; j < numOfScannersX; j += _gridSize) {
 				currentIds [i / _gridSize, j / _gridSize] = FindCurrentId(key, i, j, ref scannersList, true);
 			}
 		}
@@ -317,7 +317,7 @@ public class Scanners : MonoBehaviour
 
 					// Save colors for 3D visualization
 					if (setup)
-						allColors [i + numOfScannersX * j] = pixel;
+						allColors [j + numOfScannersX * i] = pixel;
 				}
 
 				Color minColor;
