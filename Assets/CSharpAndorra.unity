@@ -1037,7 +1037,7 @@ MonoBehaviour:
   _sliderRange: 30
   _refreshRate: 0.1
   _scannerScale: 0.012
-  _useWebcam: 0
+  _useWebcam: 1
   _showRays: 0
   _debug: 0
   _isCalibrating: 0
@@ -1056,6 +1056,56 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13d68c4d054ae41d88f6af6f3cc1a7be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &422109199
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 422109200}
+  - component: {fileID: 422109201}
+  m_Layer: 0
+  m_Name: StateManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &422109200
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 422109199}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1877268380}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &422109201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 422109199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b1ece9d458f943528e15e282abc37de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _modeSelector: 0
+  _changeModeEverySeconds: 5
+  _andorraCityScope: {fileID: 2050935378}
+  _contextHolder: {fileID: 451275316}
+  _cellTowers: {fileID: 2108115987}
+  _heatmapHolder: {fileID: 2107124964}
+  _cityIOscript: {fileID: 1877268379}
+  _heatmapsScript: {fileID: 2107124967}
+  _andorraHeatmap: {fileID: 1300289217}
+  _floorsUI: {fileID: 2103548903}
 --- !u!4 &446310909 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4554086626888320, guid: 725265e3f1ff748b1a9f659b477e83ab,
@@ -3672,7 +3722,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1409394315
 Transform:
   m_ObjectHideFlags: 0
@@ -4468,7 +4518,6 @@ GameObject:
   - component: {fileID: 1877268380}
   - component: {fileID: 1877268381}
   - component: {fileID: 1877268379}
-  - component: {fileID: 1877268382}
   m_Layer: 0
   m_Name: cityIO
   m_TagString: Untagged
@@ -4487,7 +4536,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c95f04ff72c2a4f94b62bdfec70ef34d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dataSource: 0
+  _dataSource: 2
   _delay: 0.2
   _sendData: 0
   postTableURL: https://cityio.media.mit.edu/api/table/update/citymatrix
@@ -4539,6 +4588,7 @@ Transform:
   - {fileID: 2107124966}
   - {fileID: 1020138165}
   - {fileID: 183971141}
+  - {fileID: 422109200}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
@@ -4574,27 +4624,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &1877268382
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1877268378}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b1ece9d458f943528e15e282abc37de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _contextHolder: {fileID: 451275316}
-  _cellTowers: {fileID: 2108115987}
-  _heatmapHolder: {fileID: 2107124964}
-  _cityIOscript: {fileID: 1877268379}
-  _heatmapsScript: {fileID: 2107124967}
-  _andorraCityScope: {fileID: 2050935378}
-  _andorraHeatmap: {fileID: 1300289217}
-  _floorsUI: {fileID: 2103548903}
-  _demoModeBool: 0
-  _changeModeEverySeconds: 5
 --- !u!1 &1919941637
 GameObject:
   m_ObjectHideFlags: 0
@@ -4761,7 +4790,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1973213708
 Transform:
   m_ObjectHideFlags: 0
