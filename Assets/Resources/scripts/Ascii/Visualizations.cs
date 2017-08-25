@@ -232,8 +232,9 @@ public class Visualizations : MonoBehaviour
 						_cellShrink * _cellSize);
 					_typesGeometries[_loopsCounter].transform.parent = typesParent.transform; //put into parent object for later control
 
-					if (_typesList[_loopsCounter] == (int) Brick.INVALID)
+					if (_typesList[_loopsCounter] == (int) Brick.INVALID || _typesList[_loopsCounter] >= (int) Brick.ROAD)
 					{
+						_typesGeometries [_loopsCounter].SetActive (false);
 						_typesGeometries[_loopsCounter].transform.localScale = new Vector3(0.25f * _cellSize, 0.25f * _cellSize, 0.25f * _cellSize);
 						_typesGeometries[_loopsCounter].transform.GetComponent<Renderer>().material.color = Color.black;
 					}
@@ -268,10 +269,11 @@ public class Visualizations : MonoBehaviour
 
 		_typesGeometries[index].name = ("Types " + _typesList[index].ToString());
 
-		if (_typesList[index] == -1)
+		if (_typesList[index] == (int)Brick.INVALID)
 		{
 			//_typesGeometries[index].transform.localScale = new Vector3(0.25f * _cellSize, 0.25f * _cellSize, 0.25f * _cellSize);
 			_typesGeometries[index].transform.GetComponent<Renderer>().material.color = Color.black;
+			_typesGeometries [index].SetActive (false);
 		}
 		else
 		{
@@ -299,10 +301,9 @@ public class Visualizations : MonoBehaviour
 		foreach (Brick brick in System.Enum.GetValues(typeof(Brick))) {
 			allTypes.Add (brick);
 		}
-
-		float cellSize = _cellShrink * _cellSize;
+			
 		for (int i = 0; i < NUM_HEATMAPS; i++) {
-			heatmaps[i] = new HeatMap(_gridX-1, _gridY, _windowSearchDim, cellSize, _addToYHeight, ((HeatmapType)i).ToString());
+			heatmaps[i] = new HeatMap(_gridX-1, _gridY, _windowSearchDim, _cellSize, _cellShrink, _addToYHeight, ((HeatmapType)i).ToString());
 			heatmaps[i].SetParent (heatmapsParent);
 
 			// Set up search types & origin types for each heatmap

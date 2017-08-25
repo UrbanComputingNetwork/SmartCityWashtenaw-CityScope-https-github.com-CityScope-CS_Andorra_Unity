@@ -25,6 +25,7 @@ public class HeatMap {
 	int gridX;
 	int gridY;
 	float cellSize;
+	float cellShrink;
 	float yOffset;
 	int searchDim;
 
@@ -39,7 +40,7 @@ public class HeatMap {
 
 	float gradientScale = 0.4f;
 
-	public HeatMap(int sizeX, int sizeY, int searchDimension, float _cellSize, float _addToYHeight, string name) {
+	public HeatMap(int sizeX, int sizeY, int searchDimension, float _cellSize, float _cellShrink, float _addToYHeight, string name) {
 		this.heatmapItems = new HeatMapItem[sizeX * sizeY];
 		this.gridX = sizeX;
 		this.gridY = sizeY;
@@ -49,6 +50,7 @@ public class HeatMap {
 		this._typesArray = new int[sizeX,sizeY];
 
 		this.cellSize = _cellSize;
+		this.cellShrink = _cellShrink;
 		this.yOffset = _addToYHeight;
 
 		maxScore = -2f;
@@ -126,7 +128,7 @@ public class HeatMap {
 
 		vertices.Add (new Vector2(heatmapItems [index].geo.transform.localPosition.x, heatmapItems [index].geo.transform.localPosition.z));
 
-		heatmapItems[index].geo.transform.localScale = new Vector3(cellSize, cellSize, cellSize);
+		heatmapItems[index].geo.transform.localScale = new Vector3(cellSize * cellShrink, cellSize * cellShrink, cellSize * cellShrink);
 		heatmapItems[index].geo.transform.GetComponent<Renderer>().receiveShadows = false;
 		heatmapItems[index].geo.transform.GetComponent<Renderer>().shadowCastingMode =
 			UnityEngine.Rendering.ShadowCastingMode.Off;

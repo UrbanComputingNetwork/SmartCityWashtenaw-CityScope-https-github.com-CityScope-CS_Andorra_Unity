@@ -23,6 +23,8 @@ public class stateManager : MonoBehaviour
 
     public GameObject _andorraHeatmap;
     public GameObject _floorsUI;
+	public GameObject _heatmapsUI;
+
     private int _sliderState = 3;
     private int _oldState;
 
@@ -76,40 +78,48 @@ public class stateManager : MonoBehaviour
             default:
                 print("Default: Basic Sat view and cityIO grid" + '\n');
                 _floorsUI.SetActive(false);
+				_heatmapsUI.SetActive(false);
                 break;
             case (int)HeatmapState.CITYIO:
                 print("State 0: Basic Sat view and cityIO grid" + '\n');
                 _floorsUI.SetActive(false);
+				_heatmapsUI.SetActive(false);
                 break;
             case (int)HeatmapState.LANDUSE: // LANDUSE 
                 _heatmapsScript.TypesViz();
                 print("State 2: Land use map" + '\n');
                 _floorsUI.SetActive(false);
+				_heatmapsUI.SetActive(false);
                 break;
             case (int)HeatmapState.RES_PROXIMITY: // HEATMAP
                 _heatmapsScript.HeatmapViz(Visualizations.HeatmapType.RES);
                 print("State 3: Proximity to Res HeatMap" + '\n');
                 _floorsUI.SetActive(false);
+				_heatmapsUI.SetActive(true);
                 break;
             case (int)HeatmapState.OFFICE_PROXIMITY: // HEATMAP
                 _heatmapsScript.HeatmapViz(Visualizations.HeatmapType.OFFICE);
                 print("State 4: Proximity to Offices HeatMap" + '\n');
                 _floorsUI.SetActive(false);
+				_heatmapsUI.SetActive(true);
                 break;
             case (int)HeatmapState.PARK_PROXIMITY: // HEATMAP
                 _heatmapsScript.HeatmapViz(Visualizations.HeatmapType.PARK);
                 print("State 5: Proximity to Parks HeatMap" + '\n');
                 _floorsUI.SetActive(false);
+				_heatmapsUI.SetActive(true);
                 break;
 			case (int)HeatmapState.FLOORS: // FLOORS
 				_heatmapsScript.FloorsViz();
 				_floorsUI.SetActive(true);
+				_heatmapsUI.SetActive(false);
 				print("State 1: Floors map" + '\n');
 				break;
             case (int)HeatmapState.CELL: // Cell towers
                 ShowContext(_cellTowers);
                 print("State 6: Celltowers heatmap" + '\n');
                 _floorsUI.SetActive(false);
+				_heatmapsUI.SetActive(false);
                 break;
         }
     }
