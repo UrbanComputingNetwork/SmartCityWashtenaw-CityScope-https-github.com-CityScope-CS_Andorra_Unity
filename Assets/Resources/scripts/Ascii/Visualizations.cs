@@ -67,6 +67,10 @@ public class Visualizations : MonoBehaviour
 	private List<int> _typesList = new List<int>();
 	private List<int> _floorsList = new List<int>();
 
+	RaycastHit hit;
+	GameObject meshRaycaster;
+	private float[] meshYPositions;
+
 	////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////
@@ -99,6 +103,10 @@ public class Visualizations : MonoBehaviour
 
 		_floorsList = siteData.GetFloors ();
 		_typesList = siteData.GetTypes ();
+	
+		meshYPositions = new float[(_gridX-1) * _gridY];
+		// compute mesh height
+		meshRaycaster = new GameObject();
 
 		SetupFloors ();
 		SetupHeatmaps ();
@@ -125,6 +133,8 @@ public class Visualizations : MonoBehaviour
 			CreateParent (ref floorsParent);
 			floorsParent.name = "Floors";
 		}
+
+
 			
 		_floorsGeometries = new GameObject[(_gridX-1) * _gridY];
 		_rangeOfFloors = (Mathf.Abs(_floorsList.Max()) + Mathf.Abs(_floorsList.Min()));
@@ -134,21 +144,35 @@ public class Visualizations : MonoBehaviour
 				
 				var _shiftFloorsHeightAboveZero = _floorsList[index] + Mathf.Abs(_floorsList.Min()); // move list item from subzero
 
+
+				meshRaycaster.transform.parent = this.transform;
+				meshRaycaster.transform.localPosition = new Vector3 (x * _cellSize, 1000, y * _cellSize);
+
+				if (Physics.Raycast (meshRaycaster.transform.position, Vector3.down, out hit)) {
+					meshYPositions [index] = hit.point.y;
+					Debug.Log ("mesh z position ray hit something");
+				}
+
 				if (_typesList[index] != _outOfBoundsType && _floorsList[index] > 0)
 				{ 
 					// if not on the area which is out of the physical model space
 					_floorsGeometries[index] = GameObject.CreatePrimitive(PrimitiveType.Cube); //make cell cube
 					_floorsGeometries[index].name = (_floorsList[index].ToString() + "Floors ");
 					_floorsGeometries[index].transform.parent = floorsParent.transform;
-					_floorsGeometries[index].transform.localPosition = new Vector3(x * _cellSize, _shiftFloorsHeightAboveZero * (_zAxisMultiplier / 2) + _addToYHeight, y * _cellSize); //compensate for scale shift due to height                                                                                                                                                    
+					_floorsGeometries[index].transform.localPosition = new Vector3(x * _cellSize, meshYPositions [index] + _shiftFloorsHeightAboveZero * (_zAxisMultiplier / 2) + _addToYHeight, y * _cellSize); //compensate for scale shift due to height                                                                                                                                                    
 					//color the thing
+
 					_floorsGeometries[index].transform.GetComponent<Renderer>().material.color = Color.HSVToRGB(1, 1, (_floorsList[index]) / _rangeOfFloors);// this creates color based on value of cell!
 					_floorHeight = _shiftFloorsHeightAboveZero * _zAxisMultiplier;
 					_floorsGeometries[index].transform.localScale = new Vector3(_cellShrink * _cellSize, _floorHeight, _cellShrink * _cellSize);
+
+
 				}
 				index++;
 			}
 		}
+
+		GameObject.Destroy (meshRaycaster);
 		return true;
 	}
 
@@ -199,7 +223,7 @@ public class Visualizations : MonoBehaviour
 					/*_typesGeometries.transform.localPosition = new Vector3(x * _cellSize,
                        _shiftFloorListAboveZero * _zAxisMultiplier + _addToYHeight,
                       y * _cellSize);   //move and rotate */
-					_typesGeometries[_loopsCounter].transform.localPosition = new Vector3(x * _cellSize, _addToYHeight, y * _cellSize);   //move and rotate
+					_typesGeometries[_loopsCounter].transform.localPosition = new Vector3(x * _cellSize, meshYPositions [_loopsCounter] + _addToYHeight, y * _cellSize);   //move and rotate
 					Quaternion _tmpRot = transform.localRotation;
 					_tmpRot.eulerAngles = new Vector3(90, 0, 0.0f);
 					_typesGeometries[_loopsCounter].transform.localRotation = _tmpRot;
@@ -303,7 +327,7 @@ public class Visualizations : MonoBehaviour
 				if (siteData.GetType(_loopsCounter) != _outOfBoundsType) { // if not on the area which is out of the physical model space
 					// Init heatmap geometries for each heatmap object
 					foreach (HeatMap hm in heatmaps) {
-						hm.CreateHeatmapGeo (x, y, _loopsCounter, siteData.GetType(_loopsCounter));
+						hm.CreateHeatmapGeo (x, y, _loopsCounter, siteData.GetType(_loopsCounter), meshYPositions [_loopsCounter]);
 					}
 				}
 				_loopsCounter++;
@@ -412,6 +436,7 @@ public class Visualizations : MonoBehaviour
 		if (_staticHeatmaps)
 			firstUpdate = false;
 	}
+		
 
 	/// <summary>
 	/// Updates the types // only update interactive part

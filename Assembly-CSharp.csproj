@@ -72,7 +72,7 @@
      <Compile Include="Assets\Resources\scripts\Helpers\cameraControl.cs" />
      <Compile Include="Assets\Resources\scripts\Helpers\SceneReset.cs" />
      <Compile Include="Assets\Resources\scripts\Helpers\stateManager.cs" />
-     <Compile Include="Assets\ViewManager.cs" />
+     <Compile Include="Assets\Resources\scripts\ViewManager.cs" />
      <None Include="Assets\Resources\scripts\Ascii\2x2\2x2_Header.txt" />
      <None Include="Assets\Resources\scripts\Ascii\4x4\ascii_floorHeights.txt" />
      <None Include="Assets\Resources\Materials\Gradiant.shader" />

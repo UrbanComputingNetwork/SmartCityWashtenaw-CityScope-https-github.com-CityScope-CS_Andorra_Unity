@@ -445,8 +445,6 @@ public class cityIO : MonoBehaviour
         _gridObjects[i].transform.localPosition.y + 5,
         zPos);
 
-
-
     }
 
     /////////////////////////////////////////////////////////

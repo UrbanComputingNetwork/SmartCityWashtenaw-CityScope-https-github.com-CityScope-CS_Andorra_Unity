@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class HeatMapItem {
 	public int x;
 	public int y;
+	public float z;
 	public int type;
 	public GameObject geo;
 	public float score;
@@ -26,6 +27,8 @@ public class HeatMap {
 	float cellSize;
 	float yOffset;
 	int searchDim;
+
+	public List<Vector2> vertices;
 
 	List<int> updateIndices;
 
@@ -53,6 +56,8 @@ public class HeatMap {
 		this.currentHeatmapParent = new GameObject ();
 		this.currentHeatmapParent.SetActive (false);
 		this.currentHeatmapParent.name = name;
+
+		vertices = new List<Vector2> ();
 
 	}
 
@@ -101,22 +106,25 @@ public class HeatMap {
 		this.title.SetActive (isActive);
 	}
 
-	public void CreateHeatmapGeo(int x, int y, int index, int type) {
+	public void CreateHeatmapGeo(int x, int y, int index, int type, float meshYPosition) {
 		updateIndices.Add (index);
 		heatmapItems[index] = new HeatMapItem ();
 
 		heatmapItems [index].x = x;
 		heatmapItems [index].y = y;
+		heatmapItems [index].z = meshYPosition;
 		heatmapItems [index].type = type;
 		heatmapItems [index].score = -2f;
 
 		heatmapItems[index].geo = GameObject.CreatePrimitive(PrimitiveType.Quad); //make cell cube
 		heatmapItems[index].geo.name = (currentHeatmapParent.name + " Type: " + type);
 
-		heatmapItems[index].geo.transform.localPosition = new Vector3(x * cellSize, yOffset, y * cellSize);
+		heatmapItems[index].geo.transform.localPosition = new Vector3(x * cellSize, meshYPosition + yOffset, y * cellSize);
 		Quaternion _tmpRot = heatmapParent.transform.localRotation;
 		_tmpRot.eulerAngles = new Vector3(90, 0, 0.0f);
 		heatmapItems[index].geo.transform.localRotation = _tmpRot;
+
+		vertices.Add (new Vector2(heatmapItems [index].geo.transform.localPosition.x, heatmapItems [index].geo.transform.localPosition.z));
 
 		heatmapItems[index].geo.transform.localScale = new Vector3(cellSize, cellSize, cellSize);
 		heatmapItems[index].geo.transform.GetComponent<Renderer>().receiveShadows = false;
@@ -163,16 +171,18 @@ public class HeatMap {
 		
 		if (heatmapItems[index].score >= 0) {
 			heatmapItems [index].geo.transform.localPosition =
-				new Vector3(heatmapItems[index].x * cellSize, yOffset + (heatmapItems[index].score * 2), heatmapItems[index].y * cellSize);
+				new Vector3(heatmapItems[index].x * cellSize, heatmapItems[index].z + yOffset + (heatmapItems[index].score * 2), heatmapItems[index].y * cellSize);
 			heatmapItems [index].geo.name = ("Results count: " + heatmapItems[index].score.ToString());
 			var _tmpColor = heatmapItems[index].score * gradientScale; // color color spectrum based on cell score/max potential score 
 			heatmapItems [index].geo.transform.GetComponent<Renderer> ().material.color =
 				Color.HSVToRGB (_tmpColor, 1, 1);
+			this.heatmapItems [index].geo.SetActive (true);
 		}
 		else
 		{
-			heatmapItems[index].geo.transform.GetComponent<Renderer>().material.color = Color.HSVToRGB(0, 0, 0);
-			heatmapItems[index].geo.transform.localScale = new Vector3(cellSize * 0.9f, cellSize * 0.9f, cellSize * 0.9f);
+			this.heatmapItems [index].geo.SetActive (false);
+			//heatmapItems[index].geo.transform.GetComponent<Renderer>().material.color = Color.HSVToRGB(0, 0, 0);
+			//heatmapItems[index].geo.transform.localScale = new Vector3(cellSize * 0.9f, cellSize * 0.9f, cellSize * 0.9f);
 		}
 	}
 
@@ -190,7 +200,7 @@ public class HeatMap {
 		else {
 			for (int x = 0; x < gridX; x++) {
 				for (int y = 0; y < gridY; y++) {
-					if (_typesArray [x, y] >= 0)
+					if (this.originTypes.Contains((Brick)_typesArray[x, y]))
 						UpdateHeatmapItem (x, y, _typesArray [x, y], index);
 					index++;
 				}
