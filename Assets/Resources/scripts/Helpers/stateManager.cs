@@ -27,7 +27,7 @@ public class stateManager : MonoBehaviour
     private int _oldState;
 
     private const int NUM_STATES = 6;
-    private enum HeatmapState { CITYIO = 0, LANDUSE = 1, FLOORS = 2, RES_PROXIMITY = 3, OFFICE_PROXIMITY = 4, PARK_PROXIMITY = 5, CELL = 6 };
+	private enum HeatmapState { CITYIO = 0, LANDUSE = 1, RES_PROXIMITY = 3, OFFICE_PROXIMITY = 2, PARK_PROXIMITY = 4,  FLOORS = 5, CELL = 6 };
 
     void Awake()
     {
@@ -86,11 +86,6 @@ public class stateManager : MonoBehaviour
                 print("State 2: Land use map" + '\n');
                 _floorsUI.SetActive(false);
                 break;
-            case (int)HeatmapState.FLOORS: // FLOORS
-                _heatmapsScript.FloorsViz();
-                _floorsUI.SetActive(true);
-                print("State 1: Floors map" + '\n');
-                break;
             case (int)HeatmapState.RES_PROXIMITY: // HEATMAP
                 _heatmapsScript.HeatmapViz(Visualizations.HeatmapType.RES);
                 print("State 3: Proximity to Res HeatMap" + '\n');
@@ -106,6 +101,11 @@ public class stateManager : MonoBehaviour
                 print("State 5: Proximity to Parks HeatMap" + '\n');
                 _floorsUI.SetActive(false);
                 break;
+			case (int)HeatmapState.FLOORS: // FLOORS
+				_heatmapsScript.FloorsViz();
+				_floorsUI.SetActive(true);
+				print("State 1: Floors map" + '\n');
+				break;
             case (int)HeatmapState.CELL: // Cell towers
                 ShowContext(_cellTowers);
                 print("State 6: Celltowers heatmap" + '\n');
