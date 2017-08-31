@@ -93,10 +93,8 @@ public class Visualizations : MonoBehaviour
 
 		setup = false;
 
-		#if EventManager
 		EventManager.StartListening ("updateData", OnUpdateData);
 		EventManager.StartListening ("siteInitialized", OnSiteInitialized);
-		#endif
     }
 
 	private void OnSiteInitialized() {

@@ -31,9 +31,9 @@ public class Table
 		return needsUpdate;
 	}
 
-	public void UpdateObjectsFromDecoder(string scannersParentName)
+	public void UpdateObjectsFromDecoder()
 	{
-		UpdateObjects (scannersParentName);
+		UpdateObjects ();
 	}
 
 	/// <summary>
@@ -43,10 +43,6 @@ public class Table
 	/// <param name="table">Table.</param>
 	/// <param name="scannersParentName">Scanners parent name.</param>
 	private bool CreateGrid(string scannersParentName, ref bool needsUpdate) {
-		if (!GameObject.Find (scannersParentName))
-			return false;
-
-		#if Scanners
 		int[,] currIds = GameObject.Find (scannersParentName).GetComponent<Scanners> ().GetCurrentIds();
 		if (currIds == null)
 			return false;
@@ -85,8 +81,6 @@ public class Table
 				}
 			}
 		}
-		#endif
-
 		return needsUpdate;
 	}
 
@@ -116,25 +110,21 @@ public class Table
 	private void UpdateDock(string scannersParentName) {
 		if (!GameObject.Find (scannersParentName))
 			return;
-
-		#if Scanners
+		
 		int newDockId = GameObject.Find (scannersParentName).GetComponent<Scanners> ().GetDockId ();
 		if (newDockId != this.objects.dockID) {
 			this.objects.SetDockId (newDockId);
 		}
-		#endif
 	}
 
 	private void UpdateSlider(string scannersParentName) {
 		if (!GameObject.Find (scannersParentName))
 			return;
-
-		#if Scanners
+		
 		int newSliderVal = GameObject.Find (scannersParentName).GetComponent<Scanners> ().GetSliderValue();
 		if (newSliderVal != this.objects.slider1) {
 			this.objects.SetSlider (newSliderVal);
 		}
-		#endif
 	}
 
 	private void SetupObjects(string scannersParentName) {
@@ -148,10 +138,8 @@ public class Table
 		for (int i = 0; i < buildingTypesCount; i++)
 			this.objects.density.Add((int)(UnityEngine.Random.Range(0f, 20f)));
 
-		#if Scanners
 		this.objects.SetDockId (GameObject.Find (scannersParentName).GetComponent<Scanners> ().GetDockId());
 		this.objects.SetSlider (GameObject.Find (scannersParentName).GetComponent<Scanners> ().GetSliderValue());
-		#endif
 	}
 
 	public string WriteToJSON()
