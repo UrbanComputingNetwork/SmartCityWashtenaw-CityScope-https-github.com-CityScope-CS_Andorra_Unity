@@ -43,8 +43,11 @@ public class SiteData : MonoBehaviour {
 		_masksList = AsciiParser.AsciiParserMethod(_asciiMasks);
 
 		GameObject scannersParent = GameObject.Find ("ScannersParent");
-		if (scannersParent != null)
+		if (scannersParent != null) {
+			#if EventManager
 			EventManager.StartListening ("scannersInitialized", FindInteractiveZone);
+			#endif
+		}
 		else
 			FindInteractiveZone ();
 
@@ -53,7 +56,9 @@ public class SiteData : MonoBehaviour {
 	void Update() {
 		if (_masksList.Count > 0 && setup) {
 			setup = false;
+			#if EventManager
 			EventManager.TriggerEvent ("siteInitialized");
+			#endif
 		}
 	}
 

@@ -127,9 +127,11 @@ public class cityIO : MonoBehaviour
         _table = new Table();
         tableDataPost = new TableDataPost();
 
+		#if EventManager
         // Listeners to update slider & dock values
         EventManager.StartListening("sliderChange", OnSliderChanged);
         EventManager.StartListening("dockChange", OnDockChanged);
+		#endif
     }
 
     IEnumerator Start()
@@ -178,7 +180,10 @@ public class cityIO : MonoBehaviour
                 System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
                 var lastUpdateTime = epochStart.AddSeconds(System.Math.Round(_table.timestamp / 1000d)).ToLocalTime();
                 print("CityIO new data has arrived." + '\n' + "JSON was created at: " + lastUpdateTime + '\n' + _www.text);
-                EventManager.TriggerEvent("updateData");
+
+				#if EventManager
+				EventManager.TriggerEvent("updateData");
+				#endif
             }
         }
     }
@@ -197,7 +202,10 @@ public class cityIO : MonoBehaviour
         _newCityioDataFlag = true;
         if (_table.grid != null && (update || uiChanged))
         {
+			#if EventManager
             EventManager.TriggerEvent("updateData");
+			#endif
+
             if (_sendData)
                 SendData();
             DrawTable();
