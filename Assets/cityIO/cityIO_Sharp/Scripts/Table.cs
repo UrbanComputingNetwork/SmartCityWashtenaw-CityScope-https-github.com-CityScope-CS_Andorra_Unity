@@ -27,15 +27,13 @@ public class Table
 	public bool CreateGridFromDecoder(string scannersParentName)
 	{
 		bool needsUpdate = false;
-		Scanners scanners = GameObject.Find (scannersParentName).GetComponent<Scanners> ();
-		CreateGrid(ref scanners, ref needsUpdate);
+		CreateGrid(scannersParentName, ref needsUpdate);
 		return needsUpdate;
 	}
 
-	public void UpdateObjectsFromDecoder(string scannersParentName)
+	public void UpdateObjectsFromDecoder()
 	{
-		Scanners scanners = GameObject.Find (scannersParentName).GetComponent<Scanners> ();
-		UpdateObjects (ref scanners);
+		UpdateObjects ();
 	}
 
 	/// <summary>
@@ -44,8 +42,8 @@ public class Table
 	/// <returns><c>true</c>, if grid was created, <c>false</c> otherwise.</returns>
 	/// <param name="table">Table.</param>
 	/// <param name="scannersParentName">Scanners parent name.</param>
-	private bool CreateGrid(ref Scanners scanners, ref bool needsUpdate) {
-		int[,] currIds = scanners.GetCurrentIds();
+	private bool CreateGrid(string scannersParentName, ref bool needsUpdate) {
+		int[,] currIds = GameObject.Find (scannersParentName).GetComponent<Scanners> ().GetCurrentIds();
 		if (currIds == null)
 			return false;
 
@@ -67,7 +65,7 @@ public class Table
 		else {
 			needsUpdate = true;
 			Debug.Log ("Creating new table grid list");
-			CreateObjects (ref scanners, ref needsUpdate);
+			CreateObjects (scannersParentName, ref needsUpdate);
 
 			this.grid = new List<Grid> ();
 			for (int i = 0; i < currIds.GetLength (0); i++) {
@@ -93,37 +91,46 @@ public class Table
 	/// <param name="table">Table.</param>
 	/// <param name="scannerParentName">Scanner parent name.</param>
 	/// <param name="needsUpdate">Needs update.</param>
-	private bool CreateObjects(ref Scanners scanners, ref bool needsUpdate) {
+	private bool CreateObjects(string scannersParentName, ref bool needsUpdate) {
 		if (this.objects.density != null) {
-			UpdateDock (ref scanners);
+			UpdateDock (scannersParentName);
 		}
 		else {
-			SetupObjects (ref scanners);
+			SetupObjects (scannersParentName);
 			needsUpdate = true;
 		}
 		return true;
 	}
 
-	public void UpdateObjects(ref Scanners scanners) {
-		UpdateDock (ref scanners);
-		UpdateSlider (ref scanners);
+	public void UpdateObjects(string scannersParentName) {
+		UpdateDock (scannersParentName);
+		UpdateSlider (scannersParentName);
 	}
 
-	private void UpdateDock(ref Scanners scanners) {
-		int newDockId = scanners.GetDockId ();
+	private void UpdateDock(string scannersParentName) {
+		if (!GameObject.Find (scannersParentName))
+			return;
+		
+		int newDockId = GameObject.Find (scannersParentName).GetComponent<Scanners> ().GetDockId ();
 		if (newDockId != this.objects.dockID) {
 			this.objects.SetDockId (newDockId);
 		}
 	}
 
-	private void UpdateSlider(ref Scanners scanners) {
-		int newSliderVal = scanners.GetSliderValue();
+	private void UpdateSlider(string scannersParentName) {
+		if (!GameObject.Find (scannersParentName))
+			return;
+		
+		int newSliderVal = GameObject.Find (scannersParentName).GetComponent<Scanners> ().GetSliderValue();
 		if (newSliderVal != this.objects.slider1) {
 			this.objects.SetSlider (newSliderVal);
 		}
 	}
 
-	private void SetupObjects(ref Scanners scanners) {
+	private void SetupObjects(string scannersParentName) {
+		if (!GameObject.Find (scannersParentName))
+			return;
+		
 		// Initialize with random densities
 		this.objects.density = new List<int>();
 		int buildingTypesCount = GameObject.Find ("cityIO").GetComponent<cityIO> ().GetBuildingTypeCount ();
@@ -131,8 +138,8 @@ public class Table
 		for (int i = 0; i < buildingTypesCount; i++)
 			this.objects.density.Add((int)(UnityEngine.Random.Range(0f, 20f)));
 
-		this.objects.SetDockId (scanners.GetDockId());
-		this.objects.SetSlider (scanners.GetSliderValue());
+		this.objects.SetDockId (GameObject.Find (scannersParentName).GetComponent<Scanners> ().GetDockId());
+		this.objects.SetSlider (GameObject.Find (scannersParentName).GetComponent<Scanners> ().GetSliderValue());
 	}
 
 	public string WriteToJSON()
