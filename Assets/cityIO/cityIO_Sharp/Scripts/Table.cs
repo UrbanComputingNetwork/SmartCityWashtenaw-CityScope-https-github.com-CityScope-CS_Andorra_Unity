@@ -31,9 +31,9 @@ public class Table
 		return needsUpdate;
 	}
 
-	public void UpdateObjectsFromDecoder()
+	public void UpdateObjectsFromDecoder(string scannersParentName)
 	{
-		UpdateObjects ();
+		UpdateObjects (scannersParentName);
 	}
 
 	/// <summary>
