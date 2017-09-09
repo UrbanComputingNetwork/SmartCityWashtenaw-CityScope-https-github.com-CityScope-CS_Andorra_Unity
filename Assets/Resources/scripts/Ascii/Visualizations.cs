@@ -150,7 +150,6 @@ public class Visualizations : MonoBehaviour
 
 				if (Physics.Raycast (meshRaycaster.transform.position, Vector3.down, out hit)) {
 					meshYPositions [index] = hit.point.y;
-					Debug.Log ("mesh z position ray hit something");
 				}
 
 				if (_typesList[index] != _outOfBoundsType && _floorsList[index] > 0)
