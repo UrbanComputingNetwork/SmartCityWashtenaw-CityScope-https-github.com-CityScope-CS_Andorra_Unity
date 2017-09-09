@@ -28,11 +28,15 @@ public class stateManager : MonoBehaviour
     private int _sliderState = 3;
     private int _oldState;
 
+	bool setup;
+
     private const int NUM_STATES = 6;
 	private enum HeatmapState { CITYIO = 0, LANDUSE = 1, RES_PROXIMITY = 3, OFFICE_PROXIMITY = 2, PARK_PROXIMITY = 4,  FLOORS = 5, CELL = 6 };
 
     void Awake()
     {
+		setup = false;
+
         if (_modeSelector == ModeEnum.INTERACTIVE)
         {
             _sliderState = (int)_cityIOscript._table.objects.slider1; //gets the slider 
@@ -43,7 +47,14 @@ public class stateManager : MonoBehaviour
         {
             StartCoroutine(DemoMode());
         }
+
+		EventManager.StartListening ("siteInitialized", OnSiteInitialized);
     }
+
+	private void OnSiteInitialized() {
+		setup = true;
+	}
+
     void Update()
     {
         _sliderState = (int)_cityIOscript._table.objects.slider1; //gets the slider 
@@ -64,12 +75,14 @@ public class stateManager : MonoBehaviour
                 yield return new WaitForEndOfFrame();
                 StateControl(i);
                 yield return new WaitForSeconds(_changeModeEverySeconds);
-
             }
         }
     }
     void StateControl(int _sliderState)
     {
+		if (setup != true)
+			return;
+		
         CleanOldViz(_contextHolder, _heatmapHolder);
         ShowContext(_andorraCityScope);
 
