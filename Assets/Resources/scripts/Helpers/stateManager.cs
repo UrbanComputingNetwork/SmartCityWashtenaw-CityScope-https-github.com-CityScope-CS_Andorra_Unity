@@ -30,7 +30,7 @@ public class stateManager : MonoBehaviour
 
 	bool setup;
 
-    private const int NUM_STATES = 6;
+    private const int NUM_STATES = 7;
 	private enum HeatmapState { CITYIO = 0, LANDUSE = 1, RES_PROXIMITY = 3, OFFICE_PROXIMITY = 2, PARK_PROXIMITY = 4,  FLOORS = 5, CELL = 6 };
 
     void Awake()

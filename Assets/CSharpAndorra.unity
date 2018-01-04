@@ -42,7 +42,7 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 9
+  serializedVersion: 11
   m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
@@ -54,7 +54,7 @@ LightmapSettings:
     m_EnableBakedLightmaps: 1
     m_EnableRealtimeLightmaps: 1
   m_LightmapEditorSettings:
-    serializedVersion: 8
+    serializedVersion: 9
     m_Resolution: 2
     m_BakeResolution: 40
     m_TextureWidth: 1024
@@ -89,7 +89,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigma: 1
   m_LightingDataAsset: {fileID: 112000002, guid: 83ee935938c89420086da53148a858a4,
     type: 2}
-  m_ShadowMaskMode: 2
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -1097,14 +1097,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _modeSelector: 0
-  _changeModeEverySeconds: 5
-  _andorraCityScope: {fileID: 2050935378}
+  _changeModeEverySeconds: 2
+  _andorraCityScope: {fileID: 1300289217}
   _contextHolder: {fileID: 451275316}
   _cellTowers: {fileID: 2108115987}
   _heatmapHolder: {fileID: 2107124964}
   _cityIOscript: {fileID: 1877268379}
   _heatmapsScript: {fileID: 2107124967}
-  _andorraHeatmap: {fileID: 1300289217}
+  _andorraHeatmap: {fileID: 2050935378}
   _floorsUI: {fileID: 2103548903}
   _heatmapsUI: {fileID: 950709837}
 --- !u!4 &446310909 stripped
@@ -1695,6 +1695,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d00162121dcd742469be60d2d7cc07de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameras: []
 --- !u!4 &828391467
 Transform:
   m_ObjectHideFlags: 0
@@ -3673,37 +3674,37 @@ Prefab:
         type: 2}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 34a50e6e79e1246cbaa079212175ac8d, type: 2}
+      objectReference: {fileID: 2100000, guid: 5838c08c08720417d99cd2a52288ffe3, type: 2}
     - target: {fileID: 23874604635224346, guid: 3bf1b2d24c64f45d1a5c113568e01e16,
         type: 2}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 34a50e6e79e1246cbaa079212175ac8d, type: 2}
+      objectReference: {fileID: 2100000, guid: 5838c08c08720417d99cd2a52288ffe3, type: 2}
     - target: {fileID: 23764821112920678, guid: 3bf1b2d24c64f45d1a5c113568e01e16,
         type: 2}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 34a50e6e79e1246cbaa079212175ac8d, type: 2}
+      objectReference: {fileID: 2100000, guid: 5838c08c08720417d99cd2a52288ffe3, type: 2}
     - target: {fileID: 23318689340997872, guid: 3bf1b2d24c64f45d1a5c113568e01e16,
         type: 2}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 34a50e6e79e1246cbaa079212175ac8d, type: 2}
+      objectReference: {fileID: 2100000, guid: 5838c08c08720417d99cd2a52288ffe3, type: 2}
     - target: {fileID: 23467029519449752, guid: 3bf1b2d24c64f45d1a5c113568e01e16,
         type: 2}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 34a50e6e79e1246cbaa079212175ac8d, type: 2}
+      objectReference: {fileID: 2100000, guid: 5838c08c08720417d99cd2a52288ffe3, type: 2}
     - target: {fileID: 23522297424372500, guid: 3bf1b2d24c64f45d1a5c113568e01e16,
         type: 2}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 34a50e6e79e1246cbaa079212175ac8d, type: 2}
+      objectReference: {fileID: 2100000, guid: 5838c08c08720417d99cd2a52288ffe3, type: 2}
     - target: {fileID: 23360788857024534, guid: 3bf1b2d24c64f45d1a5c113568e01e16,
         type: 2}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 34a50e6e79e1246cbaa079212175ac8d, type: 2}
+      objectReference: {fileID: 2100000, guid: 5838c08c08720417d99cd2a52288ffe3, type: 2}
     - target: {fileID: 1276854181572372, guid: 3bf1b2d24c64f45d1a5c113568e01e16, type: 2}
       propertyPath: m_IsActive
       value: 1
