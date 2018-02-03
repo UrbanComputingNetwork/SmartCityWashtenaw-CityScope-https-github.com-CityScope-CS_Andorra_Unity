@@ -1,5 +1,5 @@
 # CSharpScope Andorra 
-===================
+------
 
 ![](https://github.com/RELNO/CSharpScope_Andorra/blob/master/giphy.gif)
 
@@ -28,4 +28,10 @@ Display 2: Projection mapped interactive grid (on table)
 
 Display 3: UI
 
+_____
+
+Maintained by [Ariel Noyman](arielnoyman.com)
+
+Developed by [Ariel Noyman](arielnoyman.com), 
+[Dalma Foldesi](https://github.com/foldalm)
 
